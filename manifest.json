@@ -1,8 +1,9 @@
 {
+  "id": "/siara-engine/index.html",
   "name": "Siará Engine Pro",
   "short_name": "Siará Engine",
   "description": "Pro Studio Scale Engine & Harmonic Harmonizer",
-  "start_url": "./index.html",
+  "start_url": "/siara-engine/index.html",
   "display": "standalone",
   "background_color": "#0A0806",
   "theme_color": "#C85A17",
@@ -12,13 +13,29 @@
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Siará Engine Desktop"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Siará Engine Mobile"
     }
   ]
 }
