@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Siará Engine - Pro SaaS v1.6.4</title>
+  <title>Siará Engine - Pro SaaS v1.7.0</title>
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <script src="https://unpkg.com/@tonejs/midi"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -360,7 +360,7 @@
 
   <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--card-border); text-align: left;">
     <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand);">PLANO ATIVO</div>
-    <div style="font-size: 13px; font-weight: 800; color: #FFF;">Pro Unlimited • v1.6.4</div>
+    <div style="font-size: 13px; font-weight: 800; color: #FFF;">Pro Unlimited • v1.7.0</div>
   </div>
 </aside>
 
@@ -563,6 +563,12 @@
   let tapTimes = [];
   let currentChordType = 'triads';
 
+  /* VARIÁVEIS DE ANIMAÇÃO DO PLAYHEAD */
+  let isPlaying = false;
+  let playbackStartTime = 0;
+  let totalLoopDurationSec = 0;
+  let animFrameId = null;
+
   function getMasterGain() {
     if (!audioCtx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -585,10 +591,16 @@
   }
 
   function stopAudio() {
+    isPlaying = false;
+    if (animFrameId) {
+      cancelAnimationFrame(animFrameId);
+      animFrameId = null;
+    }
     activeNodes.forEach(node => {
       try { node.stop(); } catch(e){}
     });
     activeNodes = [];
+    drawPianoRoll();
     document.getElementById('statusMessage').innerText = "🛑 Áudio interrompido (Mute de Emergência).";
   }
 
@@ -861,7 +873,6 @@
     drawPianoRoll();
   }
 
-  /* ENGINE 100% EXPLICITA COM 30 ALGORITMOS DEDICADOS SEM FALLBACK REPETITIVO */
   function generateEvents() {
     const notes = getScaleNotes();
     const style = document.getElementById('patternStyle').value;
@@ -1209,7 +1220,6 @@
           }
         }
       } else if (varType === 'vio_09') {
-        // Viola 09 Original v1.6.1 Exata (24 Notas / 8 Bars)
         for (let b = 0; b < 32; b += 4) {
           rawEvents.push({ notes: [n(0, 1), n(3, 1)], beat: b, durationBeats: 1.5 });
           rawEvents.push({ notes: [n(4, 1)], beat: b + 1.75, durationBeats: 0.8 });
@@ -1235,7 +1245,8 @@
     }));
   }
 
-  function drawPianoRoll() {
+  /* DESENHO DO PIANO ROLL COM O PLAYHEAD (CURSOR EM TEMPO REAL) */
+  function drawPianoRoll(currentBeat = null) {
     const canvas = document.getElementById('pianoRollCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -1246,6 +1257,7 @@
     ctx.fillStyle = '#0C0806';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Linhas de Grade
     ctx.strokeStyle = '#1D1612';
     ctx.lineWidth = 1;
     for (let i = 0; i <= 32; i++) {
@@ -1258,6 +1270,7 @@
       }
     }
 
+    // Desenhar Notas
     events.forEach(e => {
       let x = (e.beat / 32) * canvas.width;
       let w = Math.max(4, (e.durationBeats / 32) * canvas.width);
@@ -1273,6 +1286,42 @@
       ctx.roundRect(x, y, Math.max(3, w - 1), h, 3);
       ctx.fill();
     });
+
+    // Desenhar a linha do Playhead (se estiver tocando)
+    if (currentBeat !== null) {
+      let px = (currentBeat / 32) * canvas.width;
+      
+      // Brilho externo da linha
+      ctx.shadowColor = '#E5A93C';
+      ctx.shadowBlur = 8;
+      ctx.strokeStyle = '#FFF';
+      ctx.lineWidth = 2;
+      
+      ctx.beginPath();
+      ctx.moveTo(px, 0);
+      ctx.lineTo(px, canvas.height);
+      ctx.stroke();
+
+      // Resetar sombra
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  function updatePlayhead() {
+    if (!isPlaying || !audioCtx) return;
+    
+    const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
+    const secondsPerBeat = 60 / bpm;
+    const elapsedSec = audioCtx.currentTime - playbackStartTime;
+
+    if (elapsedSec >= totalLoopDurationSec) {
+      stopAudio();
+      return;
+    }
+
+    const currentBeat = (elapsedSec / secondsPerBeat) % 32;
+    drawPianoRoll(currentBeat);
+    animFrameId = requestAnimationFrame(updatePlayhead);
   }
 
   function onSettingChange() {
@@ -1299,7 +1348,7 @@
       const events = generateEvents();
       const style = document.getElementById('patternStyle').value;
       const tuning = document.getElementById('tuningSelect').value;
-      const now = audioCtx.currentTime + 0.1;
+      const now = audioCtx.currentTime + 0.05;
 
       events.forEach(e => {
         let beatPos = e.beat;
@@ -1347,6 +1396,12 @@
           activeNodes.push(osc);
         });
       });
+
+      // Iniciar a Animação do Cursor
+      isPlaying = true;
+      playbackStartTime = now;
+      totalLoopDurationSec = 32 * secondsPerBeat;
+      updatePlayhead();
 
       document.getElementById('statusMessage').innerText = `▶ Executando loop (${bpm} BPM | ${tuning} Hz | ${events.length} notas).`;
 
