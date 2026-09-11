@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Siará Engine - Pro SaaS v1.8.1</title>
+  <title>Siará Engine - Pro SaaS v2.0.0</title>
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <script src="https://unpkg.com/@tonejs/midi"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -182,7 +182,8 @@
       transition: all 0.25s ease; cursor: pointer;
     }
 
-    option { background-color: #1C1511 !important; color: #F5EFE6 !important; padding: 12px; }
+    optgroup { background-color: #140E0B; color: var(--accent-sand); font-weight: 700; }
+    option { background-color: #1C1511 !important; color: #F5EFE6 !important; padding: 12px; font-weight: 500; }
     select:hover, input:hover { border-color: var(--accent-terracotta); }
     select:focus, input:focus {
       border-color: var(--accent-terracotta); background: rgba(200, 90, 23, 0.08);
@@ -211,11 +212,11 @@
     }
     canvas { width: 100%; height: 130px; background: #0C0806; border-radius: 10px; display: block; }
 
-    .actions-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; }
+    .actions-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; }
     .btn {
-      padding: 16px; border-radius: 12px; border: none; font-family: inherit;
-      font-size: 14px; font-weight: 700; cursor: pointer; display: flex;
-      align-items: center; justify-content: center; gap: 10px; transition: all 0.2s ease;
+      padding: 14px 10px; border-radius: 12px; border: none; font-family: inherit;
+      font-size: 13px; font-weight: 700; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease;
     }
     .btn-primary { background: var(--brand-gradient); color: #FFF; box-shadow: 0 10px 25px var(--accent-glow); }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px var(--accent-glow); }
@@ -324,7 +325,7 @@
     </a>
     <a id="navChords" class="nav-item" onclick="switchView('chords')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      Harmonizador de Campo
+      Harmonizador de Campo 2.0
     </a>
   </div>
 
@@ -360,7 +361,7 @@
 
   <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--card-border); text-align: left;">
     <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand);">PLANO ATIVO</div>
-    <div style="font-size: 13px; font-weight: 800; color: #FFF;">Pro Unlimited • v1.8.1</div>
+    <div style="font-size: 13px; font-weight: 800; color: #FFF;">Pro Unlimited • v2.0.0</div>
   </div>
 </aside>
 
@@ -419,12 +420,20 @@
       </div>
 
       <div class="input-field full-width">
-        <label>3. Escala & Vibe Ancestral</label>
+        <label>3. Escala & Vibe Harmônica</label>
         <select id="scaleType" onchange="onSettingChange()">
-          <option value="lydian dominant" selected>Lídio Nordestino (Sertão / Neo-Soul)</option>
-          <option value="mixolydian">Mixolídio / Aboio (Reza / Psicodélico)</option>
-          <option value="minor pentatonic">Pentatônica Gnawa (Transe / Trap)</option>
-          <option value="major pentatonic">Escala Praiana (Afrobeat / Maré)</option>
+          <optgroup label="✨ MODOS MAIORES & DOMINANTES">
+            <option value="lydian dominant" selected>Lídio Dominante (Sertão / Neo-Soul)</option>
+            <option value="mixolydian">Mixolídio / Aboio (Reza / Psicodélico)</option>
+            <option value="major pentatonic">Escala Praiana (Afrobeat / Maré)</option>
+          </optgroup>
+          <optgroup label="🌙 CAMPOS HARMÔNICOS MENORES (NOVO 2.0)">
+            <option value="minor">Menor Natural / Eólio (Melancolia / R&B)</option>
+            <option value="harmonic minor">Menor Harmônica (Dramático / Baião)</option>
+            <option value="dorian">Dório Mourisco (Baião Menor / MPB Jazz)</option>
+            <option value="phrygian">Frígio (Transe / Reza Mistica)</option>
+            <option value="minor pentatonic">Pentatônica Gnawa (Transe / Trap)</option>
+          </optgroup>
         </select>
       </div>
     </div>
@@ -459,11 +468,11 @@
 
     <div class="actions-grid">
       <button class="btn btn-primary" id="playBtn" onclick="previewPattern()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        Escutar Loop no Navegador
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Escutar Loop
       </button>
       <button class="btn btn-secondary" onclick="exportMIDI()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Exportar MIDI (.mid)
       </button>
     </div>
@@ -494,9 +503,9 @@
         <span class="preset-tag">🥁 Logdrum • 140 BPM</span>
       </div>
 
-      <div class="preset-card" onclick="loadPresetPack('E', 120, 'mixolydian', 'viola', 'vio_02')">
-        <div class="preset-title">Aboio Galope Mourisco</div>
-        <div class="preset-desc">Dedilhado rápido de viola caipira/cordas de aço em Mí Mixolídio em 120 BPM.</div>
+      <div class="preset-card" onclick="loadPresetPack('E', 120, 'minor', 'viola', 'vio_02')">
+        <div class="preset-title">Aboio Melancólico Menor</div>
+        <div class="preset-desc">Dedilhado rápido de viola em Mí Menor Natural focado em clima denso em 120 BPM.</div>
         <span class="preset-tag">🪕 Viola • 120 BPM</span>
       </div>
 
@@ -508,10 +517,10 @@
     </div>
   </div>
 
-  <!-- VIEW 3: HARMONIZADOR DE CAMPO (PRO) -->
+  <!-- VIEW 3: HARMONIZADOR DE CAMPO 2.0 (MAIOR E MENOR) -->
   <div id="viewChords" class="app-card" style="display: none;">
     <div class="header">
-      <h1 class="brand-title">Harmonizador <span>de Campo</span></h1>
+      <h1 class="brand-title">Harmonizador <span>2.0</span></h1>
       <span class="status-badge" id="chordScaleBadge">A LYDIAN DOMINANT</span>
     </div>
 
@@ -523,7 +532,7 @@
     <div id="chordsGrid" class="chords-grid"></div>
 
     <div class="progression-card">
-      <div class="progression-title">💡 Progressões Recomendadas para Improviso:</div>
+      <div class="progression-title">💡 Progressões Recomendadas de partida:</div>
       <div id="progressionsContainer"></div>
     </div>
   </div>
@@ -571,7 +580,6 @@
   let totalLoopDurationSec = 0;
   let animFrameId = null;
 
-  /* CADEIA DE SÍNTESE PRO COM MASTER FX (DELAY + AMBIÊNCIA) */
   function getMasterGain() {
     if (!audioCtx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -582,9 +590,8 @@
       const vol = parseFloat(document.getElementById('masterVolume')?.value || 80) / 100;
       masterGainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
 
-      // Nó de Efeito Delay & Reverb Ambiência
       delayNode = audioCtx.createDelay();
-      delayNode.delayTime.value = 0.22; // 220ms
+      delayNode.delayTime.value = 0.22;
       
       const delayFeedback = audioCtx.createGain();
       delayFeedback.gain.value = 0.25;
@@ -727,26 +734,57 @@
     const pContainer = document.getElementById('progressionsContainer');
     let c1 = getChordSymbol(notes[0], 0, currentChordType === 'tetrads');
     let c2 = getChordSymbol(notes[1], 1, currentChordType === 'tetrads');
+    let c4 = getChordSymbol(notes[Math.min(3, notes.length-1)], 3, currentChordType === 'tetrads');
+    let c5 = getChordSymbol(notes[Math.min(4, notes.length-1)], 4, currentChordType === 'tetrads');
     let c6 = getChordSymbol(notes[Math.min(5, notes.length-1)], 5, currentChordType === 'tetrads');
     let c7 = getChordSymbol(notes[Math.min(6, notes.length-1)], 6, currentChordType === 'tetrads');
 
-    pContainer.innerHTML = `
-      <div class="progression-item">
-        <span>1. Sertão Neo-Soul (Balanço Principal):</span>
-        <strong style="color: var(--accent-ochre);">${c1} ➔ ${c2} ➔ ${c1}</strong>
-      </div>
-      <div class="progression-item">
-        <span>2. Tensão Lídia Ancestral:</span>
-        <strong style="color: var(--accent-ochre);">${c1} ➔ ${c7} ➔ ${c6} ➔ ${c1}</strong>
-      </div>
-    `;
+    if (scale.includes('minor') || scale === 'dorian' || scale === 'phrygian') {
+      pContainer.innerHTML = `
+        <div class="progression-item">
+          <span>1. Balanço Menor Sertanejo:</span>
+          <strong style="color: var(--accent-ochre);">${c1} ➔ ${c4} ➔ ${c5} ➔ ${c1}</strong>
+        </div>
+        <div class="progression-item">
+          <span>2. Cadência de Transe / Reza:</span>
+          <strong style="color: var(--accent-ochre);">${c1} ➔ ${c7} ➔ ${c6} ➔ ${c1}</strong>
+        </div>
+      `;
+    } else {
+      pContainer.innerHTML = `
+        <div class="progression-item">
+          <span>1. Sertão Neo-Soul (Balanço Principal):</span>
+          <strong style="color: var(--accent-ochre);">${c1} ➔ ${c2} ➔ ${c1}</strong>
+        </div>
+        <div class="progression-item">
+          <span>2. Tensão Lídia Ancestral:</span>
+          <strong style="color: var(--accent-ochre);">${c1} ➔ ${c7} ➔ ${c6} ➔ ${c1}</strong>
+        </div>
+      `;
+    }
   }
 
   function getChordSymbol(rootNote, degIdx, isTetrad) {
     const cleanRoot = rootNote.replace(/\d/,'');
     const type = document.getElementById('scaleType').value;
 
-    if (type === 'lydian dominant') {
+    if (type === 'minor') {
+      const triads = [`${cleanRoot}m`, `${cleanRoot}dim`, cleanRoot, `${cleanRoot}m`, `${cleanRoot}m`, cleanRoot, cleanRoot];
+      const tetrads = [`${cleanRoot}m7`, `${cleanRoot}m7b5`, `${cleanRoot}maj7`, `${cleanRoot}m7`, `${cleanRoot}m7`, `${cleanRoot}maj7`, `${cleanRoot}7`];
+      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
+    } else if (type === 'harmonic minor') {
+      const triads = [`${cleanRoot}m`, `${cleanRoot}dim`, `${cleanRoot}aug`, `${cleanRoot}m`, cleanRoot, cleanRoot, `${cleanRoot}dim`];
+      const tetrads = [`${cleanRoot}m(maj7)`, `${cleanRoot}m7b5`, `${cleanRoot}maj7#5`, `${cleanRoot}m7`, `${cleanRoot}7`, `${cleanRoot}maj7`, `${cleanRoot}dim7`];
+      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
+    } else if (type === 'dorian') {
+      const triads = [`${cleanRoot}m`, `${cleanRoot}m`, cleanRoot, cleanRoot, `${cleanRoot}m`, `${cleanRoot}dim`, cleanRoot];
+      const tetrads = [`${cleanRoot}m7`, `${cleanRoot}m7`, `${cleanRoot}maj7`, `${cleanRoot}7`, `${cleanRoot}m7`, `${cleanRoot}m7b5`, `${cleanRoot}maj7`];
+      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
+    } else if (type === 'phrygian') {
+      const triads = [`${cleanRoot}m`, cleanRoot, cleanRoot, `${cleanRoot}m`, `${cleanRoot}dim`, cleanRoot, `${cleanRoot}m`];
+      const tetrads = [`${cleanRoot}m7`, `${cleanRoot}maj7`, `${cleanRoot}7`, `${cleanRoot}m7`, `${cleanRoot}m7b5`, `${cleanRoot}maj7`, `${cleanRoot}m7`];
+      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
+    } else if (type === 'lydian dominant') {
       const triads = [cleanRoot, `${cleanRoot}`, `${cleanRoot}dim`, `${cleanRoot}dim`, `${cleanRoot}m`, `${cleanRoot}m`, `${cleanRoot}aug`];
       const tetrads = [`${cleanRoot}7`, `${cleanRoot}7`, `${cleanRoot}m7b5`, `${cleanRoot}m7b5`, `${cleanRoot}m(maj7)`, `${cleanRoot}m7`, `${cleanRoot}maj7#5`];
       return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
@@ -764,7 +802,7 @@
     const now = audioCtx.currentTime + 0.05;
 
     chordNotes.forEach(n => {
-      triggerRhodesVoice(noteToFreq(n), now, 1.2, 0.8);
+      triggerRhodesVoice(audioCtx, masterGain, fxBusNode, noteToFreq(n), now, 1.2, 0.8, false);
     });
   }
 
@@ -1256,7 +1294,6 @@
     }));
   }
 
-  /* DESENHO DO PIANO ROLL COM O PLAYHEAD */
   function drawPianoRoll(currentBeat = null) {
     const canvas = document.getElementById('pianoRollCanvas');
     if (!canvas) return;
@@ -1343,17 +1380,15 @@
     }
   }
 
-  /* OSCILADORES DE SÍNTESE AVANÇADA (RHODES FM, LOGDRUM SUB PUNCH, VIOLA STEEL PAIR) */
-  function triggerRhodesVoice(freq, startTime, duration, volScale) {
-    const master = getMasterGain();
-    
-    const carrier = audioCtx.createOscillator();
-    const carrierGain = audioCtx.createGain();
+  /* OSCILADORES DE SÍNTESE PRO */
+  function triggerRhodesVoice(ctx, master, fxBus, freq, startTime, duration, volScale, isOffline) {
+    const carrier = ctx.createOscillator();
+    const carrierGain = ctx.createGain();
     carrier.type = 'sine';
     carrier.frequency.setValueAtTime(freq, startTime);
 
-    const modulator = audioCtx.createOscillator();
-    const modGain = audioCtx.createGain();
+    const modulator = ctx.createOscillator();
+    const modGain = ctx.createGain();
     modulator.type = 'sine';
     modulator.frequency.setValueAtTime(freq * 2.0, startTime);
     
@@ -1369,24 +1404,21 @@
 
     carrier.connect(carrierGain);
     carrierGain.connect(master);
-    carrierGain.connect(fxBusNode);
+    if (fxBus) carrierGain.connect(fxBus);
 
     carrier.start(startTime);
     modulator.start(startTime);
     carrier.stop(startTime + duration + 0.1);
     modulator.stop(startTime + 0.2);
 
-    activeNodes.push(carrier, modulator);
+    if (!isOffline) activeNodes.push(carrier, modulator);
   }
 
-  function triggerLogdrumVoice(freq, startTime, duration, volScale) {
-    const master = getMasterGain();
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+  function triggerLogdrumVoice(ctx, master, fxBus, freq, startTime, duration, volScale, isOffline) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
     osc.type = 'triangle';
-
     osc.frequency.setValueAtTime(freq * 2.2, startTime);
     osc.frequency.exponentialRampToValueAtTime(freq, startTime + 0.035);
 
@@ -1399,65 +1431,97 @@
     osc.start(startTime);
     osc.stop(startTime + duration + 0.05);
 
-    activeNodes.push(osc);
+    if (!isOffline) activeNodes.push(osc);
   }
 
-  /* VIOLA CAIPIRA / CORDAS DE AÇO DUAIS (MODELAGEM FÍSICA ACOUSTIC PLUCK) */
-  function triggerViolaVoice(freq, startTime, duration, volScale) {
-    const master = getMasterGain();
-
-    // Oscilador 1: Corda A (Triângulo para o corpo da madeira + micro-detune)
-    const osc1 = audioCtx.createOscillator();
+  function triggerViolaVoice(ctx, master, fxBus, freq, startTime, duration, volScale, isOffline) {
+    const osc1 = ctx.createOscillator();
     osc1.type = 'triangle';
     osc1.frequency.setValueAtTime(freq, startTime);
-    osc1.detune.setValueAtTime(+5, startTime); // Par de cordas desafinado suavemente
+    osc1.detune.setValueAtTime(+5, startTime);
 
-    // Oscilador 2: Corda B (Sawtooth para estalo da palheta metálica + micro-detune)
-    const osc2 = audioCtx.createOscillator();
+    const osc2 = ctx.createOscillator();
     osc2.type = 'sawtooth';
     osc2.frequency.setValueAtTime(freq, startTime);
     osc2.detune.setValueAtTime(-5, startTime);
 
-    // Filtro de ressonância do corpo da Viola
-    const bodyFilter = audioCtx.createBiquadFilter();
+    const bodyFilter = ctx.createBiquadFilter();
     bodyFilter.type = 'lowpass';
-    bodyFilter.Q.value = 3.5; // Ressonância da caixa acústica
+    bodyFilter.Q.value = 3.5;
     bodyFilter.frequency.setValueAtTime(freq * 7, startTime);
     bodyFilter.frequency.exponentialRampToValueAtTime(freq * 1.8, startTime + 0.14);
 
-    // Filtro Passa-Altas para eliminar frequências grave/embaciadas
-    const hpFilter = audioCtx.createBiquadFilter();
+    const hpFilter = ctx.createBiquadFilter();
     hpFilter.type = 'highpass';
     hpFilter.frequency.value = 180;
 
-    // Envelopes de volume separados
-    const gain1 = audioCtx.createGain(); // Corpo
+    const gain1 = ctx.createGain();
     gain1.gain.setValueAtTime(0.001, startTime);
     gain1.gain.linearRampToValueAtTime(0.32 * volScale, startTime + 0.006);
     gain1.gain.exponentialRampToValueAtTime(0.001, startTime + Math.max(0.15, duration));
 
-    const gain2 = audioCtx.createGain(); // Ataque metálico rápido
+    const gain2 = ctx.createGain();
     gain2.gain.setValueAtTime(0.001, startTime);
     gain2.gain.linearRampToValueAtTime(0.12 * volScale, startTime + 0.004);
     gain2.gain.exponentialRampToValueAtTime(0.001, startTime + Math.min(0.08, duration));
 
-    // Conexões
     osc1.connect(gain1);
     osc2.connect(gain2);
-
     gain1.connect(bodyFilter);
     gain2.connect(bodyFilter);
 
     bodyFilter.connect(hpFilter);
     hpFilter.connect(master);
-    hpFilter.connect(fxBusNode);
+    if (fxBus) hpFilter.connect(fxBus);
 
     osc1.start(startTime);
     osc2.start(startTime);
     osc1.stop(startTime + duration + 0.05);
     osc2.stop(startTime + duration + 0.05);
 
-    activeNodes.push(osc1, osc2);
+    if (!isOffline) activeNodes.push(osc1, osc2);
+  }
+
+  function schedulePatternNotes(ctx, masterGain, fxBus, baseStartTime, isOffline = false) {
+    const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
+    const humanizePct = parseInt(document.getElementById('humanizeInput').value) || 0;
+    const swingPct = parseInt(document.getElementById('swingInput').value) || 0;
+
+    const secondsPerBeat = 60 / bpm;
+    const events = generateEvents();
+    const style = document.getElementById('patternStyle').value;
+
+    events.forEach(e => {
+      let beatPos = e.beat;
+      if (swingPct > 0 && Math.floor(beatPos * 2) % 2 === 1) {
+        beatPos += (swingPct / 100) * 0.25;
+      }
+
+      let timeOffset = 0;
+      if (humanizePct > 0) {
+        timeOffset = (Math.random() - 0.5) * (humanizePct / 100) * 0.04;
+      }
+
+      const startTime = Math.max(baseStartTime, baseStartTime + (beatPos * secondsPerBeat) + timeOffset);
+      const duration = Math.max(0.08, e.durationBeats * secondsPerBeat);
+
+      e.notes.forEach(noteName => {
+        const freq = noteToFreq(noteName);
+
+        let volHumanize = 1;
+        if (humanizePct > 0) {
+          volHumanize = 1 - (Math.random() * (humanizePct / 100) * 0.3);
+        }
+
+        if (style === 'logdrum') {
+          triggerLogdrumVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
+        } else if (style === 'rhodes') {
+          triggerRhodesVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
+        } else if (style === 'viola') {
+          triggerViolaVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
+        }
+      });
+    });
   }
 
   async function previewPattern() {
@@ -1468,53 +1532,17 @@
       if (audioCtx.state === 'suspended') await audioCtx.resume();
 
       const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
-      const humanizePct = parseInt(document.getElementById('humanizeInput').value) || 0;
-      const swingPct = parseInt(document.getElementById('swingInput').value) || 0;
-
       const secondsPerBeat = 60 / bpm;
-      const events = generateEvents();
-      const style = document.getElementById('patternStyle').value;
-      const tuning = document.getElementById('tuningSelect').value;
       const now = audioCtx.currentTime + 0.05;
 
-      events.forEach(e => {
-        let beatPos = e.beat;
-        if (swingPct > 0 && Math.floor(beatPos * 2) % 2 === 1) {
-          beatPos += (swingPct / 100) * 0.25;
-        }
-
-        let timeOffset = 0;
-        if (humanizePct > 0) {
-          timeOffset = (Math.random() - 0.5) * (humanizePct / 100) * 0.04;
-        }
-
-        const startTime = Math.max(now, now + (beatPos * secondsPerBeat) + timeOffset);
-        const duration = Math.max(0.08, e.durationBeats * secondsPerBeat);
-
-        e.notes.forEach(noteName => {
-          const freq = noteToFreq(noteName);
-
-          let volHumanize = 1;
-          if (humanizePct > 0) {
-            volHumanize = 1 - (Math.random() * (humanizePct / 100) * 0.3);
-          }
-
-          if (style === 'logdrum') {
-            triggerLogdrumVoice(freq, startTime, duration, volHumanize);
-          } else if (style === 'rhodes') {
-            triggerRhodesVoice(freq, startTime, duration, volHumanize);
-          } else if (style === 'viola') {
-            triggerViolaVoice(freq, startTime, duration, volHumanize);
-          }
-        });
-      });
+      schedulePatternNotes(audioCtx, masterGain, fxBusNode, now, false);
 
       isPlaying = true;
       playbackStartTime = now;
       totalLoopDurationSec = 32 * secondsPerBeat;
       updatePlayhead();
 
-      document.getElementById('statusMessage').innerText = `▶ Executando loop Pro Synthesizer (${bpm} BPM | ${tuning} Hz | FM/ADSR FX Ativo).`;
+      document.getElementById('statusMessage').innerText = `▶ Executando loop em tempo real (${bpm} BPM).`;
 
     } catch (err) {
       document.getElementById('statusMessage').innerText = "⚠️ Erro de execução: " + err.message;
