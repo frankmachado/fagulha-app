@@ -25,6 +25,10 @@
     }
   </script>
 
+  <!-- FIREBASE AUTHENTICATION (COMPAT SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <script src="https://unpkg.com/@tonejs/midi"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -163,6 +167,15 @@
       background: rgba(217, 119, 54, 0.25); border-color: var(--accent-terracotta); color: var(--accent-sand);
     }
     .btn-save-fagulha:hover { background: var(--brand-gradient); color: #FFF; }
+
+    .btn-auth {
+      background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: #FFF;
+    }
+    .btn-auth:hover { background: rgba(255, 255, 255, 0.15); }
+
+    .user-avatar {
+      width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
+    }
 
     .btn-panic {
       background: rgba(180, 40, 40, 0.2); border-color: rgba(220, 60, 60, 0.4); color: #FF8888;
@@ -395,7 +408,7 @@
 
   <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--card-border); text-align: left;">
     <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand);">PLANO ATIVO</div>
-    <div style="font-size: 13px; font-weight: 800; color: #FFF;">Pro Unlimited • v2.4.0</div>
+    <div style="font-size: 13px; font-weight: 800; color: #FFF;" id="userPlanDisplay">Free • Visitante</div>
   </div>
 </aside>
 
@@ -420,6 +433,11 @@
     </div>
 
     <div class="top-nav-group">
+      <!-- BOTÃO DE LOGIN / PERFIL DO FIREBASE -->
+      <button id="authBtn" class="btn-top btn-auth" onclick="handleAuth()">
+        <span>Entrar com Google</span>
+      </button>
+
       <div class="vol-control">
         <span>VOL</span>
         <input type="range" id="masterVolume" min="0" max="100" value="80" style="width: 70px;" oninput="updateMasterVolume(this.value)">
@@ -613,6 +631,60 @@
 </div>
 
 <script>
+  /* CONFIGURAÇÃO DO FIREBASE */
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzpjzyHaqAO6dEzP4MOWzkJy62JwCSP7o",
+    authDomain: "siara-engine.firebaseapp.com",
+    projectId: "siara-engine",
+    storageBucket: "siara-engine.firebasestorage.app",
+    messagingSenderId: "725069613479",
+    appId: "1:725069613479:web:69f853fbc90ffed4270e82",
+    measurementId: "G-XS9K4EL2BH"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  let currentUser = null;
+
+  /* MONITORAMENTO DO STATUS DE LOGIN */
+  auth.onAuthStateChanged((user) => {
+    currentUser = user;
+    const authBtn = document.getElementById('authBtn');
+    const userPlanDisplay = document.getElementById('userPlanDisplay');
+
+    if (user) {
+      const avatarUrl = user.photoURL || '';
+      const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Produtor';
+      authBtn.innerHTML = `${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar" />` : '👤'} <span>${firstName}</span>`;
+      authBtn.title = `Conectado como ${user.email} (Clique para sair)`;
+      userPlanDisplay.innerText = "Pro Unlimited • v2.4.0";
+      userPlanDisplay.style.color = "var(--accent-ochre)";
+    } else {
+      authBtn.innerHTML = `<span>Entrar com Google</span>`;
+      authBtn.title = "Clique para entrar com sua conta Google";
+      userPlanDisplay.innerText = "Free • Visitante";
+      userPlanDisplay.style.color = "#FFF";
+    }
+  });
+
+  /* LÓGICA DE LOGIN / LOGOUT VIA GOOGLE */
+  function handleAuth() {
+    if (currentUser) {
+      if (confirm("Deseja sair da sua conta?")) {
+        auth.signOut().then(() => {
+          document.getElementById('statusMessage').innerText = "Sessão encerrada com sucesso.";
+        });
+      }
+    } else {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).then((result) => {
+        document.getElementById('statusMessage').innerText = `Bem-vindo, ${result.user.displayName}!`;
+      }).catch((error) => {
+        document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
+      });
+    }
+  }
+
   let audioCtx = null;
   let masterGainNode = null;
   let fxBusNode = null;
@@ -622,13 +694,11 @@
   let tapTimes = [];
   let currentChordType = 'triads';
 
-  /* COLE AQUI A URL GERADA NO PASSO 1 DO MAKE */
+  /* URL DO MAKE */
   const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/810rdqwcg9y5aqmmllwwhrrq67jf2q36";
 
-  /* CONTROLE DE VOZES ATIVAS PARA SUSTAIN REAL (KEY UP / KEY DOWN) */
   const activeKeyVoices = {};
 
-  /* VARIÁVEIS DE ANIMAÇÃO DO PLAYHEAD */
   let isPlaying = false;
   let playbackStartTime = 0;
   let totalLoopDurationSec = 0;
@@ -721,7 +791,7 @@
     lastTapTime = now;
   }
 
-  /* FUNÇÃO DE DISPARO PARA O MAKE (SALVAR FAGULHA) */
+  /* FUNÇÃO DE DISPARO PARA O MAKE (INCLUI DADOS DO USUÁRIO LOGADO) */
   async function sendFagulhaToMake() {
     if (!MAKE_WEBHOOK_URL || MAKE_WEBHOOK_URL.includes("SUA_URL_DO_MAKE_AQUI")) {
       document.getElementById('statusMessage').innerText = "⚠️ Cole sua URL do Make na variável MAKE_WEBHOOK_URL do código!";
@@ -730,6 +800,8 @@
 
     const payload = {
       timestamp: new Date().toLocaleString('pt-BR'),
+      userEmail: currentUser ? currentUser.email : 'Anônimo / Não Logado',
+      userName: currentUser ? currentUser.displayName : 'Visitante',
       root: document.getElementById('rootNote').value,
       scale: document.getElementById('scaleType').value,
       bpm: document.getElementById('bpmInput').value,
@@ -907,7 +979,6 @@
     });
   }
 
-  /* SISTEMA DE SUSTAIN INTERATIVO EM TEMPO REAL */
   function startLiveNote(noteName) {
     const masterGain = getMasterGain();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
@@ -1500,7 +1571,6 @@
     }
   }
 
-  /* OSCILADORES DE SÍNTESE - MODOS PATTERN (LOOP AUTOMÁTICO) */
   function triggerRhodesVoice(ctx, master, fxBus, freq, startTime, duration, volScale, isOffline) {
     const carrier = ctx.createOscillator();
     const carrierGain = ctx.createGain();
@@ -1602,7 +1672,6 @@
     if (!isOffline) activeNodes.push(osc1, osc2);
   }
 
-  /* OSCILADORES DE INTERAÇÃO AO VIVO COM SUSTAIN (KEY DOWN / KEY UP) */
   function startRhodesLiveVoice(ctx, master, fxBus, freq) {
     const now = ctx.currentTime;
     const carrier = ctx.createOscillator();
@@ -1855,7 +1924,7 @@
     document.getElementById('statusMessage').innerText = `MIDI exportado em ${tuning}Hz com Humanize (${humanizePct}%) e Swing (${swingPct}%)!`;
   }
 
-  /* EVENT LISTENERS PARA TECLADO (KEYDOWN = SUSTAIN / KEYUP = RELEASE) */
+  /* EVENT LISTENERS PARA TECLADO */
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
     if (e.repeat) return;
