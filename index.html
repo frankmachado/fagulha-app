@@ -4,6 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Siará Engine - Pro SaaS v2.4.0</title>
+
+  <!-- REQUISITOS PWA & MANIFEST -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#C85A17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Siará Engine">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <!-- REGISTRO AUTOMÁTICO DO SERVICE WORKER -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker registrado com sucesso!', reg))
+          .catch(err => console.error('Erro ao registrar Service Worker:', err));
+      });
+    }
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <script src="https://unpkg.com/@tonejs/midi"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
