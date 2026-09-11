@@ -1869,7 +1869,16 @@
     }
   }
 
+  /* EXPORTAR MIDI COM TRAVA DE LOGIN */
   function exportMIDI() {
+    if (!currentUser) {
+      document.getElementById('statusMessage').innerText = "🔒 Recurso Pro: Faça login com o Google para liberar o download do arquivo MIDI!";
+      setTimeout(() => {
+        handleAuth();
+      }, 1500);
+      return;
+    }
+
     const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
     const tuning = parseFloat(document.getElementById('tuningSelect').value) || 440;
     const humanizePct = parseInt(document.getElementById('humanizeInput').value) || 0;
@@ -1921,7 +1930,7 @@
     link.download = `Siara_${root}_${style}_${varType}_${bpm}BPM_${tuning}Hz.mid`;
     link.click();
     
-    document.getElementById('statusMessage').innerText = `MIDI exportado em ${tuning}Hz com Humanize (${humanizePct}%) e Swing (${swingPct}%)!`;
+    document.getElementById('statusMessage').innerText = `⚡ Download concluído por ${currentUser.displayName}! MIDI em ${tuning}Hz exportado.`;
   }
 
   /* EVENT LISTENERS PARA TECLADO */
