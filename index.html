@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Siará Engine - Pro SaaS v2.6.0</title>
+  <title>Fagulha - Pro SaaS v2.6.0</title>
 
   <!-- REQUISITOS PWA & MANIFEST -->
   <link rel="manifest" href="manifest.json">
@@ -11,7 +11,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Siará Engine">
+  <meta name="apple-mobile-web-app-title" content="Fagulha">
   <link rel="apple-touch-icon" href="icon-192.png">
 
   <!-- REGISTRO AUTOMÁTICO DO SERVICE WORKER -->
@@ -25,10 +25,11 @@
     }
   </script>
 
-  <!-- FIREBASE AUTHENTICATION & FIRESTORE (COMPAT SDK) -->
+  <!-- FIREBASE AUTHENTICATION, FIRESTORE & ANALYTICS (COMPAT SDK) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <script src="https://unpkg.com/@tonejs/midi"></script>
@@ -369,7 +370,7 @@
       </svg>
     </div>
     <div style="text-align: left;">
-      <div style="font-weight: 800; font-size: 15px;">Fagulha App</div>
+      <div style="font-weight: 800; font-size: 15px;">Fagulha</div>
       <div style="font-size: 11px; color: var(--text-muted);">Pro Studio Hub</div>
     </div>
   </div>
@@ -470,7 +471,7 @@
   <!-- VIEW 1: GERADOR -->
   <div id="viewGenerator" class="app-card">
     <div class="header">
-      <h1 class="brand-title">Siará <span>Engine</span></h1>
+      <h1 class="brand-title">Fagulha <span>Engine</span></h1>
       <span class="status-badge" id="tuningBadge">440 Hz STANDARD</span>
     </div>
 
@@ -552,7 +553,7 @@
 
     <div class="console-toast">
       <div class="status-dot"></div>
-      <span id="statusMessage">Siará Scale Engine pronto para processar.</span>
+      <span id="statusMessage">Fagulha Scale Engine pronto para processar.</span>
     </div>
   </div>
 
@@ -704,7 +705,46 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
+  
+  // INICIALIZAÇÃO DO FIREBASE ANALYTICS
+  let analytics = null;
+  if (firebase.analytics) {
+    analytics = firebase.analytics();
+  }
+
   let currentUser = null;
+
+  /* RASTREAMENTO DE TEMPO DE PERMANÊNCIA POR MÓDULO (ANALYTICS) */
+  let moduloAtual = 'generator';
+  let tempoEntradaModulo = Date.now();
+
+  function registrarTempoModulo(novoModulo) {
+    if (moduloAtual === novoModulo) return;
+
+    const tempoAgora = Date.now();
+    const tempoGastoSegundos = Math.round((tempoAgora - tempoEntradaModulo) / 1000);
+
+    if (tempoGastoSegundos >= 2 && analytics) {
+      analytics.logEvent('tempo_em_modulo', {
+        modulo_nome: moduloAtual,
+        duracao_segundos: tempoGastoSegundos
+      });
+      console.log(`[Analytics] Tempo gasto em '${moduloAtual}': ${tempoGastoSegundos}s`);
+    }
+
+    moduloAtual = novoModulo;
+    tempoEntradaModulo = Date.now();
+  }
+
+  window.addEventListener('beforeunload', () => {
+    const tempoGastoSegundos = Math.round((Date.now() - tempoEntradaModulo) / 1000);
+    if (tempoGastoSegundos >= 2 && analytics) {
+      analytics.logEvent('tempo_em_modulo', {
+        modulo_nome: moduloAtual,
+        duracao_segundos: tempoGastoSegundos
+      });
+    }
+  });
 
   /* MONITORAMENTO DO STATUS DE LOGIN */
   auth.onAuthStateChanged((user) => {
@@ -756,8 +796,8 @@
   let tapTimes = [];
   let currentChordType = 'triads';
 
-  /* URL DO MAKE */
-  const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/810rdqwcg9y5aqmmllwwhrrq67jf2q36";
+  /* URL DO MAKE DO FAGULHA */
+  const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/h56x3v4wyds3scsl4gqc5ui77hqljgp1";
 
   const activeKeyVoices = {};
 
@@ -902,7 +942,7 @@
       await db.collection('fagulhas').add(sparkData);
 
       // 2. Dispara o Webhook para o Make
-      if (MAKE_WEBHOOK_URL && !MAKE_WEBHOOK_URL.includes("SUA_URL_DO_MAKE_AQUI")) {
+      if (MAKE_WEBHOOK_URL) {
         fetch(MAKE_WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1008,6 +1048,10 @@
 
   function switchView(viewName) {
     stopAudio();
+    
+    // Rastreia o tempo que o usuário passou na aba anterior
+    registrarTempoModulo(viewName);
+
     const gen = document.getElementById('viewGenerator');
     const lib = document.getElementById('viewLibrary');
     const pre = document.getElementById('viewPresets');
@@ -2102,7 +2146,7 @@
     const blob = new Blob([midi.toArray()], { type: "audio/midi" });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `Siara_${root}_${style}_${varType}_${bpm}BPM_${tuning}Hz.mid`;
+    link.download = `Fagulha_${root}_${style}_${varType}_${bpm}BPM_${tuning}Hz.mid`;
     link.click();
     
     document.getElementById('statusMessage').innerText = `⚡ Download concluído por ${currentUser.displayName}! MIDI em ${tuning}Hz exportado.`;
