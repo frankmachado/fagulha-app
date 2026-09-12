@@ -34,10 +34,10 @@
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <script src="https://unpkg.com/@tonejs/midi"></script>
   
-  <!-- FONTE TIPOGRÁFICA: SORA VIA GOOGLE FONTS -->
+  <!-- FONTE TIPOGRÁFICA: SORA + SYNE VIA GOOGLE FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -59,9 +59,25 @@
       --sidebar-width: 270px;
     }
 
+    /* REGRA GLOBAL DA FONTE DE LEITURA (SORA) */
     * { 
       box-sizing: border-box;
       font-family: 'Sora', sans-serif;
+    }
+
+    /* REGRA DE TÍTULOS E MARCA (SYNE) */
+    h1, h2, h3, h4, 
+    .brand-title, 
+    .sidebar-brand div div:first-child,
+    .nav-title, 
+    .status-badge,
+    .preset-title,
+    .spark-info-title,
+    .chord-symbol,
+    .scale-title,
+    .piano-roll-header span {
+      font-family: 'Syne', sans-serif !important;
+      letter-spacing: -0.3px;
     }
 
     body {
