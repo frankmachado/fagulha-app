@@ -295,6 +295,17 @@
     .btn-shortcut-icon { width: 34px; padding: 0 !important; font-family: monospace; font-weight: 700; }
 
     @media (max-width: 700px) {
+      .sidebar {
+        width: min(80vw, 260px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      }
+      .sidebar.collapsed {
+        transform: translateX(-105%);
+      }
+      .main-wrapper {
+        margin-left: 0;
+        padding: 16px 12px 24px;
+      }
       .controls-grid {
         grid-template-columns: 1fr;
       }
