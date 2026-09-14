@@ -467,6 +467,11 @@
       display: flex; justify-content: space-between; align-items: center;
       padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 12px;
     }
+    .faq-list { display: grid; gap: 8px; max-height: 60vh; overflow-y: auto; }
+    .faq-item { border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; background: rgba(255, 255, 255, 0.025); }
+    .faq-item summary { padding: 11px 12px; cursor: pointer; color: var(--text-main); font-size: 12px; font-weight: 700; }
+    .faq-item summary::marker { color: var(--accent-ochre); }
+    .faq-answer { padding: 0 12px 11px; color: var(--text-muted); font-size: 11px; line-height: 1.5; }
     .kbd-badge {
       background: var(--input-bg); border: 1px solid var(--input-border); color: var(--accent-sand);
       padding: 3px 6px; border-radius: 4px; font-family: monospace; font-size: 10px; font-weight: 700;
@@ -581,7 +586,7 @@
         <option value="en">EN</option>
         <option value="es">ES</option>
       </select>
-      <button class="btn-top btn-shortcut-icon" onclick="openShortcutsModal()" data-i18n-title="keyboardShortcuts" title="Atalhos de Teclado">
+      <button class="btn-top btn-shortcut-icon" onclick="openShortcutsModal()" data-i18n-title="faqTitle" title="Dúvidas Frequentes">
         ?
       </button>
 
@@ -912,32 +917,16 @@
 <div id="shortcutsModal" class="modal-overlay" onclick="closeShortcutsModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: #FFF; font-size: 16px;" data-i18n="keyboardShortcutsText">Atalhos de Teclado</h3>
+      <h3 style="margin: 0; color: #FFF; font-size: 16px;" data-i18n="faqTitle">Dúvidas Frequentes</h3>
       <span style="cursor: pointer; font-weight: 700;" onclick="closeShortcutsModal()">✕</span>
     </div>
-    <div class="shortcut-row">
-      <span data-i18n="shortcutScale">Tocar Graus da Escala (Hold = Sustenta, Release = Solta)</span>
-      <span class="kbd-badge">1..7</span>
-    </div>
-    <div class="shortcut-row">
-      <span data-i18n="shortcutNotes">Notas Fixas Absolutas</span>
-      <span class="kbd-badge">C..B</span>
-    </div>
-    <div class="shortcut-row">
-      <span data-i18n="shortcutPlay">Escutar / Pausar Loop</span>
-      <span class="kbd-badge">ESPAÇO</span>
-    </div>
-    <div class="shortcut-row">
-      <span data-i18n="shortcutMute">Emergency Mute (Panic)</span>
-      <span class="kbd-badge">ESC</span>
-    </div>
-    <div class="shortcut-row">
-      <span data-i18n="shortcutTap">Calcular Tap Tempo</span>
-      <span class="kbd-badge">T</span>
-    </div>
-    <div class="shortcut-row">
-      <span data-i18n="shortcutMenu">Alternar Menu Lateral</span>
-      <span class="kbd-badge">M</span>
+    <div class="faq-list">
+      <details class="faq-item"><summary data-i18n="faqGeneratorQuestion">Como crio um loop?</summary><div class="faq-answer" data-i18n="faqGeneratorAnswer">Escolha a tônica, a escala, o instrumento e o groove. Depois clique em Escutar Loop para ouvir o resultado.</div></details>
+      <details class="faq-item"><summary data-i18n="faqHarmonizerQuestion">Para que serve o Harmonizador?</summary><div class="faq-answer" data-i18n="faqHarmonizerAnswer">Ele mostra os acordes possíveis da escala ativa. Você pode trocar a tônica, o instrumento e a escala sem sair da tela.</div></details>
+      <details class="faq-item"><summary data-i18n="faqInstrumentQuestion">Como troco o instrumento?</summary><div class="faq-answer" data-i18n="faqInstrumentAnswer">Use o seletor Instrumento no gerador ou o seletor rápido dentro do Harmonizador.</div></details>
+      <details class="faq-item"><summary data-i18n="faqPhotoQuestion">Como salvo minha foto de perfil?</summary><div class="faq-answer" data-i18n="faqPhotoAnswer">Abra Meu Perfil, escolha uma imagem e clique em Salvar foto. A imagem é ajustada para o formato do avatar.</div></details>
+      <details class="faq-item"><summary data-i18n="faqLanguageQuestion">Como mantenho meu idioma?</summary><div class="faq-answer" data-i18n="faqLanguageAnswer">Escolha PT, EN ou ES no menu superior. A preferência fica salva neste navegador.</div></details>
+      <details class="faq-item"><summary data-i18n="faqMidiQuestion">Como exporto um arquivo MIDI?</summary><div class="faq-answer" data-i18n="faqMidiAnswer">Faça login, configure seu loop e clique em Exportar MIDI. O arquivo será baixado automaticamente.</div></details>
     </div>
   </div>
 </div>
@@ -989,7 +978,13 @@
       shortcutScale: 'Tocar Graus da Escala (Hold = Sustenta, Release = Solta)', shortcutNotes: 'Notas Fixas Absolutas',
       shortcutPlay: 'Escutar / Pausar Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calcular Tap Tempo', shortcutMenu: 'Alternar Menu Lateral',
       language: 'Idioma', saveLoopTitle: 'Salvar o loop atual na sua biblioteca', tapTempoTitle: 'Clique no ritmo para definir o BPM',
-      stopTitle: 'Interromper todos os áudios', keyboardShortcuts: 'Atalhos de Teclado', displayNamePlaceholder: 'Ex: Produtor Siara',
+      stopTitle: 'Interromper todos os áudios', keyboardShortcuts: 'Atalhos de Teclado', faqTitle: 'Dúvidas Frequentes', displayNamePlaceholder: 'Ex: Produtor Siara',
+      faqGeneratorQuestion: 'Como crio um loop?', faqGeneratorAnswer: 'Escolha a tônica, a escala, o instrumento e o groove. Depois clique em Escutar Loop para ouvir o resultado.',
+      faqHarmonizerQuestion: 'Para que serve o Harmonizador?', faqHarmonizerAnswer: 'Ele mostra os acordes possíveis da escala ativa. Você pode trocar a tônica, o instrumento e a escala sem sair da tela.',
+      faqInstrumentQuestion: 'Como troco o instrumento?', faqInstrumentAnswer: 'Use o seletor Instrumento no gerador ou o seletor rápido dentro do Harmonizador.',
+      faqPhotoQuestion: 'Como salvo minha foto de perfil?', faqPhotoAnswer: 'Abra Meu Perfil, escolha uma imagem e clique em Salvar foto. A imagem é ajustada para o formato do avatar.',
+      faqLanguageQuestion: 'Como mantenho meu idioma?', faqLanguageAnswer: 'Escolha PT, EN ou ES no menu superior. A preferência fica salva neste navegador.',
+      faqMidiQuestion: 'Como exporto um arquivo MIDI?', faqMidiAnswer: 'Faça login, configure seu loop e clique em Exportar MIDI. O arquivo será baixado automaticamente.',
       bioPlaceholder: 'Conte um pouco sobre seu estilo musical, ritmos favoritos ou produções...', loopNamePlaceholder: 'Ex: Bassline Baião Trap',
       notesVibePlaceholder: 'Ex: Usar como introdução na faixa principal',
       presetSertaoTitle: 'Sertão Neo-Soul Pack', presetSertaoDescription: 'Acordes aveludados em Lá Lídio Nordestino com Rhodes expansivo em 113 BPM.', presetSertaoTag: '🎹 Rhodes • 113 BPM',
@@ -1014,7 +1009,13 @@
       cancel: 'Cancel', saveToCloud: '⚡ Save to Cloud', keyboardShortcutsText: 'Keyboard Shortcuts', shortcutScale: 'Play Scale Degrees (Hold = Sustain, Release = Stop)',
       shortcutNotes: 'Absolute Fixed Notes', shortcutPlay: 'Play / Pause Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calculate Tap Tempo',
       shortcutMenu: 'Toggle Sidebar', language: 'Language', saveLoopTitle: 'Save the current loop to your library', tapTempoTitle: 'Tap the rhythm to set the BPM',
-      stopTitle: 'Stop all audio', keyboardShortcuts: 'Keyboard Shortcuts', displayNamePlaceholder: 'E.g. Producer Siara',
+      stopTitle: 'Stop all audio', keyboardShortcuts: 'Keyboard Shortcuts', faqTitle: 'Frequently Asked Questions', displayNamePlaceholder: 'E.g. Producer Siara',
+      faqGeneratorQuestion: 'How do I create a loop?', faqGeneratorAnswer: 'Choose the root, scale, instrument and groove, then click Listen to Loop to hear the result.',
+      faqHarmonizerQuestion: 'What is the Harmonizer for?', faqHarmonizerAnswer: 'It shows the chords available in the active scale. You can change the root, instrument and scale without leaving the screen.',
+      faqInstrumentQuestion: 'How do I change the instrument?', faqInstrumentAnswer: 'Use the Instrument selector in the generator or the quick selector inside the Harmonizer.',
+      faqPhotoQuestion: 'How do I save my profile photo?', faqPhotoAnswer: 'Open My Profile, choose an image and click Save photo. The image is adjusted to the avatar format.',
+      faqLanguageQuestion: 'How do I keep my language?', faqLanguageAnswer: 'Choose PT, EN or ES in the top menu. The preference is saved in this browser.',
+      faqMidiQuestion: 'How do I export a MIDI file?', faqMidiAnswer: 'Sign in, configure your loop and click Export MIDI. The file will download automatically.',
       bioPlaceholder: 'Tell us about your musical style, favorite rhythms or productions...', loopNamePlaceholder: 'E.g. Bassline Baião Trap',
       notesVibePlaceholder: 'E.g. Use as an intro for the main track',
       presetSertaoTitle: 'Sertão Neo-Soul Pack', presetSertaoDescription: 'Velvety chords in A Northeast Lydian with expansive Rhodes at 113 BPM.', presetSertaoTag: '🎹 Rhodes • 113 BPM',
@@ -1039,7 +1040,13 @@
       cancel: 'Cancelar', saveToCloud: '⚡ Guardar en la nube', keyboardShortcutsText: 'Atajos de teclado', shortcutScale: 'Tocar grados de la escala (Mantener = sostener, soltar = parar)',
       shortcutNotes: 'Notas fijas absolutas', shortcutPlay: 'Escuchar / pausar loop', shortcutMute: 'Silencio de emergencia (Panic)', shortcutTap: 'Calcular Tap Tempo',
       shortcutMenu: 'Alternar menú lateral', language: 'Idioma', saveLoopTitle: 'Guardar el loop actual en tu biblioteca', tapTempoTitle: 'Toca el ritmo para definir el BPM',
-      stopTitle: 'Interrumpir todos los audios', keyboardShortcuts: 'Atajos de teclado', displayNamePlaceholder: 'Ej.: Productor Siara',
+      stopTitle: 'Interrumpir todos los audios', keyboardShortcuts: 'Atajos de teclado', faqTitle: 'Preguntas frecuentes', displayNamePlaceholder: 'Ej.: Productor Siara',
+      faqGeneratorQuestion: '¿Cómo creo un loop?', faqGeneratorAnswer: 'Elige la tónica, la escala, el instrumento y el groove. Después pulsa Escuchar loop para oír el resultado.',
+      faqHarmonizerQuestion: '¿Para qué sirve el Armonizador?', faqHarmonizerAnswer: 'Muestra los acordes posibles de la escala activa. Puedes cambiar la tónica, el instrumento y la escala sin salir de la pantalla.',
+      faqInstrumentQuestion: '¿Cómo cambio el instrumento?', faqInstrumentAnswer: 'Usa el selector Instrumento en el generador o el selector rápido dentro del Armonizador.',
+      faqPhotoQuestion: '¿Cómo guardo mi foto de perfil?', faqPhotoAnswer: 'Abre Mi perfil, elige una imagen y pulsa Guardar foto. La imagen se ajusta al formato del avatar.',
+      faqLanguageQuestion: '¿Cómo mantengo mi idioma?', faqLanguageAnswer: 'Elige PT, EN o ES en el menú superior. La preferencia queda guardada en este navegador.',
+      faqMidiQuestion: '¿Cómo exporto un archivo MIDI?', faqMidiAnswer: 'Inicia sesión, configura tu loop y pulsa Exportar MIDI. El archivo se descargará automáticamente.',
       bioPlaceholder: 'Cuéntanos sobre tu estilo musical, ritmos favoritos o producciones...', loopNamePlaceholder: 'Ej.: Bassline Baião Trap',
       notesVibePlaceholder: 'Ej.: Usar como introducción de la canción principal',
       presetSertaoTitle: 'Pack Sertão Neo-Soul', presetSertaoDescription: 'Acordes aterciopelados en La Lidio nordestino con Rhodes expansivo a 113 BPM.', presetSertaoTag: '🎹 Rhodes • 113 BPM',
