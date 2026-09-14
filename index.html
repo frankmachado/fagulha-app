@@ -63,7 +63,6 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* TÍTULOS E NAVEGAÇÃO COM PLUS JAKARTA SANS (ESTILO MOISES.AI) */
     h1, h2, h3, h4, 
     .brand-title, 
     .sidebar-brand div div:first-child,
@@ -102,7 +101,7 @@
       top: -150px; left: -100px; z-index: 0; pointer-events: none;
     }
 
-    /* SIDEBAR ESTILO MOISES (MINIMALISTA) */
+    /* SIDEBAR ESTILO MOISES */
     .sidebar {
       width: var(--sidebar-width); height: 100vh;
       background: var(--sidebar-bg); border-right: 1px solid rgba(255, 255, 255, 0.04);
@@ -177,7 +176,7 @@
       display: flex; align-items: center; justify-content: space-between;
       gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
     }
-    .top-nav-group { display: flex; align-items: center; gap: 8px; }
+    .top-nav-group { display: flex; align-items: center; gap: 8px; position: relative; }
 
     .btn-top {
       background: transparent; border: 1px solid transparent;
@@ -203,6 +202,22 @@
     .user-avatar {
       width: 20px; height: 20px; border-radius: 50%; object-fit: cover;
     }
+
+    /* DROPDOWN MENU DO USUÁRIO */
+    .user-dropdown-menu {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: var(--sidebar-bg); border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px; width: 180px; padding: 6px; display: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 60;
+    }
+    .user-dropdown-menu.show { display: block; }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      border-radius: 6px; cursor: pointer; transition: all 0.2s;
+    }
+    .dropdown-item:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
+    .dropdown-item.logout:hover { color: #FF9999; background: rgba(220, 60, 60, 0.15); }
 
     .btn-panic {
       background: rgba(180, 40, 40, 0.12); border: 1px solid rgba(220, 60, 60, 0.25); color: #FF9999;
@@ -249,17 +264,22 @@
       margin-bottom: 8px;
     }
 
-    select, input[type="number"], input[type="text"] {
+    select, input[type="number"], input[type="text"], textarea {
       width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
       color: var(--text-main); padding: 12px 14px; border-radius: 10px;
       font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; outline: none;
       transition: all 0.2s ease;
     }
 
+    /* ELEMENTO DE BPM INTELIGENTE */
+    .bpm-input-wrapper { display: flex; gap: 6px; }
+    .bpm-input-wrapper input { flex: 1; text-align: center; font-weight: 700; }
+    .bpm-input-wrapper select { width: 110px; font-size: 11px; }
+
     optgroup { background-color: #140E0B; color: var(--accent-sand); font-weight: 700; }
     option { background-color: #1C1511 !important; color: #F5EFE6 !important; padding: 10px; font-weight: 500; }
-    select:hover, input:hover { border-color: rgba(217, 119, 54, 0.3); background: rgba(255, 255, 255, 0.05); }
-    select:focus, input:focus {
+    select:hover, input:hover, textarea:hover { border-color: rgba(217, 119, 54, 0.3); background: rgba(255, 255, 255, 0.05); }
+    select:focus, input:focus, textarea:focus {
       border-color: var(--accent-terracotta); background: rgba(200, 90, 23, 0.08);
     }
 
@@ -371,6 +391,21 @@
     .spark-info-notes { font-size: 11px; color: var(--text-muted); }
     .spark-actions { display: flex; gap: 6px; }
 
+    /* ESTILOS DA TELA DEDICADA DE PERFIL (#profile) */
+    .profile-header-card {
+      display: flex; align-items: center; gap: 20px;
+      padding-bottom: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      margin-bottom: 24px; text-align: left;
+    }
+    .profile-avatar-large {
+      width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--accent-terracotta); box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .profile-section-title {
+      font-size: 12px; font-weight: 700; color: var(--accent-sand);
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px; text-align: left;
+    }
+
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100;
@@ -458,7 +493,6 @@
     </div>
   </div>
 
-  <!-- RODAPÉ DISCRETO ESTILO MOISES -->
   <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.03); text-align: left;">
     <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">PLANO ATIVO</div>
     <div style="font-size: 12px; font-weight: 700; color: var(--accent-sand);" id="userPlanDisplay">Visitante</div>
@@ -487,10 +521,19 @@
     </div>
 
     <div class="top-nav-group">
-      <!-- BOTÃO DE LOGIN / PERFIL DO FIREBASE -->
-      <button id="authBtn" class="btn-top btn-auth" onclick="handleAuth()">
+      <!-- BOTÃO DE LOGIN / PERFIL DO FIREBASE COM MENU DROPDOWN -->
+      <button id="authBtn" class="btn-top btn-auth" onclick="toggleUserDropdown()">
         <span>Entrar com Google</span>
       </button>
+
+      <div id="userDropdownMenu" class="user-dropdown-menu">
+        <div class="dropdown-item" onclick="switchView('profile'); toggleUserDropdown();">
+          <span>👤 Meu Perfil</span>
+        </div>
+        <div class="dropdown-item logout" onclick="auth.signOut(); toggleUserDropdown();">
+          <span>🚪 Sair da Conta</span>
+        </div>
+      </div>
 
       <div class="vol-control">
         <span>VOL</span>
@@ -525,9 +568,24 @@
           <option value="B">Si (B)</option>
         </select>
       </div>
+
+      <!-- SELETOR DE BPM INTELIGENTE COM DROPDOWN DE PRESETS -->
       <div class="input-field">
         <label>Andamento (BPM)</label>
-        <input type="number" id="bpmInput" value="113" min="60" max="180" onchange="onSettingChange()">
+        <div class="bpm-input-wrapper">
+          <input type="number" id="bpmInput" value="113" min="60" max="180" onchange="onSettingChange()">
+          <select id="bpmPresetSelect" onchange="selectBpmPreset(this.value)">
+            <option value="" disabled selected>Atalhos</option>
+            <option value="80">80 BPM (Lento)</option>
+            <option value="90">90 BPM (Boom Bap)</option>
+            <option value="100">100 BPM (Maracatu)</option>
+            <option value="113">113 BPM (Baião)</option>
+            <option value="120">120 BPM (Dance)</option>
+            <option value="128">128 BPM (House)</option>
+            <option value="140">140 BPM (Trap / Drill)</option>
+            <option value="160">160 BPM (Acelerado)</option>
+          </select>
+        </div>
       </div>
 
       <div class="input-field full-width">
@@ -646,9 +704,9 @@
     </div>
 
     <div class="keyboard-guide-card">
-      <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand);">🎹 LIVE KEYBOARD JAM:</div>
+      <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand);">🎹 LIVE KEYBOARD JAM (MAPEADO):</div>
       <div style="font-size: 11px; color: var(--text-main);">
-        Pressione <span class="kbd-badge">C..B</span> ou <span class="kbd-badge">1..7</span> no teclado para tocar e sustentar notas.
+        Pressione <span class="kbd-badge">1..7</span> para tocar os graus 1º a 7º da escala ativa ou <span class="kbd-badge">C..B</span> para notas fixas.
       </div>
     </div>
 
@@ -665,39 +723,60 @@
     </div>
   </div>
 
-</main>
-
-<!-- MODAL PARA EDITAÇÃO DE PERFIL DO USUÁRIO -->
-<div id="editProfileModal" class="modal-overlay" onclick="closeEditProfileModal()">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: #FFF; font-size: 16px;">👤 Perfil de Produtor</h3>
-      <span style="cursor: pointer; font-weight: 700; color: var(--text-muted);" onclick="closeEditProfileModal()">✕</span>
+  <!-- VIEW 5: TELA DEDICADA DE PERFIL (#profile) -->
+  <div id="viewProfile" class="app-card" style="display: none;">
+    <div class="header">
+      <h1 class="brand-title">Meu Perfil <span>de Produtor</span></h1>
+      <button class="btn btn-secondary" onclick="switchView('generator')" style="padding: 6px 12px; font-size: 11px;">Voltar ao Studio</button>
     </div>
 
-    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-      Atualize suas informações de exibição na plataforma.
-    </div>
-
-    <div class="input-field" style="margin-bottom: 12px;">
-      <label>Nome de Exibição</label>
-      <input type="text" id="profileNameInput" placeholder="Ex: Produtor Siara">
-    </div>
-
-    <div class="input-field" style="margin-bottom: 20px;">
-      <label>URL da Foto de Perfil (Avatar)</label>
-      <input type="text" id="profilePhotoInput" placeholder="https://exemplo.com/sua-foto.jpg">
-    </div>
-
-    <div style="display: flex; gap: 8px; justify-content: space-between; align-items: center;">
-      <button class="btn btn-secondary" onclick="auth.signOut(); closeEditProfileModal();" style="padding: 9px 12px; color: #FF9999; border-color: rgba(220,60,60,0.25);">Sair da Conta</button>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn btn-secondary" onclick="closeEditProfileModal()" style="padding: 9px 14px;">Cancelar</button>
-        <button class="btn btn-primary" onclick="saveUserProfile()" style="padding: 9px 18px;">Salvar</button>
+    <div class="profile-header-card">
+      <img id="profileLargeAvatar" src="https://ui-avatars.com/api/?name=Produtor&background=C85A17&color=fff" class="profile-avatar-large" />
+      <div>
+        <div id="profileHeaderName" style="font-size: 18px; font-weight: 800; color: #FFF;">Nome do Produtor</div>
+        <div id="profileHeaderEmail" style="font-size: 12px; color: var(--text-muted);">email@exemplo.com</div>
+        <div style="font-size: 11px; color: var(--accent-ochre); margin-top: 4px; font-weight: 600;" id="profileHeaderPlan">Plano Pro Unlimited</div>
       </div>
     </div>
+
+    <div class="profile-section-title">Informações de Exibição</div>
+
+    <div class="controls-grid" style="margin-bottom: 20px;">
+      <div class="input-field">
+        <label>Nome de Exibição / Produtor</label>
+        <input type="text" id="pageProfileName" placeholder="Ex: Produtor Siara">
+      </div>
+
+      <div class="input-field">
+        <label>URL da Foto de Perfil (Avatar)</label>
+        <input type="text" id="pageProfilePhoto" placeholder="https://exemplo.com/sua-foto.jpg">
+      </div>
+
+      <div class="input-field full-width">
+        <label>Bio / Apresentação Musical (Opcional)</label>
+        <textarea id="pageProfileBio" rows="3" placeholder="Conte um pouco sobre seu estilo musical, ritmos favoritos ou produções..."></textarea>
+      </div>
+    </div>
+
+    <div class="profile-section-title">Dados da Conta</div>
+    <div class="controls-grid" style="margin-bottom: 24px; opacity: 0.8;">
+      <div class="input-field">
+        <label>E-mail Vinculado</label>
+        <input type="text" id="pageProfileEmailDisabled" disabled style="cursor: not-allowed;">
+      </div>
+      <div class="input-field">
+        <label>ID do Produtor (Firebase UID)</label>
+        <input type="text" id="pageProfileUidDisabled" disabled style="cursor: not-allowed; font-family: monospace; font-size: 11px;">
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 20px;">
+      <button class="btn btn-secondary" onclick="auth.signOut();" style="color: #FF9999; border-color: rgba(220,60,60,0.25);">🚪 Sair da Conta</button>
+      <button class="btn btn-primary" onclick="savePageUserProfile()" style="padding: 10px 24px;">⚡ Salvar Alterações</button>
+    </div>
   </div>
-</div>
+
+</main>
 
 <!-- MODAL PARA SALVAR FAGULHA NOMEADA -->
 <div id="saveSparkModal" class="modal-overlay" onclick="closeSaveSparkModal()">
@@ -735,8 +814,12 @@
       <span style="cursor: pointer; font-weight: 700;" onclick="closeShortcutsModal()">✕</span>
     </div>
     <div class="shortcut-row">
-      <span>Notas / Graus (Hold = Sustenta, Release = Solta)</span>
-      <span class="kbd-badge">C..B / 1..7</span>
+      <span>Tocar Graus da Escala (Hold = Sustenta, Release = Solta)</span>
+      <span class="kbd-badge">1..7</span>
+    </div>
+    <div class="shortcut-row">
+      <span>Notas Fixas Absolutas</span>
+      <span class="kbd-badge">C..B</span>
     </div>
     <div class="shortcut-row">
       <span>Escutar / Pausar Loop</span>
@@ -818,51 +901,80 @@
     const userPlanDisplay = document.getElementById('userPlanDisplay');
 
     if (user) {
-      const avatarUrl = user.photoURL || '';
+      const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'P')}&background=C85A17&color=fff`;
       const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Produtor';
-      authBtn.innerHTML = `${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar" />` : '👤'} <span>${firstName}</span>`;
-      authBtn.title = `Conectado como ${user.email} (Clique para editar perfil)`;
+      
+      authBtn.innerHTML = `<img src="${avatarUrl}" class="user-avatar" /> <span>${firstName}</span> ▾`;
+      authBtn.title = `Conectado como ${user.email}`;
       userPlanDisplay.innerText = "Pro Unlimited";
       userPlanDisplay.style.color = "var(--accent-ochre)";
+      
       loadUserSparksFromFirestore();
+      populatePageProfileFields();
     } else {
       authBtn.innerHTML = `<span>Entrar com Google</span>`;
       authBtn.title = "Clique para entrar com sua conta Google";
       userPlanDisplay.innerText = "Visitante";
       userPlanDisplay.style.color = "var(--text-muted)";
       renderEmptyLibrary("Faça login com o Google para acessar sua biblioteca de fagulhas em nuvem.");
+      
+      if (window.location.hash === '#profile') {
+        switchView('generator');
+      }
     }
   });
 
-  /* LÓGICA DE AUTH / MODAL DE PERFIL */
-  function handleAuth() {
-    if (currentUser) {
-      openEditProfileModal();
-    } else {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).then((result) => {
-        document.getElementById('statusMessage').innerText = `Bem-vindo, ${result.user.displayName}!`;
-      }).catch((error) => {
-        document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
-      });
+  function toggleUserDropdown() {
+    if (!currentUser) {
+      handleAuth();
+      return;
     }
+    document.getElementById('userDropdownMenu').classList.toggle('show');
   }
 
-  function openEditProfileModal() {
+  window.addEventListener('click', (e) => {
+    const authBtn = document.getElementById('authBtn');
+    const dropdown = document.getElementById('userDropdownMenu');
+    if (!authBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+
+  function handleAuth() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).then((result) => {
+      document.getElementById('statusMessage').innerText = `Bem-vindo, ${result.user.displayName}!`;
+    }).catch((error) => {
+      document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
+    });
+  }
+
+  /* PREENCHE A PÁGINA DEDICADA DE PERFIL (#profile) */
+  function populatePageProfileFields() {
     if (!currentUser) return;
-    document.getElementById('profileNameInput').value = currentUser.displayName || '';
-    document.getElementById('profilePhotoInput').value = currentUser.photoURL || '';
-    document.getElementById('editProfileModal').style.display = 'flex';
+    const avatarUrl = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'P')}&background=C85A17&color=fff`;
+    
+    document.getElementById('profileLargeAvatar').src = avatarUrl;
+    document.getElementById('profileHeaderName').innerText = currentUser.displayName || "Produtor Fagulha";
+    document.getElementById('profileHeaderEmail').innerText = currentUser.email || "";
+    
+    document.getElementById('pageProfileName').value = currentUser.displayName || "";
+    document.getElementById('pageProfilePhoto').value = currentUser.photoURL || "";
+    document.getElementById('pageProfileEmailDisabled').value = currentUser.email || "";
+    document.getElementById('pageProfileUidDisabled').value = currentUser.uid || "";
+
+    db.collection('users').doc(currentUser.uid).get().then(doc => {
+      if (doc.exists && doc.data().bio) {
+        document.getElementById('pageProfileBio').value = doc.data().bio;
+      }
+    }).catch(()=>{});
   }
 
-  function closeEditProfileModal() {
-    document.getElementById('editProfileModal').style.display = 'none';
-  }
-
-  function saveUserProfile() {
+  function savePageUserProfile() {
     if (!currentUser) return;
-    const newName = document.getElementById('profileNameInput').value.trim();
-    const newPhoto = document.getElementById('profilePhotoInput').value.trim();
+    const newName = document.getElementById('pageProfileName').value.trim();
+    const newPhoto = document.getElementById('pageProfilePhoto').value.trim();
+    const newBio = document.getElementById('pageProfileBio').value.trim();
 
     document.getElementById('statusMessage').innerText = "⏳ Atualizando perfil...";
 
@@ -870,16 +982,29 @@
       displayName: newName || currentUser.displayName,
       photoURL: newPhoto || currentUser.photoURL
     }).then(() => {
-      closeEditProfileModal();
+      return db.collection('users').doc(currentUser.uid).set({
+        displayName: newName,
+        photoURL: newPhoto,
+        bio: newBio,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    }).then(() => {
       document.getElementById('statusMessage').innerText = "⚡ Perfil atualizado com sucesso!";
+      populatePageProfileFields();
       
-      const avatarUrl = currentUser.photoURL || '';
+      const avatarUrl = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'P')}&background=C85A17&color=fff`;
       const firstName = currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Produtor';
-      const authBtn = document.getElementById('authBtn');
-      authBtn.innerHTML = `${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar" />` : '👤'} <span>${firstName}</span>`;
+      document.getElementById('authBtn').innerHTML = `<img src="${avatarUrl}" class="user-avatar" /> <span>${firstName}</span> ▾`;
     }).catch((err) => {
       document.getElementById('statusMessage').innerText = "⚠️ Erro ao atualizar perfil: " + err.message;
     });
+  }
+
+  function selectBpmPreset(val) {
+    if (!val) return;
+    document.getElementById('bpmInput').value = parseInt(val);
+    document.getElementById('bpmPresetSelect').selectedIndex = 0;
+    onSettingChange();
   }
 
   let audioCtx = null;
@@ -1146,27 +1271,33 @@
     const lib = document.getElementById('viewLibrary');
     const pre = document.getElementById('viewPresets');
     const cho = document.getElementById('viewChords');
+    const pro = document.getElementById('viewProfile');
 
     document.getElementById('navGenerator').classList.remove('active');
     document.getElementById('navLibrary').classList.remove('active');
     document.getElementById('navPresets').classList.remove('active');
     document.getElementById('navChords').classList.remove('active');
 
+    gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none';
+
     if (viewName === 'generator') {
-      gen.style.display = 'block'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none';
+      gen.style.display = 'block';
       document.getElementById('navGenerator').classList.add('active');
       drawPianoRoll();
     } else if (viewName === 'library') {
-      gen.style.display = 'none'; lib.style.display = 'block'; pre.style.display = 'none'; cho.style.display = 'none';
+      lib.style.display = 'block';
       document.getElementById('navLibrary').classList.add('active');
       loadUserSparksFromFirestore();
     } else if (viewName === 'presets') {
-      gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'block'; cho.style.display = 'none';
+      pre.style.display = 'block';
       document.getElementById('navPresets').classList.add('active');
     } else if (viewName === 'chords') {
-      gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'block';
+      cho.style.display = 'block';
       document.getElementById('navChords').classList.add('active');
       renderHarmonizerView();
+    } else if (viewName === 'profile') {
+      pro.style.display = 'block';
+      populatePageProfileFields();
     }
   }
 
@@ -2245,20 +2376,24 @@
     document.getElementById('statusMessage').innerText = `⚡ Download concluído por ${currentUser.displayName}! MIDI em ${tuning}Hz exportado.`;
   }
 
+  /* SUPORTE A LIVE KEYBOARD JAM 100% MAPEADO POR ESCALA (1-7) E NOTAS FIXAS (C-B) */
   window.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
     if (e.repeat) return;
 
     const key = e.key.toUpperCase();
     let noteToPlay = null;
 
+    // Teclas 1 a 7 -> Mapeamento Dinâmico dos Graus da Escala Selecionada
     if (['1','2','3','4','5','6','7'].includes(key)) {
       const degIdx = parseInt(key) - 1;
       const notes = getScaleNotes();
-      if (notes[degIdx]) {
+      if (notes && notes[degIdx]) {
         noteToPlay = parseNote(notes, degIdx, 1);
       }
-    } else if (['C','D','E','F','G','A','B'].includes(key)) {
+    } 
+    // Teclas C a B -> Notas Absolutas Fixas
+    else if (['C','D','E','F','G','A','B'].includes(key)) {
       if (!e.ctrlKey && !e.metaKey && !e.altKey) {
         noteToPlay = key + "4";
       }
