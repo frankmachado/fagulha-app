@@ -294,6 +294,32 @@
     .language-select { width: auto; min-width: 64px; outline: none; }
     .btn-shortcut-icon { width: 34px; padding: 0 !important; font-family: monospace; font-weight: 700; }
 
+    @media (max-width: 700px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+      .full-width {
+        grid-column: span 1;
+      }
+      .actions-grid {
+        grid-template-columns: 1fr;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .scale-chips-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .piano-roll-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+    }
+
     @media (max-width: 520px) {
       .top-nav-bar {
         flex-wrap: wrap;
