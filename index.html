@@ -198,6 +198,21 @@
       background: radial-gradient(circle, rgba(200, 90, 23, 0.08) 0%, rgba(0,0,0,0) 70%);
       top: -150px; left: -100px; z-index: 0; pointer-events: none;
     }
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 5, 4, 0.6);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 70;
+    }
+    .sidebar-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     /* SIDEBAR ESTILO MOISES */
     .sidebar {
@@ -306,6 +321,9 @@
       }
       .sidebar.collapsed {
         transform: translateX(-105%);
+      }
+      .sidebar-backdrop {
+        display: block;
       }
       .top-nav-bar {
         position: relative;
@@ -684,6 +702,7 @@
 
 <div class="bg-grid-pattern"></div>
 <div class="glow-1"></div>
+<div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 
 <aside id="sidebar" class="sidebar">
   <div class="sidebar-brand">
@@ -1792,9 +1811,31 @@
   }
 
   function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('collapsed');
-    document.getElementById('mainWrapper').classList.toggle('expanded');
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('mainWrapper');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    const isMobile = window.innerWidth <= 700;
+
+    const shouldCollapse = !sidebar.classList.contains('collapsed');
+    sidebar.classList.toggle('collapsed', shouldCollapse);
+    main.classList.toggle('expanded', shouldCollapse && !isMobile);
+
+    if (isMobile) {
+      backdrop.classList.toggle('visible', !shouldCollapse);
+    } else {
+      backdrop.classList.remove('visible');
+    }
   }
+
+  window.addEventListener('resize', () => {
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    if (window.innerWidth > 700) {
+      sidebar.classList.remove('collapsed');
+      document.getElementById('mainWrapper').classList.remove('expanded');
+      backdrop.classList.remove('visible');
+    }
+  });
 
   /* SISTEMA DE NAVEGAÇÃO & ROTAS DINÂMICAS POR HASH */
   function switchView(viewName) {
