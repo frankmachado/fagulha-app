@@ -487,7 +487,7 @@
         ⚡ Salvar Fagulha
       </button>
       <button class="btn-top" onclick="tapTempo()" title="Clique no ritmo para definir o BPM">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 14 16 14"/></svg>
         <span>Tap Tempo</span>
       </button>
       <button class="btn-top btn-panic" onclick="stopAudio()" title="Interromper todos os áudios">
@@ -1140,9 +1140,15 @@
     document.getElementById('mainWrapper').classList.toggle('expanded');
   }
 
+  /* SISTEMA DE NAVEGAÇÃO & ROTAS DINÂMICAS POR HASH */
   function switchView(viewName) {
     stopAudio();
     registrarTempoModulo(viewName);
+
+    // Atualiza o final da URL (ex: #library, #chords) sem recarregar
+    if (window.location.hash !== '#' + viewName) {
+      window.location.hash = viewName;
+    }
 
     const gen = document.getElementById('viewGenerator');
     const lib = document.getElementById('viewLibrary');
@@ -1171,6 +1177,18 @@
       renderHarmonizerView();
     }
   }
+
+  // Monitora alterações de URL (botões de voltar/avançar do navegador)
+  window.addEventListener('hashchange', () => {
+    const currentView = window.location.hash.replace('#', '') || 'generator';
+    switchView(currentView);
+  });
+
+  // Carrega a visualização correspondente ao inicializar a aplicação
+  window.addEventListener('load', () => {
+    const initialView = window.location.hash.replace('#', '') || 'generator';
+    switchView(initialView);
+  });
 
   function setChordType(type) {
     currentChordType = type;
