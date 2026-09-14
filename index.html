@@ -403,7 +403,20 @@
         min-height: 32px;
       }
       .btn-top { padding-left: 8px; padding-right: 8px; font-size: 10.5px; }
-      .vol-control { gap: 4px; padding-left: 6px; padding-right: 6px; font-size: 10px; }
+      .vol-control {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px;
+        padding-left: 6px;
+        padding-right: 6px;
+        font-size: 10px;
+      }
+      .vol-control input[type="range"] {
+        width: 46px;
+        min-width: 46px;
+        flex: 1 1 auto;
+      }
       .language-select { min-width: 58px; padding-left: 7px; padding-right: 7px; }
     }
 
@@ -1830,9 +1843,33 @@
   window.addEventListener('resize', () => {
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('sidebarBackdrop');
+    const main = document.getElementById('mainWrapper');
     if (window.innerWidth > 700) {
       sidebar.classList.remove('collapsed');
-      document.getElementById('mainWrapper').classList.remove('expanded');
+      main.classList.remove('expanded');
+      backdrop.classList.remove('visible');
+      return;
+    }
+
+    if (sidebar.classList.contains('collapsed')) {
+      backdrop.classList.remove('visible');
+    } else {
+      backdrop.classList.add('visible');
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('mainWrapper');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    const isMobile = window.innerWidth <= 700;
+
+    if (!isMobile) return;
+    if (sidebar.classList.contains('collapsed')) return;
+    const clickInsideSidebar = sidebar.contains(event.target);
+    const clickOnToggle = event.target.closest('.btn-top') && event.target.closest('.btn-top').onclick?.toString().includes('toggleSidebar');
+    if (!clickInsideSidebar && !clickOnToggle && !main.contains(event.target)) {
+      sidebar.classList.add('collapsed');
       backdrop.classList.remove('visible');
     }
   });
