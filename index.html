@@ -217,7 +217,7 @@
 
     /* DROPDOWN MENU DO USUÁRIO */
     .user-dropdown-menu {
-      position: absolute; top: calc(100% + 8px); right: 0;
+      position: absolute; top: calc(100% + 8px); left: 0;
       background: var(--sidebar-bg); border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px; width: 180px; padding: 6px; display: none;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 60;
@@ -798,6 +798,7 @@
         <div class="profile-photo-picker">
           <label for="pageProfilePhoto" class="btn btn-secondary" style="padding: 7px 10px; font-size: 11px;" data-i18n="chooseImage">Escolher imagem</label>
           <input type="file" id="pageProfilePhoto" accept="image/png,image/jpeg,image/webp" onchange="previewProfileImage(event)">
+          <button class="btn btn-primary" type="button" onclick="saveProfilePhoto()" style="padding: 7px 10px; font-size: 11px;" data-i18n="savePhoto">Salvar foto</button>
           <span id="profilePhotoHelp" class="profile-photo-help" data-i18n="imageFormats">PNG, JPG ou WebP</span>
         </div>
       </div>
@@ -923,6 +924,7 @@
 
   let currentUser = null;
   let selectedProfileImage = null;
+  let savedProfilePhotoUrl = '';
 
   const translations = {
     pt: {
@@ -932,7 +934,7 @@
       activePlan: 'PLANO ATIVO', visitor: 'Visitante', menu: 'Menu', saveSpark: '⚡ Salvar Fagulha', tapTempo: 'Tap Tempo',
       stop: '🛑 Stop', signInGoogle: 'Entrar com Google', myProfile: '👤 Meu Perfil', signOut: '🚪 Sair da Conta', volume: 'VOL',
       rootNote: 'Tônica (Key)', tempo: 'Andamento (BPM)', shortcuts: 'Atalhos', scaleVibe: 'Escala & Vibe Harmônica', scaleNotes: 'Notas da Escala',
-      instrument: 'Instrumento', playingInstrument: 'Instrumento:', groove: 'Groove (8 Compassos)', pianoRoll: 'GRID PIANO ROLL (32 BEATS)', listenLoop: 'Escutar Loop',
+      instrument: 'Instrumento', playingInstrument: 'Instrumento:', savePhoto: 'Salvar foto', groove: 'Groove (8 Compassos)', pianoRoll: 'GRID PIANO ROLL (32 BEATS)', listenLoop: 'Escutar Loop',
       exportMidi: 'Exportar MIDI (.mid)', engineReady: 'Fagulha Scale Engine pronto para processar.', my: 'Minhas', sparks: 'Fagulhas',
       preset: 'Preset', library: 'Library', curatedPacks: 'PACKS CURADOS', harmonizerTitle: 'Harmonizador', field: 'de Campo', activeScale: 'Escala Ativa:',
       triads: 'Tríades (3 Notas)', tetrads: 'Tétrades / 7ªs (4 Notas)', recommendedProgressions: '💡 Progressões Recomendadas:',
@@ -959,7 +961,7 @@
       standardTuning: '440 Hz (Standard)', organicTuning: '432 Hz (Organic)', activePlan: 'ACTIVE PLAN', visitor: 'Guest', menu: 'Menu',
       saveSpark: '⚡ Save Spark', tapTempo: 'Tap Tempo', stop: '🛑 Stop', signInGoogle: 'Sign in with Google', myProfile: '👤 My Profile',
       signOut: '🚪 Sign Out', volume: 'VOL', rootNote: 'Root Note (Key)', tempo: 'Tempo (BPM)', shortcuts: 'Shortcuts',
-      scaleVibe: 'Scale & Harmonic Vibe', scaleNotes: 'Scale Notes', instrument: 'Instrument', playingInstrument: 'Instrument:', groove: 'Groove (8 Bars)',
+      scaleVibe: 'Scale & Harmonic Vibe', scaleNotes: 'Scale Notes', instrument: 'Instrument', playingInstrument: 'Instrument:', savePhoto: 'Save photo', groove: 'Groove (8 Bars)',
       pianoRoll: 'PIANO ROLL GRID (32 BEATS)', listenLoop: 'Listen to Loop', exportMidi: 'Export MIDI (.mid)', engineReady: 'Fagulha Scale Engine ready to process.',
       my: 'My', sparks: 'Sparks', preset: 'Preset', library: 'Library', curatedPacks: 'CURATED PACKS', harmonizerTitle: 'Field', field: 'Harmonizer',
       activeScale: 'Active Scale:', triads: 'Triads (3 Notes)', tetrads: 'Tetrads / 7ths (4 Notes)', recommendedProgressions: '💡 Recommended Progressions:',
@@ -984,7 +986,7 @@
       standardTuning: '440 Hz (Estándar)', organicTuning: '432 Hz (Orgánico)', activePlan: 'PLAN ACTIVO', visitor: 'Visitante', menu: 'Menú',
       saveSpark: '⚡ Guardar chispa', tapTempo: 'Tap Tempo', stop: '🛑 Parar', signInGoogle: 'Entrar con Google', myProfile: '👤 Mi perfil',
       signOut: '🚪 Cerrar sesión', volume: 'VOL', rootNote: 'Tónica (Clave)', tempo: 'Tempo (BPM)', shortcuts: 'Atajos',
-      scaleVibe: 'Escala y ambiente armónico', scaleNotes: 'Notas de la escala', instrument: 'Instrumento', playingInstrument: 'Instrumento:', groove: 'Groove (8 compases)',
+      scaleVibe: 'Escala y ambiente armónico', scaleNotes: 'Notas de la escala', instrument: 'Instrumento', playingInstrument: 'Instrumento:', savePhoto: 'Guardar foto', groove: 'Groove (8 compases)',
       pianoRoll: 'CUADRÍCULA PIANO ROLL (32 BEATS)', listenLoop: 'Escuchar loop', exportMidi: 'Exportar MIDI (.mid)', engineReady: 'Fagulha Scale Engine listo para procesar.',
       my: 'Mis', sparks: 'Chispas', preset: 'Preset', library: 'Biblioteca', curatedPacks: 'PACKS CURADOS', harmonizerTitle: 'Armonizador', field: 'de campo',
       activeScale: 'Escala activa:', triads: 'Tríadas (3 notas)', tetrads: 'Tétradas / 7ª (4 notas)', recommendedProgressions: '💡 Progresiones recomendadas:',
@@ -1125,9 +1127,9 @@
   /* PREENCHE A PÁGINA DEDICADA DE PERFIL (#profile) */
   function populatePageProfileFields() {
     if (!currentUser) return;
-    const avatarUrl = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'P')}&background=C85A17&color=fff`;
+    const fallbackAvatarUrl = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'P')}&background=C85A17&color=fff`;
     
-    document.getElementById('profileLargeAvatar').src = avatarUrl;
+    document.getElementById('profileLargeAvatar').src = savedProfilePhotoUrl || fallbackAvatarUrl;
     document.getElementById('profileHeaderName').innerText = currentUser.displayName || "Produtor Fagulha";
     document.getElementById('profileHeaderEmail').innerText = currentUser.email || "";
     
@@ -1139,8 +1141,13 @@
     document.getElementById('profilePhotoHelp').innerText = translate('imageFormats');
 
     db.collection('users').doc(currentUser.uid).get().then(doc => {
-      if (doc.exists && doc.data().bio) {
-        document.getElementById('pageProfileBio').value = doc.data().bio;
+      if (!doc.exists) return;
+      const profileData = doc.data();
+      savedProfilePhotoUrl = profileData.photoURL || currentUser.photoURL || '';
+      document.getElementById('profileLargeAvatar').src = savedProfilePhotoUrl || fallbackAvatarUrl;
+      updateAuthButtonAvatar();
+      if (profileData.bio) {
+        document.getElementById('pageProfileBio').value = profileData.bio;
       }
     }).catch(()=>{});
   }
@@ -1164,6 +1171,45 @@
     document.getElementById('profilePhotoHelp').innerText = file.name;
   }
 
+  function uploadSelectedProfileImage() {
+    if (!selectedProfileImage || !currentUser) return Promise.resolve(savedProfilePhotoUrl || currentUser.photoURL || '');
+
+    const fileExtension = selectedProfileImage.name.split('.').pop().toLowerCase();
+    const photoRef = storage.ref(`profile-images/${currentUser.uid}/avatar-${Date.now()}.${fileExtension}`);
+    return photoRef.put(selectedProfileImage, { contentType: selectedProfileImage.type }).then(() => photoRef.getDownloadURL());
+  }
+
+  function saveProfilePhoto() {
+    if (!currentUser || !selectedProfileImage) {
+      document.getElementById('statusMessage').innerText = "⚠️ Escolha uma imagem antes de salvar.";
+      return;
+    }
+
+    document.getElementById('statusMessage').innerText = "⏳ Salvando foto...";
+    uploadSelectedProfileImage().then((newPhoto) => {
+      savedProfilePhotoUrl = newPhoto;
+      return currentUser.updateProfile({ photoURL: newPhoto }).then(() => {
+        return db.collection('users').doc(currentUser.uid).set({
+          photoURL: newPhoto,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      });
+    }).then(() => {
+      selectedProfileImage = null;
+      document.getElementById('statusMessage').innerText = "⚡ Foto salva com sucesso!";
+      populatePageProfileFields();
+      updateAuthButtonAvatar();
+    }).catch((err) => {
+      document.getElementById('statusMessage').innerText = "⚠️ Erro ao salvar foto: " + err.message;
+    });
+  }
+
+  function updateAuthButtonAvatar() {
+    const avatarUrl = savedProfilePhotoUrl || currentUser?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.displayName || 'P')}&background=C85A17&color=fff`;
+    const firstName = currentUser?.displayName ? currentUser.displayName.split(' ')[0] : 'Produtor';
+    document.getElementById('authBtn').innerHTML = `<img src="${avatarUrl}" class="user-avatar" /> <span>${firstName}</span> ▾`;
+  }
+
   function savePageUserProfile() {
     if (!currentUser) return;
     const newName = document.getElementById('pageProfileName').value.trim();
@@ -1171,12 +1217,7 @@
 
     document.getElementById('statusMessage').innerText = "⏳ Atualizando perfil...";
 
-    let photoPromise = Promise.resolve(currentUser.photoURL || "");
-    if (selectedProfileImage) {
-      const fileExtension = selectedProfileImage.name.split('.').pop().toLowerCase();
-      const photoRef = storage.ref(`profile-images/${currentUser.uid}/avatar-${Date.now()}.${fileExtension}`);
-      photoPromise = photoRef.put(selectedProfileImage, { contentType: selectedProfileImage.type }).then(() => photoRef.getDownloadURL());
-    }
+    const photoPromise = uploadSelectedProfileImage();
 
     photoPromise.then((newPhoto) => currentUser.updateProfile({
       displayName: newName || currentUser.displayName,
@@ -1189,12 +1230,10 @@
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
     }).then(() => {
+      savedProfilePhotoUrl = newPhoto;
       document.getElementById('statusMessage').innerText = "⚡ Perfil atualizado com sucesso!";
       populatePageProfileFields();
-      
-      const avatarUrl = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'P')}&background=C85A17&color=fff`;
-      const firstName = currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Produtor';
-      document.getElementById('authBtn').innerHTML = `<img src="${avatarUrl}" class="user-avatar" /> <span>${firstName}</span> ▾`;
+      updateAuthButtonAvatar();
     })).catch((err) => {
       document.getElementById('statusMessage').innerText = "⚠️ Erro ao atualizar perfil: " + err.message;
     });
