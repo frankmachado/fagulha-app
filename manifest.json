@@ -2,11 +2,16 @@
   "name": "Fagulha Studio Hub",
   "short_name": "Fagulha",
   "description": "Engine Pro Studio para criação de escalas, harmonização e loops.",
+  "id": "./",
   "start_url": "./index.html",
   "scope": "./",
+  "lang": "pt-BR",
+  "dir": "ltr",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "background_color": "#090807",
   "theme_color": "#C85A17",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icon-192.png",

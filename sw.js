@@ -4,8 +4,7 @@ const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './sw.js',
-  './icon-192.png'
+  './sw.js'
 ];
 
 // Instalação e Cache
@@ -13,7 +12,9 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[SW] Salvando recursos no cache...');
-      return cache.addAll(ASSETS_TO_CACHE);
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map((asset) => cache.add(asset))
+      );
     })
   );
   self.skipWaiting();
