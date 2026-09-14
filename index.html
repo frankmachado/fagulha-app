@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fagulha - Pro SaaS v2.6.0</title>
+  <title>Fagulha Studio Hub</title>
 
   <!-- REQUISITOS PWA & MANIFEST -->
   <link rel="manifest" href="manifest.json">
@@ -34,54 +34,50 @@
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <script src="https://unpkg.com/@tonejs/midi"></script>
   
-  <!-- FONTE TIPOGRÁFICA: SORA + SYNE VIA GOOGLE FONTS -->
+  <!-- FONTE TIPOGRÁFICA ESTILO MOISES: INTER + PLUS JAKARTA SANS VIA GOOGLE FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-dark: #0A0806;
-      --sidebar-bg: #120D0A;
-      --card-bg: rgba(18, 13, 10, 0.65);
-      --card-border: transparent;
-      --input-bg: rgba(25, 18, 14, 0.4);
-      --input-border: rgba(255, 255, 255, 0.06);
+      --bg-dark: #090807;
+      --sidebar-bg: #100C09;
+      --card-bg: rgba(16, 12, 9, 0.75);
+      --input-bg: rgba(255, 255, 255, 0.03);
+      --input-border: rgba(255, 255, 255, 0.07);
       
       --brand-gradient: linear-gradient(135deg, #C85A17 0%, #8A3305 100%);
       --accent-terracotta: #D97736;
       --accent-ochre: #E5A93C;
       --accent-sand: #E8C89B;
-      --accent-glow: rgba(200, 90, 23, 0.35);
+      --accent-glow: rgba(200, 90, 23, 0.25);
       
       --text-main: #F5EFE6;
-      --text-muted: #8E7E73;
-      --sidebar-width: 270px;
+      --text-muted: #80756C;
+      --sidebar-width: 260px;
     }
 
     * { 
       box-sizing: border-box;
-      font-family: 'Sora', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* TÍTULOS E MARCA COM SYNE (AJUSTADO: REMOVIDO ACHATAMENTO) */
+    /* TÍTULOS E NAVEGAÇÃO COM PLUS JAKARTA SANS (ESTILO MOISES.AI) */
     h1, h2, h3, h4, 
     .brand-title, 
     .sidebar-brand div div:first-child,
     .nav-title, 
-    .status-badge,
     .preset-title,
     .spark-info-title,
     .chord-symbol,
-    .scale-title,
-    .piano-roll-header span {
-      font-family: 'Syne', sans-serif !important;
-      letter-spacing: 0.2px;
-      line-height: 1.25;
+    .btn,
+    .btn-top {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      letter-spacing: -0.2px;
     }
 
     body {
-      font-family: 'Sora', sans-serif;
       background-color: var(--bg-dark);
       color: var(--text-main);
       min-height: 100vh;
@@ -89,88 +85,83 @@
       display: flex;
       position: relative;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
     .bg-grid-pattern {
       position: fixed; inset: 0;
       background-image: 
-        radial-gradient(rgba(217, 119, 54, 0.05) 1px, transparent 1px),
-        linear-gradient(to right, rgba(217, 119, 54, 0.02) 1px, transparent 1px);
+        radial-gradient(rgba(217, 119, 54, 0.04) 1px, transparent 1px),
+        linear-gradient(to right, rgba(217, 119, 54, 0.015) 1px, transparent 1px);
       background-size: 32px 32px, 64px 64px;
       z-index: 0; pointer-events: none;
     }
     .glow-1 {
       position: fixed; width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(200, 90, 23, 0.12) 0%, rgba(0,0,0,0) 70%);
+      background: radial-gradient(circle, rgba(200, 90, 23, 0.08) 0%, rgba(0,0,0,0) 70%);
       top: -150px; left: -100px; z-index: 0; pointer-events: none;
     }
-    .glow-2 {
-      position: fixed; width: 650px; height: 650px;
-      background: radial-gradient(circle, rgba(229, 169, 60, 0.08) 0%, rgba(0,0,0,0) 70%);
-      bottom: -200px; right: -150px; z-index: 0; pointer-events: none;
-    }
 
-    /* SIDEBAR ESTILO MOISES (CLEAN & FRAMELESS) */
+    /* SIDEBAR ESTILO MOISES (MINIMALISTA) */
     .sidebar {
       width: var(--sidebar-width); height: 100vh;
-      background: var(--sidebar-bg); border-right: 1px solid rgba(255, 255, 255, 0.03);
-      padding: 24px 18px; display: flex; flex-direction: column;
+      background: var(--sidebar-bg); border-right: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 24px 16px; display: flex; flex-direction: column;
       position: fixed; top: 0; left: 0; z-index: 50;
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       overflow-y: auto;
     }
     .sidebar.collapsed { transform: translateX(-100%); }
 
-    .sidebar-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .sidebar-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding-left: 4px; }
     .logo-icon {
-      width: 36px; height: 36px; border-radius: 10px;
+      width: 32px; height: 32px; border-radius: 8px;
       background: var(--brand-gradient);
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 14px var(--accent-glow); flex-shrink: 0;
+      box-shadow: 0 4px 12px var(--accent-glow); flex-shrink: 0;
     }
 
-    .nav-section { margin-bottom: 24px; text-align: left; }
+    .nav-section { margin-bottom: 28px; text-align: left; }
     .nav-title {
-      font-size: 10px; font-weight: 800; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 12px;
-      padding-left: 6px;
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+      padding-left: 8px;
     }
 
     .nav-item {
       display: flex; align-items: center; gap: 12px;
-      padding: 10px 14px; border-radius: 10px;
+      padding: 9px 12px; border-radius: 8px;
       color: var(--text-muted); font-size: 13px; font-weight: 600;
       text-decoration: none; cursor: pointer; transition: all 0.2s ease; margin-bottom: 2px;
       background: transparent; border: 1px solid transparent;
     }
     .nav-item:hover {
-      color: var(--text-main); background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main); background: rgba(255, 255, 255, 0.03);
     }
     .nav-item.active {
-      background: rgba(200, 90, 23, 0.15); color: #FFF;
-      border: 1px solid rgba(217, 119, 54, 0.3);
-      border-left: 3px solid var(--accent-terracotta);
+      background: rgba(200, 90, 23, 0.12); color: #FFF;
+      border: 1px solid rgba(217, 119, 54, 0.25);
     }
 
     .slider-field { display: flex; flex-direction: column; text-align: left; margin-bottom: 14px; padding: 0 4px; }
     .slider-header {
-      display: flex; justify-content: space-between; font-size: 11px; font-weight: 700;
+      display: flex; justify-content: space-between; font-size: 11px; font-weight: 600;
       color: var(--text-muted); margin-bottom: 6px;
     }
     .slider-header span:last-child { color: var(--accent-ochre); }
 
     input[type="range"] {
       -webkit-appearance: none; appearance: none;
-      width: 100%; height: 5px; background: rgba(255, 255, 255, 0.08);
+      width: 100%; height: 4px; background: rgba(255, 255, 255, 0.08);
       border-radius: 4px; outline: none; border: none;
       transition: background 0.2s;
     }
-    input[type="range"]:hover { background: rgba(255, 255, 255, 0.15); }
+    input[type="range"]:hover { background: rgba(255, 255, 255, 0.12); }
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none; appearance: none;
-      width: 14px; height: 14px; border-radius: 50%;
+      width: 12px; height: 12px; border-radius: 50%;
       background: var(--accent-terracotta); cursor: pointer;
-      box-shadow: 0 0 8px var(--accent-glow);
+      box-shadow: 0 0 6px var(--accent-glow);
     }
 
     .main-wrapper {
@@ -180,71 +171,73 @@
     }
     .main-wrapper.expanded { margin-left: 0; }
 
-    /* TOP BAR LIMPA ESTILO MOISES */
+    /* TOP BAR LIMPA */
     .top-nav-bar {
       width: 100%; max-width: 760px;
       display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+      gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
     }
     .top-nav-group { display: flex; align-items: center; gap: 8px; }
 
     .btn-top {
       background: transparent; border: 1px solid transparent;
-      color: var(--text-muted); padding: 8px 12px; border-radius: 10px; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;
+      color: var(--text-muted); padding: 7px 12px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
       transition: all 0.2s;
     }
     .btn-top:hover {
-      background: rgba(255, 255, 255, 0.06); color: var(--text-main);
-      border-color: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04); color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.08);
     }
     
     .btn-save-fagulha {
-      background: rgba(217, 119, 54, 0.22); border: 1px solid var(--accent-terracotta); color: var(--accent-sand);
-      box-shadow: 0 4px 12px rgba(217, 119, 54, 0.15);
+      background: rgba(217, 119, 54, 0.18); border: 1px solid rgba(217, 119, 54, 0.35); color: var(--accent-sand);
     }
     .btn-save-fagulha:hover { background: var(--brand-gradient); color: #FFF; border-color: transparent; }
 
     .btn-auth {
-      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main);
     }
-    .btn-auth:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.25); }
+    .btn-auth:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); }
 
     .user-avatar {
-      width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
+      width: 20px; height: 20px; border-radius: 50%; object-fit: cover;
     }
 
     .btn-panic {
-      background: rgba(180, 40, 40, 0.15); border: 1px solid rgba(220, 60, 60, 0.3); color: #FF8888;
+      background: rgba(180, 40, 40, 0.12); border: 1px solid rgba(220, 60, 60, 0.25); color: #FF9999;
     }
-    .btn-panic:hover { background: rgba(220, 60, 60, 0.3); color: #FFF; border-color: rgba(220, 60, 60, 0.5); }
+    .btn-panic:hover { background: rgba(220, 60, 60, 0.25); color: #FFF; }
 
     .vol-control {
       display: flex; align-items: center; gap: 8px;
       background: transparent; border: 1px solid transparent;
-      padding: 6px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; color: var(--text-muted);
+      padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--text-muted);
       transition: all 0.2s;
     }
     .vol-control:hover {
-      background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.08); color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04); color: var(--text-main);
     }
 
-    /* CARD PRINCIPAL FLUTUANTE */
+    /* CARD PRINCIPAL CLEAN */
     .app-card {
       width: 100%; max-width: 760px; background: var(--card-bg);
-      backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
-      border: none; border-radius: 24px; padding: 32px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 20px; padding: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
 
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .brand-title { font-size: 20px; font-weight: 800; margin: 0; }
+    .brand-title { font-size: 18px; font-weight: 800; margin: 0; }
     .brand-title span { color: var(--accent-terracotta); }
     
     .status-badge {
-      font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 30px;
-      background: rgba(229, 169, 60, 0.1); color: var(--accent-ochre);
-      border: none; transition: all 0.25s ease;
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .status-dot-led {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent-ochre);
+      box-shadow: 0 0 8px var(--accent-ochre);
     }
 
     .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
@@ -252,151 +245,148 @@
 
     .input-field { display: flex; flex-direction: column; text-align: left; }
     .input-field label {
-      font-size: 11px; font-weight: 700; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+      margin-bottom: 8px;
     }
 
     select, input[type="number"], input[type="text"] {
       width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
-      color: var(--text-main); padding: 14px 16px; border-radius: 12px;
-      font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 500; outline: none;
-      transition: all 0.25s ease;
+      color: var(--text-main); padding: 12px 14px; border-radius: 10px;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; outline: none;
+      transition: all 0.2s ease;
     }
 
     optgroup { background-color: #140E0B; color: var(--accent-sand); font-weight: 700; }
-    option { background-color: #1C1511 !important; color: #F5EFE6 !important; padding: 12px; font-weight: 500; }
-    select:hover, input:hover { border-color: rgba(217, 119, 54, 0.4); background: rgba(45, 33, 26, 0.5); }
+    option { background-color: #1C1511 !important; color: #F5EFE6 !important; padding: 10px; font-weight: 500; }
+    select:hover, input:hover { border-color: rgba(217, 119, 54, 0.3); background: rgba(255, 255, 255, 0.05); }
     select:focus, input:focus {
-      border-color: var(--accent-terracotta); background: rgba(200, 90, 23, 0.1);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+      border-color: var(--accent-terracotta); background: rgba(200, 90, 23, 0.08);
     }
 
-    /* CAIXAS NÃO CLICÁVEIS FLUTUANTES */
     .scale-chips-container {
-      background: rgba(0, 0, 0, 0.2); border: none;
-      border-radius: 14px; padding: 14px 16px; margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.02);
+      border-radius: 12px; padding: 12px 16px; margin-bottom: 24px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .scale-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .scale-title { font-size: 11px; font-weight: 600; color: var(--text-muted); }
     .chips-wrapper { display: flex; gap: 6px; flex-wrap: wrap; }
     
     .note-chip {
-      background: rgba(200, 90, 23, 0.15); color: var(--accent-sand); border: none;
-      font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 8px;
+      background: rgba(200, 90, 23, 0.12); color: var(--accent-sand); border: none;
+      font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
     }
 
     .piano-roll-card {
-      background: rgba(10, 6, 4, 0.7); border: none;
-      border-radius: 16px; padding: 16px; margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.02);
+      border-radius: 14px; padding: 16px; margin-bottom: 24px;
     }
     .piano-roll-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 12px; font-size: 11px; font-weight: 700; color: var(--text-muted);
+      margin-bottom: 12px; font-size: 11px; font-weight: 600; color: var(--text-muted);
     }
-    canvas { width: 100%; height: 130px; background: #0C0806; border-radius: 10px; display: block; }
+    canvas { width: 100%; height: 120px; background: #070504; border-radius: 8px; display: block; }
 
     .actions-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; }
     .btn {
-      padding: 14px 10px; border-radius: 12px; border: none; font-family: 'Sora', sans-serif;
+      padding: 12px 10px; border-radius: 10px; border: none;
       font-size: 13px; font-weight: 700; cursor: pointer; display: flex;
       align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease;
     }
-    .btn-primary { background: var(--brand-gradient); color: #FFF; box-shadow: 0 8px 20px var(--accent-glow); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px var(--accent-glow); }
+    .btn-primary { background: var(--brand-gradient); color: #FFF; box-shadow: 0 6px 16px var(--accent-glow); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px var(--accent-glow); }
     .btn-secondary { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--input-border); }
-    .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--accent-terracotta); }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--accent-terracotta); }
 
     .console-toast {
-      margin-top: 20px; background: rgba(0, 0, 0, 0.2); border: none;
-      border-radius: 10px; padding: 12px 16px; font-size: 12px; color: var(--text-muted);
-      text-align: left; display: flex; align-items: center; gap: 10px;
+      margin-top: 18px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.02);
+      border-radius: 8px; padding: 10px 14px; font-size: 11px; color: var(--text-muted);
+      text-align: left; display: flex; align-items: center; gap: 8px;
     }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-terracotta); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-terracotta); }
 
     .chord-mode-toggle { display: flex; gap: 8px; margin-bottom: 16px; justify-content: flex-start; }
     .toggle-pill {
-      background: transparent; border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-muted); padding: 8px 16px; border-radius: 20px;
-      font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+      background: transparent; border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted); padding: 6px 14px; border-radius: 16px;
+      font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;
     }
-    .toggle-pill:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
+    .toggle-pill:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-main); }
     .toggle-pill.active {
-      background: rgba(200, 90, 23, 0.22); color: var(--accent-sand); border-color: var(--accent-terracotta);
+      background: rgba(200, 90, 23, 0.18); color: var(--accent-sand); border-color: rgba(217, 119, 54, 0.4);
     }
 
-    .chords-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+    .chords-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
     .chord-card {
-      background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 14px; padding: 14px; text-align: left; transition: all 0.2s ease; cursor: pointer;
-      position: relative; overflow: hidden;
+      background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 12px; padding: 14px; text-align: left; transition: all 0.2s ease; cursor: pointer;
     }
     .chord-card:hover {
-      border-color: var(--accent-terracotta); transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4); background: rgba(200, 90, 23, 0.1);
+      border-color: rgba(217, 119, 54, 0.4); transform: translateY(-2px);
+      background: rgba(200, 90, 23, 0.08);
     }
-    .chord-degree { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-    .chord-symbol { font-size: 20px; font-weight: 800; color: #FFF; margin: 4px 0 8px 0; }
+    .chord-degree { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .chord-symbol { font-size: 18px; font-weight: 800; color: #FFF; margin: 4px 0 6px 0; }
     .chord-notes { font-size: 11px; font-weight: 600; color: var(--accent-ochre); }
 
     .progression-card {
-      background: rgba(0,0,0,0.18); border: none;
-      border-radius: 12px; padding: 16px; margin-top: 20px; text-align: left;
+      background: rgba(0,0,0,0.15); border: 1px solid rgba(255, 255, 255, 0.02);
+      border-radius: 10px; padding: 14px; margin-top: 18px; text-align: left;
     }
-    .progression-title { font-size: 12px; font-weight: 800; color: var(--accent-sand); text-transform: uppercase; margin-bottom: 10px; }
+    .progression-title { font-size: 11px; font-weight: 700; color: var(--accent-sand); text-transform: uppercase; margin-bottom: 8px; }
     .progression-item {
-      font-size: 13px; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
     }
 
     .keyboard-guide-card {
-      background: rgba(200, 90, 23, 0.06); border: none;
-      border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; text-align: left;
+      background: rgba(200, 90, 23, 0.04); border: 1px solid rgba(200, 90, 23, 0.1);
+      border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; text-align: left;
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
     }
 
-    .presets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: left; }
+    .presets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; text-align: left; }
     .preset-card {
-      background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 16px; padding: 20px; transition: all 0.2s ease; cursor: pointer;
+      background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 14px; padding: 18px; transition: all 0.2s ease; cursor: pointer;
     }
     .preset-card:hover {
-      border-color: var(--accent-terracotta); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-      background: rgba(200, 90, 23, 0.06);
+      border-color: rgba(217, 119, 54, 0.4); transform: translateY(-2px);
+      background: rgba(200, 90, 23, 0.05);
     }
-    .preset-title { font-size: 15px; font-weight: 800; color: #FFF; margin-bottom: 6px; }
-    .preset-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4; }
+    .preset-title { font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 4px; }
+    .preset-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; }
     .preset-tag {
-      font-size: 10px; font-weight: 700; color: var(--accent-ochre);
-      background: rgba(229, 169, 60, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block;
+      font-size: 10px; font-weight: 600; color: var(--accent-ochre);
+      background: rgba(229, 169, 60, 0.08); padding: 4px 8px; border-radius: 4px; display: inline-block;
     }
 
-    .sparks-grid { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+    .sparks-grid { display: flex; flex-direction: column; gap: 10px; text-align: left; }
     .spark-card {
-      background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 16px; padding: 18px; display: flex; justify-content: space-between;
+      background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 14px; padding: 16px; display: flex; justify-content: space-between;
       align-items: center; transition: all 0.2s ease;
     }
-    .spark-card:hover { border-color: var(--accent-terracotta); background: rgba(200, 90, 23, 0.08); }
-    .spark-info-title { font-size: 15px; font-weight: 800; color: #FFF; margin-bottom: 4px; }
-    .spark-info-meta { font-size: 11px; color: var(--accent-ochre); font-weight: 600; margin-bottom: 6px; }
-    .spark-info-notes { font-size: 12px; color: var(--text-muted); }
-    .spark-actions { display: flex; gap: 8px; }
+    .spark-card:hover { border-color: rgba(217, 119, 54, 0.3); background: rgba(200, 90, 23, 0.05); }
+    .spark-info-title { font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 2px; }
+    .spark-info-meta { font-size: 11px; color: var(--accent-ochre); font-weight: 600; margin-bottom: 4px; }
+    .spark-info-notes { font-size: 11px; color: var(--text-muted); }
+    .spark-actions { display: flex; gap: 6px; }
 
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 100;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100;
     }
     .modal-card {
-      background: var(--sidebar-bg); border: none;
-      border-radius: 20px; padding: 28px; width: 100%; max-width: 460px; text-align: left;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      background: var(--sidebar-bg); border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; text-align: left;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
     }
     .shortcut-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 13px;
+      padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 12px;
     }
     .kbd-badge {
       background: var(--input-bg); border: 1px solid var(--input-border); color: var(--accent-sand);
-      padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 11px; font-weight: 700;
+      padding: 3px 6px; border-radius: 4px; font-family: monospace; font-size: 10px; font-weight: 700;
     }
   </style>
 </head>
@@ -404,38 +394,37 @@
 
 <div class="bg-grid-pattern"></div>
 <div class="glow-1"></div>
-<div class="glow-2"></div>
 
 <aside id="sidebar" class="sidebar">
   <div class="sidebar-brand">
     <div class="logo-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5">
         <path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
       </svg>
     </div>
     <div style="text-align: left;">
       <div style="font-weight: 800; font-size: 15px;">Fagulha</div>
-      <div style="font-size: 11px; color: var(--text-muted);">Pro Studio Hub</div>
+      <div style="font-size: 10px; color: var(--text-muted);">Pro Studio Hub</div>
     </div>
   </div>
 
   <div class="nav-section">
     <div class="nav-title">Navegação & Módulos</div>
     <a id="navGenerator" class="nav-item active" onclick="switchView('generator')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      Scale Engine (Generator)
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Scale Engine
     </a>
     <a id="navLibrary" class="nav-item" onclick="switchView('library')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      Minhas Fagulhas (Cloud)
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Minhas Fagulhas
     </a>
     <a id="navPresets" class="nav-item" onclick="switchView('presets')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-      Pack Preset Library
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Presets
     </a>
     <a id="navChords" class="nav-item" onclick="switchView('chords')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      Harmonizador de Campo 2.4
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Harmonizador
     </a>
   </div>
 
@@ -443,7 +432,7 @@
     <div class="nav-title">Groove & Humanizer</div>
     <div class="slider-field">
       <div class="slider-header">
-        <span>Humanizer (Timing/Vel)</span>
+        <span>Humanizer</span>
         <span id="humanizeVal">15%</span>
       </div>
       <input type="range" id="humanizeInput" min="0" max="50" value="15" oninput="document.getElementById('humanizeVal').innerText = this.value + '%'">
@@ -451,7 +440,7 @@
 
     <div class="slider-field">
       <div class="slider-header">
-        <span>Swing (Balanço 1/16)</span>
+        <span>Swing</span>
         <span id="swingVal">0%</span>
       </div>
       <input type="range" id="swingInput" min="0" max="60" value="0" oninput="document.getElementById('swingVal').innerText = this.value + '%'">
@@ -459,19 +448,21 @@
   </div>
 
   <div class="nav-section">
-    <div class="nav-title">Engine Config</div>
+    <div class="nav-title">Configurações</div>
     <div class="input-field" style="margin-bottom: 12px;">
-      <label>Master Tuning</label>
+      <label>Afinação Master</label>
       <select id="tuningSelect" onchange="onTuningChange()">
-        <option value="440" selected>440 Hz (Standard Studio)</option>
-        <option value="432">432 Hz (Ancestral Organic -31.8c)</option>
+        <option value="440" selected>440 Hz (Padrão)</option>
+        <option value="432">432 Hz (Orgânico)</option>
       </select>
     </div>
   </div>
 
-  <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.05); text-align: left;">
-    <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand);">PLANO ATIVO</div>
-    <div style="font-size: 13px; font-weight: 800; color: #FFF;" id="userPlanDisplay">Free • Visitante</div>
+  <!-- RODAPÉ DISCRETO ESTILO MOISES -->
+  <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.03); text-align: left;">
+    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">PLANO ATIVO</div>
+    <div style="font-size: 12px; font-weight: 700; color: var(--accent-sand);" id="userPlanDisplay">Visitante</div>
+    <div style="font-size: 9px; color: rgba(255, 255, 255, 0.2); margin-top: 4px;">Fagulha Pro Studio</div>
   </div>
 </aside>
 
@@ -480,14 +471,14 @@
   <div class="top-nav-bar">
     <div class="top-nav-group">
       <button class="btn-top" onclick="toggleSidebar()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         <span>Menu</span>
       </button>
       <button class="btn-top btn-save-fagulha" onclick="openSaveSparkModal()" title="Salvar o loop atual na sua biblioteca">
         ⚡ Salvar Fagulha
       </button>
       <button class="btn-top" onclick="tapTempo()" title="Clique no ritmo para definir o BPM">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 14 16 14"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 14 16 14"/></svg>
         <span>Tap Tempo</span>
       </button>
       <button class="btn-top btn-panic" onclick="stopAudio()" title="Interromper todos os áudios">
@@ -503,11 +494,11 @@
 
       <div class="vol-control">
         <span>VOL</span>
-        <input type="range" id="masterVolume" min="0" max="100" value="80" style="width: 70px;" oninput="updateMasterVolume(this.value)">
+        <input type="range" id="masterVolume" min="0" max="100" value="80" style="width: 60px;" oninput="updateMasterVolume(this.value)">
         <span id="volVal">80%</span>
       </div>
       <button class="btn-top" onclick="openShortcutsModal()" title="Atalhos de Teclado">
-        <span style="font-family: monospace; font-weight: 800;">?</span>
+        <span style="font-family: monospace; font-weight: 700;">?</span>
       </button>
     </div>
   </div>
@@ -516,12 +507,14 @@
   <div id="viewGenerator" class="app-card">
     <div class="header">
       <h1 class="brand-title">Fagulha <span>Engine</span></h1>
-      <span class="status-badge" id="tuningBadge">440 Hz STANDARD</span>
+      <span class="status-badge" id="tuningBadge">
+        <span class="status-dot-led"></span> 440 Hz STANDARD
+      </span>
     </div>
 
     <div class="controls-grid">
       <div class="input-field">
-        <label>1. Tônica (Key)</label>
+        <label>Tônica (Key)</label>
         <select id="rootNote" onchange="onSettingChange()">
           <option value="C">Dó (C)</option>
           <option value="D">Ré (D)</option>
@@ -533,12 +526,12 @@
         </select>
       </div>
       <div class="input-field">
-        <label>2. Andamento (BPM)</label>
+        <label>Andamento (BPM)</label>
         <input type="number" id="bpmInput" value="113" min="60" max="180" onchange="onSettingChange()">
       </div>
 
       <div class="input-field full-width">
-        <label>3. Escala & Vibe Harmônica</label>
+        <label>Escala & Vibe Harmônica</label>
         <select id="scaleType" onchange="onSettingChange()">
           <optgroup label="✨ MODOS MAIORES & DOMINANTES">
             <option value="lydian dominant" selected>Lídio Dominante (Sertão / Neo-Soul)</option>
@@ -563,7 +556,7 @@
 
     <div class="controls-grid">
       <div class="input-field">
-        <label>4. Instrumento</label>
+        <label>Instrumento</label>
         <select id="patternStyle" onchange="updateVariationMenu()">
           <option value="logdrum">🥁 Baixo / Logdrum</option>
           <option value="rhodes">🎹 Rhodes / Teclados</option>
@@ -571,26 +564,26 @@
         </select>
       </div>
       <div class="input-field">
-        <label>5. Groove (8 Compassos)</label>
+        <label>Groove (8 Compassos)</label>
         <select id="variationType" onchange="onSettingChange()"></select>
       </div>
     </div>
 
     <div class="piano-roll-card">
       <div class="piano-roll-header">
-        <span>GRID PIANO ROLL (32 BEATS / 8 BARS)</span>
+        <span>GRID PIANO ROLL (32 BEATS)</span>
         <span id="noteCounter" style="color: var(--accent-terracotta);">0 Notas</span>
       </div>
-      <canvas id="pianoRollCanvas" width="620" height="130"></canvas>
+      <canvas id="pianoRollCanvas" width="620" height="120"></canvas>
     </div>
 
     <div class="actions-grid">
       <button class="btn btn-primary" id="playBtn" onclick="previewPattern()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
         Escutar Loop
       </button>
       <button class="btn btn-secondary" onclick="exportMIDI()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Exportar MIDI (.mid)
       </button>
     </div>
@@ -615,7 +608,7 @@
   <div id="viewPresets" class="app-card" style="display: none;">
     <div class="header">
       <h1 class="brand-title">Preset <span>Library</span></h1>
-      <span class="status-badge">4 PACKS CURADOS</span>
+      <span class="status-badge">PACKS CURADOS</span>
     </div>
     
     <div class="presets-grid">
@@ -645,17 +638,17 @@
     </div>
   </div>
 
-  <!-- VIEW 4: HARMONIZADOR DE CAMPO 2.4 -->
+  <!-- VIEW 4: HARMONIZADOR DE CAMPO -->
   <div id="viewChords" class="app-card" style="display: none;">
     <div class="header">
-      <h1 class="brand-title">Harmonizador <span>2.4</span></h1>
+      <h1 class="brand-title">Harmonizador <span>de Campo</span></h1>
       <span class="status-badge" id="chordScaleBadge">A LYDIAN DOMINANT</span>
     </div>
 
     <div class="keyboard-guide-card">
-      <div style="font-size: 11px; font-weight: 800; color: var(--accent-sand);">🎹 LIVE KEYBOARD JAM (SUSTENTAÇÃO NATURAL):</div>
+      <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand);">🎹 LIVE KEYBOARD JAM:</div>
       <div style="font-size: 11px; color: var(--text-main);">
-        Pressione <span class="kbd-badge">C..B</span> ou <span class="kbd-badge">1..7</span> para tocar. Segure a tecla para sustentar a nota e solte para o som apagar.
+        Pressione <span class="kbd-badge">C..B</span> ou <span class="kbd-badge">1..7</span> no teclado para tocar e sustentar notas.
       </div>
     </div>
 
@@ -667,7 +660,7 @@
     <div id="chordsGrid" class="chords-grid"></div>
 
     <div class="progression-card">
-      <div class="progression-title">💡 Progressões Recomendadas de partida:</div>
+      <div class="progression-title">💡 Progressões Recomendadas:</div>
       <div id="progressionsContainer"></div>
     </div>
   </div>
@@ -678,16 +671,16 @@
 <div id="editProfileModal" class="modal-overlay" onclick="closeEditProfileModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: #FFF; font-size: 18px;">👤 Meu Perfil de Produtor</h3>
+      <h3 style="margin: 0; color: #FFF; font-size: 16px;">👤 Perfil de Produtor</h3>
       <span style="cursor: pointer; font-weight: 700; color: var(--text-muted);" onclick="closeEditProfileModal()">✕</span>
     </div>
 
-    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;">
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
       Atualize suas informações de exibição na plataforma.
     </div>
 
-    <div class="input-field" style="margin-bottom: 14px;">
-      <label>Nome de Produtor / Exibição</label>
+    <div class="input-field" style="margin-bottom: 12px;">
+      <label>Nome de Exibição</label>
       <input type="text" id="profileNameInput" placeholder="Ex: Produtor Siara">
     </div>
 
@@ -696,11 +689,11 @@
       <input type="text" id="profilePhotoInput" placeholder="https://exemplo.com/sua-foto.jpg">
     </div>
 
-    <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
-      <button class="btn btn-secondary" onclick="auth.signOut(); closeEditProfileModal();" style="padding: 10px 14px; color: #FF8888; border-color: rgba(220,60,60,0.3);">Sair da Conta</button>
+    <div style="display: flex; gap: 8px; justify-content: space-between; align-items: center;">
+      <button class="btn btn-secondary" onclick="auth.signOut(); closeEditProfileModal();" style="padding: 9px 12px; color: #FF9999; border-color: rgba(220,60,60,0.25);">Sair da Conta</button>
       <div style="display: flex; gap: 8px;">
-        <button class="btn btn-secondary" onclick="closeEditProfileModal()" style="padding: 10px 16px;">Cancelar</button>
-        <button class="btn btn-primary" onclick="saveUserProfile()" style="padding: 10px 20px;">Salvar Alterações</button>
+        <button class="btn btn-secondary" onclick="closeEditProfileModal()" style="padding: 9px 14px;">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveUserProfile()" style="padding: 9px 18px;">Salvar</button>
       </div>
     </div>
   </div>
@@ -710,17 +703,17 @@
 <div id="saveSparkModal" class="modal-overlay" onclick="closeSaveSparkModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: #FFF; font-size: 18px;">⚡ Salvar Nova Fagulha</h3>
+      <h3 style="margin: 0; color: #FFF; font-size: 16px;">⚡ Salvar Fagulha</h3>
       <span style="cursor: pointer; font-weight: 700; color: var(--text-muted);" onclick="closeSaveSparkModal()">✕</span>
     </div>
 
-    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;">
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
       Grave este loop na sua biblioteca Cloud e envie uma cópia ao Make.
     </div>
 
-    <div class="input-field" style="margin-bottom: 14px;">
+    <div class="input-field" style="margin-bottom: 12px;">
       <label>Nome do Loop / Fagulha</label>
-      <input type="text" id="sparkTitleInput" placeholder="Ex: Bassline Baião Trap 01" autofocus>
+      <input type="text" id="sparkTitleInput" placeholder="Ex: Bassline Baião Trap" autofocus>
     </div>
 
     <div class="input-field" style="margin-bottom: 20px;">
@@ -728,17 +721,17 @@
       <input type="text" id="sparkNotesInput" placeholder="Ex: Usar como introdução na faixa principal">
     </div>
 
-    <div style="display: flex; gap: 10px; justify-content: flex-end;">
-      <button class="btn btn-secondary" onclick="closeSaveSparkModal()" style="padding: 10px 16px;">Cancelar</button>
-      <button class="btn btn-primary" onclick="confirmSendSparkToMake()" style="padding: 10px 20px;">⚡ Salvar na Nuvem</button>
+    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+      <button class="btn btn-secondary" onclick="closeSaveSparkModal()" style="padding: 9px 14px;">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmSendSparkToMake()" style="padding: 9px 18px;">⚡ Salvar na Nuvem</button>
     </div>
   </div>
 </div>
 
 <div id="shortcutsModal" class="modal-overlay" onclick="closeShortcutsModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h3 style="margin: 0; color: #FFF;">Atalhos de Teclado</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="margin: 0; color: #FFF; font-size: 16px;">Atalhos de Teclado</h3>
       <span style="cursor: pointer; font-weight: 700;" onclick="closeShortcutsModal()">✕</span>
     </div>
     <div class="shortcut-row">
@@ -829,14 +822,14 @@
       const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Produtor';
       authBtn.innerHTML = `${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar" />` : '👤'} <span>${firstName}</span>`;
       authBtn.title = `Conectado como ${user.email} (Clique para editar perfil)`;
-      userPlanDisplay.innerText = "Pro Unlimited • v2.6.0";
+      userPlanDisplay.innerText = "Pro Unlimited";
       userPlanDisplay.style.color = "var(--accent-ochre)";
       loadUserSparksFromFirestore();
     } else {
       authBtn.innerHTML = `<span>Entrar com Google</span>`;
       authBtn.title = "Clique para entrar com sua conta Google";
-      userPlanDisplay.innerText = "Free • Visitante";
-      userPlanDisplay.style.color = "#FFF";
+      userPlanDisplay.innerText = "Visitante";
+      userPlanDisplay.style.color = "var(--text-muted)";
       renderEmptyLibrary("Faça login com o Google para acessar sua biblioteca de fagulhas em nuvem.");
     }
   });
@@ -972,7 +965,7 @@
     });
     activeNodes = [];
     drawPianoRoll();
-    document.getElementById('statusMessage').innerText = "🛑 Áudio interrompido (Mute de Emergência).";
+    document.getElementById('statusMessage').innerText = "🛑 Áudio interrompido.";
   }
 
   function tapTempo() {
@@ -987,7 +980,7 @@
         if (calculatedBpm >= 60 && calculatedBpm <= 180) {
           document.getElementById('bpmInput').value = calculatedBpm;
           onSettingChange();
-          document.getElementById('statusMessage').innerText = `Tap Tempo: ${calculatedBpm} BPM calculated.`;
+          document.getElementById('statusMessage').innerText = `Tap Tempo: ${calculatedBpm} BPM calculado.`;
         }
       } else { tapTimes = []; }
     }
@@ -996,7 +989,7 @@
 
   function openSaveSparkModal() {
     if (!currentUser) {
-      document.getElementById('statusMessage').innerText = "🔒 Recurso Pro: Faça login com o Google para salvar fagulhas na sua biblioteca!";
+      document.getElementById('statusMessage').innerText = "🔒 Faça login com o Google para salvar fagulhas na sua biblioteca.";
       setTimeout(() => { handleAuth(); }, 1200);
       return;
     }
@@ -1047,7 +1040,7 @@
         }).catch(err => console.error("Erro no Make:", err));
       }
 
-      document.getElementById('statusMessage').innerText = `⚡ Fagulha "${sparkTitle}" salva com sucesso na sua biblioteca!`;
+      document.getElementById('statusMessage').innerText = `⚡ Fagulha "${sparkTitle}" salva com sucesso!`;
       loadUserSparksFromFirestore();
 
     } catch (err) {
@@ -1087,8 +1080,8 @@
               <div class="spark-info-notes">📝 ${item.sparkNotes} | 🕒 ${item.timestampStr || ''}</div>
             </div>
             <div class="spark-actions">
-              <button class="btn btn-primary" style="padding: 8px 14px; font-size: 11px;" onclick="loadSparkIntoGenerator('${item.root}', '${item.scale}', ${item.bpm}, '${item.instrument}', '${item.variation}', '${item.tuning}')">▶ Carregar</button>
-              <button class="btn btn-secondary" style="padding: 8px 10px; font-size: 11px; color: #FF8888;" onclick="deleteSparkFromFirestore('${docId}')">🗑️</button>
+              <button class="btn btn-primary" style="padding: 7px 12px; font-size: 11px;" onclick="loadSparkIntoGenerator('${item.root}', '${item.scale}', ${item.bpm}, '${item.instrument}', '${item.variation}', '${item.tuning}')">▶ Carregar</button>
+              <button class="btn btn-secondary" style="padding: 7px 10px; font-size: 11px; color: #FF9999;" onclick="deleteSparkFromFirestore('${docId}')">🗑️</button>
             </div>
           `;
           grid.appendChild(card);
@@ -1145,7 +1138,6 @@
     stopAudio();
     registrarTempoModulo(viewName);
 
-    // Atualiza o final da URL (ex: #library, #chords) sem recarregar
     if (window.location.hash !== '#' + viewName) {
       window.location.hash = viewName;
     }
@@ -1178,13 +1170,11 @@
     }
   }
 
-  // Monitora alterações de URL (botões de voltar/avançar do navegador)
   window.addEventListener('hashchange', () => {
     const currentView = window.location.hash.replace('#', '') || 'generator';
     switchView(currentView);
   });
 
-  // Carrega a visualização correspondente ao inicializar a aplicação
   window.addEventListener('load', () => {
     const initialView = window.location.hash.replace('#', '') || 'generator';
     switchView(initialView);
@@ -1228,7 +1218,7 @@
         <div class="chord-degree">Grau ${idx + 1}</div>
         <div class="chord-symbol">${chordSymbol}</div>
         <div class="chord-notes">${cleanNotes}</div>
-        <div style="font-size: 9px; color: var(--text-muted); margin-top: 6px;">▶ Clique para ouvir</div>
+        <div style="font-size: 9px; color: var(--text-muted); margin-top: 4px;">▶ Clique para ouvir</div>
       `;
       grid.appendChild(card);
     });
@@ -1244,22 +1234,22 @@
     if (scale.includes('minor') || scale === 'dorian' || scale === 'phrygian') {
       pContainer.innerHTML = `
         <div class="progression-item">
-          <span>1. Balanço Menor Sertanejo:</span>
+          <span>Balanço Menor Sertanejo:</span>
           <strong style="color: var(--accent-ochre);">${c1} ➔ ${c4} ➔ ${c5} ➔ ${c1}</strong>
         </div>
         <div class="progression-item">
-          <span>2. Cadência de Transe / Reza:</span>
+          <span>Cadência de Transe / Reza:</span>
           <strong style="color: var(--accent-ochre);">${c1} ➔ ${c7} ➔ ${c6} ➔ ${c1}</strong>
         </div>
       `;
     } else {
       pContainer.innerHTML = `
         <div class="progression-item">
-          <span>1. Sertão Neo-Soul (Balanço Principal):</span>
+          <span>Sertão Neo-Soul:</span>
           <strong style="color: var(--accent-ochre);">${c1} ➔ ${c2} ➔ ${c1}</strong>
         </div>
         <div class="progression-item">
-          <span>2. Tensão Lídia Ancestral:</span>
+          <span>Tensão Lídia Ancestral:</span>
           <strong style="color: var(--accent-ochre);">${c1} ➔ ${c7} ➔ ${c6} ➔ ${c1}</strong>
         </div>
       `;
@@ -1346,11 +1336,9 @@
     const val = document.getElementById('tuningSelect').value;
     const badge = document.getElementById('tuningBadge');
     if (val === '432') {
-      badge.innerText = '432 Hz ANCESTRAL (-31.8c)';
-      badge.style.color = 'var(--accent-sand)';
+      badge.innerHTML = '<span class="status-dot-led" style="background: var(--accent-sand); box-shadow: 0 0 8px var(--accent-sand);"></span> 432 Hz ANCESTRAL';
     } else {
-      badge.innerText = '440 Hz STANDARD';
-      badge.style.color = 'var(--accent-ochre)';
+      badge.innerHTML = '<span class="status-dot-led"></span> 440 Hz STANDARD';
     }
     document.getElementById('statusMessage').innerText = `Afinação Master alterada para ${val} Hz.`;
     drawPianoRoll();
@@ -1399,42 +1387,42 @@
 
     if (style === 'logdrum') {
       varSelect.innerHTML = `
-        <option value="log_01">01. Balanço Sincopado Urbano (Base com Dobras)</option>
-        <option value="log_02">02. Pressão Acelerada (Rolls 1/16 nos Compassos 4 e 8)</option>
-        <option value="log_03">03. Espaça & Ataca (Staccato com Pausas de Respiro)</option>
-        <option value="log_04">04. Pulso Galopado (Avanço Acentuado de Sub)</option>
-        <option value="log_05">05. Saltos Oitavados (Dinâmica Aguda / Grave)</option>
-        <option value="log_06">06. Ostinato de Transe (Mantra Rítmico Grave)</option>
-        <option value="log_07">07. Sincopa Quebrada (Deslocamento nos Compassos Pares)</option>
-        <option value="log_08">08. Caminhada Contínua (Linha Fluida de 8 Bars)</option>
-        <option value="log_09">09. Ataque Duplo (Acentuação no Contratempo Seco)</option>
-        <option value="log_10">10. Virada Tripletada (Construção de Tensão na Ponte)</option>
+        <option value="log_01">Balanço Sincopado Urbano</option>
+        <option value="log_02">Pressão Acelerada (Rolls 1/16)</option>
+        <option value="log_03">Espaça & Ataca (Staccato)</option>
+        <option value="log_04">Pulso Galopado</option>
+        <option value="log_05">Saltos Oitavados</option>
+        <option value="log_06">Ostinato de Transe</option>
+        <option value="log_07">Sincopa Quebrada</option>
+        <option value="log_08">Caminhada Contínua</option>
+        <option value="log_09">Ataque Duplo (Contratempo)</option>
+        <option value="log_10">Virada Tripletada</option>
       `;
     } else if (style === 'rhodes') {
       varSelect.innerHTML = `
-        <option value="rho_01">01. Atmosfera Aveludada (Sustentação R&B de 8 Bars)</option>
-        <option value="rho_02">02. Sincopado Cadenciado (Ataques Duplos e Stabs)</option>
-        <option value="rho_03">03. Bloco Estelar (Acordes Abertos Mudando a cada 2 Bars)</option>
-        <option value="rho_04">04. Staccato Espaçado (Pulsos no Tempo Fraco)</option>
-        <option value="rho_05">05. Modulação Movel (Evolução Harmônica na 2ª Metade)</option>
-        <option value="rho_06">06. Arpejo Sustentado (Escada Suave de Rhodes)</option>
-        <option value="rho_07">07. Camada Densa (Voicings com Pulsos Rítmicos)</option>
-        <option value="rho_08">08. Respiro Noturno (Entradas Apenas nos Compassos Ímpares)</option>
-        <option value="rho_09">09. Sincopa de Maré (Flutuação de Acordes Suspensos)</option>
-        <option value="rho_10">10. Resolução Ascendente (Tensão e Abertura Harmônica)</option>
+        <option value="rho_01">Atmosfera Aveludada (Sustentação)</option>
+        <option value="rho_02">Sincopado Cadenciado</option>
+        <option value="rho_03">Bloco Estelar (Acordes Abertos)</option>
+        <option value="rho_04">Staccato Espaçado</option>
+        <option value="rho_05">Modulação Movel</option>
+        <option value="rho_06">Arpejo Sustentado</option>
+        <option value="rho_07">Camada Densa</option>
+        <option value="rho_08">Respiro Noturno</option>
+        <option value="rho_09">Sincopa de Maré</option>
+        <option value="rho_10">Resolução Ascendente</option>
       `;
     } else if (style === 'viola') {
       varSelect.innerHTML = `
-        <option value="vio_01">01. Dedilhado de Serra (Lento e Ressonante - 8 Bars)</option>
-        <option value="vio_02">02. Galope Mourisco (Corrida Rápida de Cordas em 1/16)</option>
-        <option value="vio_03">03. Melodia Ondulante (Linha Ascendente e Descendente)</option>
-        <option value="vio_04">04. Fraseado de Solitude (Pergunta e Resposta em 8 Bars)</option>
-        <option value="vio_05">05. Transe de Pífano (Repetição Hipnótica em Duplas)</option>
-        <option value="vio_06">06. Cascata de Cordas (Arpejos Abertos no Início dos Compassos)</option>
-        <option value="vio_07">07. Pontilhado Seco (Plucks Percussivos no Contratempo)</option>
-        <option value="vio_08">08. Balanço de Maré (Dedilhado Fluido em Tercinas)</option>
-        <option value="vio_09">09. Rezo Mourisco (Dedilhado Ritual de 24 Notas)</option>
-        <option value="vio_10">10. Cortejo Evolutivo (Dedilhado Crescente dos Compassos 1 a 8)</option>
+        <option value="vio_01">Dedilhado de Serra</option>
+        <option value="vio_02">Galope Mourisco</option>
+        <option value="vio_03">Melodia Ondulante</option>
+        <option value="vio_04">Fraseado de Solitude</option>
+        <option value="vio_05">Transe de Pífano</option>
+        <option value="vio_06">Cascata de Cordas</option>
+        <option value="vio_07">Pontilhado Seco</option>
+        <option value="vio_08">Balanço de Maré</option>
+        <option value="vio_09">Rezo Mourisco</option>
+        <option value="vio_10">Cortejo Evolutivo</option>
       `;
     }
     drawPianoRoll();
@@ -1818,28 +1806,28 @@
     const ctx = canvas.getContext('2d');
     const events = generateEvents();
 
-    document.getElementById('noteCounter').innerText = `${events.length} Notas / 8 Bars`;
+    document.getElementById('noteCounter').innerText = `${events.length} Notas`;
 
-    ctx.fillStyle = '#0C0806';
+    ctx.fillStyle = '#070504';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.strokeStyle = '#1D1612';
+    ctx.strokeStyle = '#16110D';
     ctx.lineWidth = 1;
     for (let i = 0; i <= 32; i++) {
       let x = (i / 32) * canvas.width;
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
       if (i % 4 === 0 && i > 0) {
-        ctx.strokeStyle = '#2D221B';
+        ctx.strokeStyle = '#221B15';
         ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-        ctx.strokeStyle = '#1D1612';
+        ctx.strokeStyle = '#16110D';
       }
     }
 
     events.forEach(e => {
       let x = (e.beat / 32) * canvas.width;
       let w = Math.max(4, (e.durationBeats / 32) * canvas.width);
-      let y = canvas.height - 25 - ((e.notes.length || 1) * 9);
-      let h = 12;
+      let y = canvas.height - 22 - ((e.notes.length || 1) * 8);
+      let h = 10;
 
       let grad = ctx.createLinearGradient(x, y, x + w, y);
       grad.addColorStop(0, '#C85A17');
@@ -1848,7 +1836,7 @@
       ctx.fillStyle = grad;
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
-        ctx.roundRect(x, y, Math.max(3, w - 1), h, 3);
+        ctx.roundRect(x, y, Math.max(3, w - 1), h, 2);
       } else {
         ctx.fillRect(x, y, Math.max(3, w - 1), h);
       }
@@ -1859,7 +1847,7 @@
       let px = (Math.max(0, currentBeat) / 32) * canvas.width;
       
       ctx.shadowColor = '#E5A93C';
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 6;
       ctx.strokeStyle = '#FFFFFF';
       ctx.lineWidth = 2;
       
@@ -2198,7 +2186,7 @@
 
   function exportMIDI() {
     if (!currentUser) {
-      document.getElementById('statusMessage').innerText = "🔒 Recurso Pro: Faça login com o Google para liberar o download do arquivo MIDI!";
+      document.getElementById('statusMessage').innerText = "🔒 Faça login com o Google para liberar o download do arquivo MIDI.";
       setTimeout(() => { handleAuth(); }, 1500);
       return;
     }
