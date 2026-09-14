@@ -171,32 +171,42 @@
     }
     .main-wrapper.expanded { margin-left: 0; }
 
-    /* TOP BAR LIMPA */
+    /* TOP BAR PROFISSIONAL */
     .top-nav-bar {
-      width: 100%; max-width: 760px;
-      display: grid; grid-template-columns: 1fr; grid-template-rows: auto auto;
-      gap: 6px; margin: -8px 0 20px; padding: 8px 10px;
-      position: sticky; top: 10px; z-index: 40;
-      background: rgba(16, 12, 9, 0.72); border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 14px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      width: 100%; max-width: 760px; display: flex; align-items: center;
+      justify-content: space-between; gap: 12px; margin: -8px 0 20px; padding: 6px 10px;
+      position: sticky; top: 10px; z-index: 40; box-sizing: border-box;
+      background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
     }
-    .top-nav-group { display: flex; align-items: center; gap: 8px; position: relative; width: 100%; min-height: 36px; }
-    .top-nav-group:first-child { justify-content: flex-start; }
-    .top-nav-group:last-child { justify-content: flex-start; }
+    .top-nav-group { display: flex; align-items: center; gap: 6px; min-width: 0; }
+    .left-group { justify-content: flex-start; }
+    .right-group { justify-content: flex-end; }
 
-    .language-select { width: auto; min-width: 74px; height: 36px; padding: 0 10px; font-size: 11px; }
+    .btn-top, .vol-control, .language-select, .btn-auth {
+      height: 34px !important; padding: 0 10px !important;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px; color: var(--text-muted); font-size: 11px; font-weight: 600;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      cursor: pointer; transition: all 0.2s ease; box-sizing: border-box; white-space: nowrap;
+    }
+    .btn-top:hover, .vol-control:hover, .language-select:hover, .btn-auth:hover {
+      background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.12); color: var(--text-main);
+    }
+    .language-select { width: auto; min-width: 64px; outline: none; }
+    .btn-shortcut-icon { width: 34px; padding: 0 !important; font-family: monospace; font-weight: 700; }
 
     @media (max-width: 520px) {
       .top-nav-group { gap: 4px; }
       .btn-top { padding-left: 8px; padding-right: 8px; }
-      .vol-control { gap: 5px; height: 36px; padding-left: 6px; padding-right: 6px; }
+      .vol-control { gap: 5px; padding-left: 6px; padding-right: 6px; }
       .language-select { min-width: 64px; padding-left: 7px; padding-right: 7px; }
     }
 
     .btn-top {
       background: transparent; border: 1px solid transparent;
-      color: var(--text-muted); height: 36px; padding: 0 12px; border-radius: 8px; cursor: pointer;
+      color: var(--text-muted); height: 34px; padding: 0 10px; border-radius: 8px; cursor: pointer;
       display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
       transition: all 0.2s;
     }
@@ -219,11 +229,11 @@
       width: 20px; height: 20px; border-radius: 50%; object-fit: cover;
     }
 
-    /* DROPDOWN MENU DO USUÁRIO */
+    /* DROPDOWN DO USUÁRIO */
     .user-dropdown-menu {
-      position: absolute; top: calc(100% + 8px); left: 0;
+      position: absolute; top: calc(100% + 6px); right: 0; left: auto;
       background: var(--sidebar-bg); border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px; width: 180px; padding: 6px; display: none;
+      border-radius: 10px; width: 170px; padding: 4px; display: none;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 60;
     }
     .user-dropdown-menu.show { display: block; }
@@ -243,7 +253,7 @@
     .vol-control {
       display: flex; align-items: center; gap: 8px;
       background: transparent; border: 1px solid transparent;
-      padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--text-muted);
+      padding: 0 10px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--text-muted);
       transition: all 0.2s;
     }
     .vol-control:hover {
@@ -541,7 +551,8 @@
 <main id="mainWrapper" class="main-wrapper">
   
   <div class="top-nav-bar">
-    <div class="top-nav-group">
+    <!-- GRUPO ESQUERDO: CONTROLES DE REPRODUÇÃO E AÇÕES -->
+    <div class="top-nav-group left-group">
       <button class="btn-top" onclick="toggleSidebar()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         <span data-i18n="menu">Menu</span>
@@ -558,24 +569,11 @@
       </button>
     </div>
 
-    <div class="top-nav-group">
-      <!-- BOTÃO DE LOGIN / PERFIL DO FIREBASE COM MENU DROPDOWN -->
-      <button id="authBtn" class="btn-top btn-auth" onclick="toggleUserDropdown()">
-        <span data-i18n="signInGoogle">Entrar com Google</span>
-      </button>
-
-      <div id="userDropdownMenu" class="user-dropdown-menu">
-        <div class="dropdown-item" onclick="switchView('profile'); toggleUserDropdown();">
-          <span data-i18n="myProfile">👤 Meu Perfil</span>
-        </div>
-        <div class="dropdown-item logout" onclick="auth.signOut(); toggleUserDropdown();">
-          <span data-i18n="signOut">🚪 Sair da Conta</span>
-        </div>
-      </div>
-
+    <!-- GRUPO DIREITO: ÁUDIO, IDIOMA E USUÁRIO -->
+    <div class="top-nav-group right-group">
       <div class="vol-control">
         <span data-i18n="volume">VOL</span>
-        <input type="range" id="masterVolume" min="0" max="100" value="80" style="width: 60px;" oninput="updateMasterVolume(this.value)">
+        <input type="range" id="masterVolume" min="0" max="100" value="80" style="width: 50px;" oninput="updateMasterVolume(this.value)">
         <span id="volVal">80%</span>
       </div>
       <select id="languageSelect" class="language-select" aria-label="Idioma" data-i18n-aria-label="language" onchange="changeLanguage(this.value)">
@@ -583,9 +581,25 @@
         <option value="en">EN</option>
         <option value="es">ES</option>
       </select>
-      <button class="btn-top" onclick="openShortcutsModal()" data-i18n-title="keyboardShortcuts" title="Atalhos de Teclado">
-        <span style="font-family: monospace; font-weight: 700;">?</span>
+      <button class="btn-top btn-shortcut-icon" onclick="openShortcutsModal()" data-i18n-title="keyboardShortcuts" title="Atalhos de Teclado">
+        ?
       </button>
+
+      <div style="position: relative;">
+        <!-- BOTÃO DE LOGIN / PERFIL DO FIREBASE COM MENU DROPDOWN -->
+        <button id="authBtn" class="btn-top btn-auth" onclick="toggleUserDropdown()">
+          <span data-i18n="signInGoogle">Entrar com Google</span>
+        </button>
+
+        <div id="userDropdownMenu" class="user-dropdown-menu">
+          <div class="dropdown-item" onclick="switchView('profile'); toggleUserDropdown();">
+            <span data-i18n="myProfile">👤 Meu Perfil</span>
+          </div>
+          <div class="dropdown-item logout" onclick="auth.signOut(); toggleUserDropdown();">
+            <span data-i18n="signOut">🚪 Sair da Conta</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
