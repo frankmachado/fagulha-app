@@ -29,6 +29,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
@@ -401,6 +402,11 @@
       width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
       border: 2px solid var(--accent-terracotta); box-shadow: 0 0 20px var(--accent-glow);
     }
+    .profile-photo-picker {
+      display: flex; align-items: center; gap: 12px; margin-top: 10px;
+    }
+    .profile-photo-picker input[type="file"] { display: none; }
+    .profile-photo-help { font-size: 11px; color: var(--text-muted); }
     .profile-section-title {
       font-size: 12px; font-weight: 700; color: var(--accent-sand);
       text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px; text-align: left;
@@ -757,6 +763,11 @@
         <div id="profileHeaderName" style="font-size: 18px; font-weight: 800; color: #FFF;">Nome do Produtor</div>
         <div id="profileHeaderEmail" style="font-size: 12px; color: var(--text-muted);">email@exemplo.com</div>
         <div style="font-size: 11px; color: var(--accent-ochre); margin-top: 4px; font-weight: 600;" id="profileHeaderPlan">Plano Pro Unlimited</div>
+        <div class="profile-photo-picker">
+          <label for="pageProfilePhoto" class="btn btn-secondary" style="padding: 7px 10px; font-size: 11px;">Escolher imagem</label>
+          <input type="file" id="pageProfilePhoto" accept="image/png,image/jpeg,image/webp" onchange="previewProfileImage(event)">
+          <span id="profilePhotoHelp" class="profile-photo-help">PNG, JPG ou WebP</span>
+        </div>
       </div>
     </div>
 
@@ -766,11 +777,6 @@
       <div class="input-field">
         <label>Nome de Exibição / Produtor</label>
         <input type="text" id="pageProfileName" placeholder="Ex: Produtor Siara">
-      </div>
-
-      <div class="input-field">
-        <label>URL da Foto de Perfil (Avatar)</label>
-        <input type="text" id="pageProfilePhoto" placeholder="https://exemplo.com/sua-foto.jpg">
       </div>
 
       <div class="input-field full-width">
@@ -876,6 +882,7 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
+  const storage = firebase.storage();
   
   let analytics = null;
   if (firebase.analytics) {
@@ -883,6 +890,7 @@
   }
 
   let currentUser = null;
+  let selectedProfileImage = null;
 
   /* RASTREAMENTO DE ANALYTICS */
   let moduloAtual = 'generator';
@@ -980,9 +988,11 @@
     document.getElementById('profileHeaderEmail').innerText = currentUser.email || "";
     
     document.getElementById('pageProfileName').value = currentUser.displayName || "";
-    document.getElementById('pageProfilePhoto').value = currentUser.photoURL || "";
     document.getElementById('pageProfileEmailDisabled').value = currentUser.email || "";
     document.getElementById('pageProfileUidDisabled').value = currentUser.uid || "";
+    selectedProfileImage = null;
+    document.getElementById('pageProfilePhoto').value = "";
+    document.getElementById('profilePhotoHelp').innerText = "PNG, JPG ou WebP";
 
     db.collection('users').doc(currentUser.uid).get().then(doc => {
       if (doc.exists && doc.data().bio) {
@@ -991,17 +1001,42 @@
     }).catch(()=>{});
   }
 
+  function previewProfileImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      event.target.value = "";
+      document.getElementById('statusMessage').innerText = "⚠️ Escolha um arquivo de imagem válido.";
+      return;
+    }
+
+    selectedProfileImage = file;
+    const reader = new FileReader();
+    reader.onload = (loadEvent) => {
+      document.getElementById('profileLargeAvatar').src = loadEvent.target.result;
+    };
+    reader.readAsDataURL(file);
+    document.getElementById('profilePhotoHelp').innerText = file.name;
+  }
+
   function savePageUserProfile() {
     if (!currentUser) return;
     const newName = document.getElementById('pageProfileName').value.trim();
-    const newPhoto = document.getElementById('pageProfilePhoto').value.trim();
     const newBio = document.getElementById('pageProfileBio').value.trim();
 
     document.getElementById('statusMessage').innerText = "⏳ Atualizando perfil...";
 
-    currentUser.updateProfile({
+    let photoPromise = Promise.resolve(currentUser.photoURL || "");
+    if (selectedProfileImage) {
+      const fileExtension = selectedProfileImage.name.split('.').pop().toLowerCase();
+      const photoRef = storage.ref(`profile-images/${currentUser.uid}/avatar-${Date.now()}.${fileExtension}`);
+      photoPromise = photoRef.put(selectedProfileImage, { contentType: selectedProfileImage.type }).then(() => photoRef.getDownloadURL());
+    }
+
+    photoPromise.then((newPhoto) => currentUser.updateProfile({
       displayName: newName || currentUser.displayName,
-      photoURL: newPhoto || currentUser.photoURL
+      photoURL: newPhoto
     }).then(() => {
       return db.collection('users').doc(currentUser.uid).set({
         displayName: newName,
@@ -1016,7 +1051,7 @@
       const avatarUrl = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'P')}&background=C85A17&color=fff`;
       const firstName = currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Produtor';
       document.getElementById('authBtn').innerHTML = `<img src="${avatarUrl}" class="user-avatar" /> <span>${firstName}</span> ▾`;
-    }).catch((err) => {
+    })).catch((err) => {
       document.getElementById('statusMessage').innerText = "⚠️ Erro ao atualizar perfil: " + err.message;
     });
   }
