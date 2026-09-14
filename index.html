@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no, email=no, address=no">
   <title>Fagulha Studio Hub</title>
 
   <!-- REQUISITOS PWA & MANIFEST -->
@@ -12,6 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Fagulha">
+  <meta name="apple-touch-fullscreen" content="yes">
   <link rel="apple-touch-icon" href="icon-192.png">
 
   <!-- REGISTRO AUTOMÁTICO DO SERVICE WORKER -->
@@ -57,6 +59,10 @@
       --text-main: #F5EFE6;
       --text-muted: #80756C;
       --sidebar-width: 260px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
     }
 
     * { 
@@ -86,6 +92,10 @@
       position: relative;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      padding-top: max(0px, var(--safe-top));
+      padding-right: max(0px, var(--safe-right));
+      padding-bottom: max(0px, var(--safe-bottom));
+      padding-left: max(0px, var(--safe-left));
     }
 
     .bg-grid-pattern {
@@ -106,7 +116,7 @@
     .sidebar {
       width: var(--sidebar-width); height: 100vh;
       background: var(--sidebar-bg); border-right: 1px solid rgba(255, 255, 255, 0.04);
-      padding: 24px 16px; display: flex; flex-direction: column;
+      padding: calc(24px + var(--safe-top)) 16px 24px; display: flex; flex-direction: column;
       position: fixed; top: 0; left: 0; z-index: 50;
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       overflow-y: auto;
@@ -165,7 +175,7 @@
     }
 
     .main-wrapper {
-      flex: 1; margin-left: var(--sidebar-width); padding: 24px;
+      flex: 1; margin-left: var(--sidebar-width); padding: calc(24px + var(--safe-top)) 24px 24px;
       display: flex; flex-direction: column; align-items: center;
       position: relative; z-index: 1; transition: margin-left 0.3s ease; width: 100%;
     }
@@ -175,7 +185,7 @@
     .top-nav-bar {
       width: 100%; max-width: 760px; display: flex; align-items: center;
       justify-content: space-between; gap: 12px; margin: -8px 0 20px; padding: 6px 10px;
-      position: sticky; top: 10px; z-index: 40; box-sizing: border-box;
+      position: sticky; top: calc(10px + var(--safe-top)); z-index: 40; box-sizing: border-box;
       background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 14px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
