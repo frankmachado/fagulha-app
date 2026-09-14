@@ -668,7 +668,7 @@
   <!-- VIEW 2: MINHAS FAGULHAS -->
   <div id="viewLibrary" class="app-card" style="display: none;">
     <div class="header">
-      <h1 class="brand-title">Minhas <span>Fagulhas</span></h1>
+      <h1 class="brand-title"><span data-i18n="my">Minhas</span> <span data-i18n="sparks">Fagulhas</span></h1>
       <span class="status-badge" id="libraryCountBadge">0 LOOPS SALVOS</span>
     </div>
 
@@ -678,8 +678,8 @@
   <!-- VIEW 3: PACK PRESET LIBRARY -->
   <div id="viewPresets" class="app-card" style="display: none;">
     <div class="header">
-      <h1 class="brand-title">Preset <span>Library</span></h1>
-      <span class="status-badge">PACKS CURADOS</span>
+      <h1 class="brand-title"><span data-i18n="preset">Preset</span> <span data-i18n="library">Library</span></h1>
+      <span class="status-badge" data-i18n="curatedPacks">PACKS CURADOS</span>
     </div>
     
     <div class="presets-grid">
@@ -712,7 +712,7 @@
   <!-- VIEW 4: HARMONIZADOR DE CAMPO -->
   <div id="viewChords" class="app-card" style="display: none;">
     <div class="header">
-      <h1 class="brand-title">Harmonizador <span>de Campo</span></h1>
+      <h1 class="brand-title"><span data-i18n="harmonizerTitle">Harmonizador</span> <span data-i18n="field">de Campo</span></h1>
       <span class="status-badge" id="chordScaleBadge">A LYDIAN DOMINANT</span>
     </div>
 
@@ -726,7 +726,7 @@
       </div>
       
       <div style="display: flex; align-items: center; gap: 8px;">
-        <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Escala Ativa:</label>
+        <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="activeScale">Escala Ativa:</label>
         <select id="quickHarmonizerScale" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickScaleChange(this.value)">
           <optgroup label="✨ MODOS MAIORES & DOMINANTES">
             <option value="lydian dominant">Lídio Dominante</option>
@@ -745,14 +745,14 @@
     </div>
 
     <div class="chord-mode-toggle">
-      <button class="toggle-pill active" id="btnTriads" onclick="setChordType('triads')">Tríades (3 Notas)</button>
-      <button class="toggle-pill" id="btnTetrads" onclick="setChordType('tetrads')">Tétrades / 7ªs (4 Notas)</button>
+      <button class="toggle-pill active" id="btnTriads" onclick="setChordType('triads')" data-i18n="triads">Tríades (3 Notas)</button>
+      <button class="toggle-pill" id="btnTetrads" onclick="setChordType('tetrads')" data-i18n="tetrads">Tétrades / 7ªs (4 Notas)</button>
     </div>
 
     <div id="chordsGrid" class="chords-grid"></div>
 
     <div class="progression-card">
-      <div class="progression-title">💡 Progressões Recomendadas:</div>
+      <div class="progression-title" data-i18n="recommendedProgressions">💡 Progressões Recomendadas:</div>
       <div id="progressionsContainer"></div>
     </div>
   </div>
@@ -760,8 +760,8 @@
   <!-- VIEW 5: TELA DEDICADA DE PERFIL (#profile) -->
   <div id="viewProfile" class="app-card" style="display: none;">
     <div class="header">
-      <h1 class="brand-title">Meu Perfil <span>de Produtor</span></h1>
-      <button class="btn btn-secondary" onclick="switchView('generator')" style="padding: 6px 12px; font-size: 11px;">Voltar ao Studio</button>
+      <h1 class="brand-title"><span data-i18n="myProfileTitle">Meu Perfil</span> <span data-i18n="producer">de Produtor</span></h1>
+      <button class="btn btn-secondary" onclick="switchView('generator')" style="padding: 6px 12px; font-size: 11px;" data-i18n="backToStudio">Voltar ao Studio</button>
     </div>
 
     <div class="profile-header-card">
@@ -769,44 +769,44 @@
       <div>
         <div id="profileHeaderName" style="font-size: 18px; font-weight: 800; color: #FFF;">Nome do Produtor</div>
         <div id="profileHeaderEmail" style="font-size: 12px; color: var(--text-muted);">email@exemplo.com</div>
-        <div style="font-size: 11px; color: var(--accent-ochre); margin-top: 4px; font-weight: 600;" id="profileHeaderPlan">Plano Pro Unlimited</div>
+        <div style="font-size: 11px; color: var(--accent-ochre); margin-top: 4px; font-weight: 600;" id="profileHeaderPlan" data-i18n="proPlan">Plano Pro Unlimited</div>
         <div class="profile-photo-picker">
-          <label for="pageProfilePhoto" class="btn btn-secondary" style="padding: 7px 10px; font-size: 11px;">Escolher imagem</label>
+          <label for="pageProfilePhoto" class="btn btn-secondary" style="padding: 7px 10px; font-size: 11px;" data-i18n="chooseImage">Escolher imagem</label>
           <input type="file" id="pageProfilePhoto" accept="image/png,image/jpeg,image/webp" onchange="previewProfileImage(event)">
-          <span id="profilePhotoHelp" class="profile-photo-help">PNG, JPG ou WebP</span>
+          <span id="profilePhotoHelp" class="profile-photo-help" data-i18n="imageFormats">PNG, JPG ou WebP</span>
         </div>
       </div>
     </div>
 
-    <div class="profile-section-title">Informações de Exibição</div>
+    <div class="profile-section-title" data-i18n="displayInformation">Informações de Exibição</div>
 
     <div class="controls-grid" style="margin-bottom: 20px;">
       <div class="input-field">
-        <label>Nome de Exibição / Produtor</label>
-        <input type="text" id="pageProfileName" placeholder="Ex: Produtor Siara">
+        <label data-i18n="displayName">Nome de Exibição / Produtor</label>
+        <input type="text" id="pageProfileName" data-i18n-placeholder="displayNamePlaceholder" placeholder="Ex: Produtor Siara">
       </div>
 
       <div class="input-field full-width">
-        <label>Bio / Apresentação Musical (Opcional)</label>
-        <textarea id="pageProfileBio" rows="3" placeholder="Conte um pouco sobre seu estilo musical, ritmos favoritos ou produções..."></textarea>
+        <label data-i18n="bio">Bio / Apresentação Musical (Opcional)</label>
+        <textarea id="pageProfileBio" rows="3" data-i18n-placeholder="bioPlaceholder" placeholder="Conte um pouco sobre seu estilo musical, ritmos favoritos ou produções..."></textarea>
       </div>
     </div>
 
-    <div class="profile-section-title">Dados da Conta</div>
+    <div class="profile-section-title" data-i18n="accountData">Dados da Conta</div>
     <div class="controls-grid" style="margin-bottom: 24px; opacity: 0.8;">
       <div class="input-field">
-        <label>E-mail Vinculado</label>
+        <label data-i18n="linkedEmail">E-mail Vinculado</label>
         <input type="text" id="pageProfileEmailDisabled" disabled style="cursor: not-allowed;">
       </div>
       <div class="input-field">
-        <label>ID do Produtor (Firebase UID)</label>
+        <label data-i18n="producerId">ID do Produtor (Firebase UID)</label>
         <input type="text" id="pageProfileUidDisabled" disabled style="cursor: not-allowed; font-family: monospace; font-size: 11px;">
       </div>
     </div>
 
     <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 20px;">
-      <button class="btn btn-secondary" onclick="auth.signOut();" style="color: #FF9999; border-color: rgba(220,60,60,0.25);">🚪 Sair da Conta</button>
-      <button class="btn btn-primary" onclick="savePageUserProfile()" style="padding: 10px 24px;">⚡ Salvar Alterações</button>
+      <button class="btn btn-secondary" onclick="auth.signOut();" style="color: #FF9999; border-color: rgba(220,60,60,0.25);" data-i18n="signOut">🚪 Sair da Conta</button>
+      <button class="btn btn-primary" onclick="savePageUserProfile()" style="padding: 10px 24px;" data-i18n="saveChanges">⚡ Salvar Alterações</button>
     </div>
   </div>
 
@@ -816,27 +816,27 @@
 <div id="saveSparkModal" class="modal-overlay" onclick="closeSaveSparkModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: #FFF; font-size: 16px;">⚡ Salvar Fagulha</h3>
+      <h3 style="margin: 0; color: #FFF; font-size: 16px;" data-i18n="saveSpark">⚡ Salvar Fagulha</h3>
       <span style="cursor: pointer; font-weight: 700; color: var(--text-muted);" onclick="closeSaveSparkModal()">✕</span>
     </div>
 
     <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-      Grave este loop na sua biblioteca Cloud e envie uma cópia ao Make.
+      <span data-i18n="saveSparkDescription">Grave este loop na sua biblioteca Cloud e envie uma cópia ao Make.</span>
     </div>
 
     <div class="input-field" style="margin-bottom: 12px;">
-      <label>Nome do Loop / Fagulha</label>
-      <input type="text" id="sparkTitleInput" placeholder="Ex: Bassline Baião Trap" autofocus>
+      <label data-i18n="loopName">Nome do Loop / Fagulha</label>
+      <input type="text" id="sparkTitleInput" data-i18n-placeholder="loopNamePlaceholder" placeholder="Ex: Bassline Baião Trap" autofocus>
     </div>
 
     <div class="input-field" style="margin-bottom: 20px;">
-      <label>Anotações ou Vibe (Opcional)</label>
-      <input type="text" id="sparkNotesInput" placeholder="Ex: Usar como introdução na faixa principal">
+      <label data-i18n="notesVibe">Anotações ou Vibe (Opcional)</label>
+      <input type="text" id="sparkNotesInput" data-i18n-placeholder="notesVibePlaceholder" placeholder="Ex: Usar como introdução na faixa principal">
     </div>
 
     <div style="display: flex; gap: 8px; justify-content: flex-end;">
-      <button class="btn btn-secondary" onclick="closeSaveSparkModal()" style="padding: 9px 14px;">Cancelar</button>
-      <button class="btn btn-primary" onclick="confirmSendSparkToMake()" style="padding: 9px 18px;">⚡ Salvar na Nuvem</button>
+      <button class="btn btn-secondary" onclick="closeSaveSparkModal()" style="padding: 9px 14px;" data-i18n="cancel">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmSendSparkToMake()" style="padding: 9px 18px;" data-i18n="saveToCloud">⚡ Salvar na Nuvem</button>
     </div>
   </div>
 </div>
@@ -844,31 +844,31 @@
 <div id="shortcutsModal" class="modal-overlay" onclick="closeShortcutsModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: #FFF; font-size: 16px;">Atalhos de Teclado</h3>
+      <h3 style="margin: 0; color: #FFF; font-size: 16px;" data-i18n="keyboardShortcutsText">Atalhos de Teclado</h3>
       <span style="cursor: pointer; font-weight: 700;" onclick="closeShortcutsModal()">✕</span>
     </div>
     <div class="shortcut-row">
-      <span>Tocar Graus da Escala (Hold = Sustenta, Release = Solta)</span>
+      <span data-i18n="shortcutScale">Tocar Graus da Escala (Hold = Sustenta, Release = Solta)</span>
       <span class="kbd-badge">1..7</span>
     </div>
     <div class="shortcut-row">
-      <span>Notas Fixas Absolutas</span>
+      <span data-i18n="shortcutNotes">Notas Fixas Absolutas</span>
       <span class="kbd-badge">C..B</span>
     </div>
     <div class="shortcut-row">
-      <span>Escutar / Pausar Loop</span>
+      <span data-i18n="shortcutPlay">Escutar / Pausar Loop</span>
       <span class="kbd-badge">ESPAÇO</span>
     </div>
     <div class="shortcut-row">
-      <span>Emergency Mute (Panic)</span>
+      <span data-i18n="shortcutMute">Emergency Mute (Panic)</span>
       <span class="kbd-badge">ESC</span>
     </div>
     <div class="shortcut-row">
-      <span>Calcular Tap Tempo</span>
+      <span data-i18n="shortcutTap">Calcular Tap Tempo</span>
       <span class="kbd-badge">T</span>
     </div>
     <div class="shortcut-row">
-      <span>Alternar Menu Lateral</span>
+      <span data-i18n="shortcutMenu">Alternar Menu Lateral</span>
       <span class="kbd-badge">M</span>
     </div>
   </div>
@@ -898,6 +898,106 @@
 
   let currentUser = null;
   let selectedProfileImage = null;
+
+  const translations = {
+    pt: {
+      navigation: 'Navegação & Módulos', scaleEngine: 'Scale Engine', mySparks: 'Minhas Fagulhas', presets: 'Presets',
+      harmonizer: 'Harmonizador', grooveHumanizer: 'Groove & Humanizer', humanizer: 'Humanizer', swing: 'Swing',
+      settings: 'Configurações', masterTuning: 'Afinação Master', standardTuning: '440 Hz (Padrão)', organicTuning: '432 Hz (Orgânico)',
+      activePlan: 'PLANO ATIVO', visitor: 'Visitante', menu: 'Menu', saveSpark: '⚡ Salvar Fagulha', tapTempo: 'Tap Tempo',
+      stop: '🛑 Stop', signInGoogle: 'Entrar com Google', myProfile: '👤 Meu Perfil', signOut: '🚪 Sair da Conta', volume: 'VOL',
+      rootNote: 'Tônica (Key)', tempo: 'Andamento (BPM)', shortcuts: 'Atalhos', scaleVibe: 'Escala & Vibe Harmônica', scaleNotes: 'Notas da Escala',
+      instrument: 'Instrumento', groove: 'Groove (8 Compassos)', pianoRoll: 'GRID PIANO ROLL (32 BEATS)', listenLoop: 'Escutar Loop',
+      exportMidi: 'Exportar MIDI (.mid)', engineReady: 'Fagulha Scale Engine pronto para processar.', my: 'Minhas', sparks: 'Fagulhas',
+      preset: 'Preset', library: 'Library', curatedPacks: 'PACKS CURADOS', harmonizerTitle: 'Harmonizador', field: 'de Campo', activeScale: 'Escala Ativa:',
+      triads: 'Tríades (3 Notas)', tetrads: 'Tétrades / 7ªs (4 Notas)', recommendedProgressions: '💡 Progressões Recomendadas:',
+      myProfileTitle: 'Meu Perfil', producer: 'de Produtor', backToStudio: 'Voltar ao Studio', proPlan: 'Plano Pro Unlimited',
+      chooseImage: 'Escolher imagem', imageFormats: 'PNG, JPG ou WebP', displayInformation: 'Informações de Exibição',
+      displayName: 'Nome de Exibição / Produtor', bio: 'Bio / Apresentação Musical (Opcional)', accountData: 'Dados da Conta',
+      linkedEmail: 'E-mail Vinculado', producerId: 'ID do Produtor (Firebase UID)', saveChanges: '⚡ Salvar Alterações',
+      saveSparkDescription: 'Grave este loop na sua biblioteca Cloud e envie uma cópia ao Make.', loopName: 'Nome do Loop / Fagulha',
+      notesVibe: 'Anotações ou Vibe (Opcional)', cancel: 'Cancelar', saveToCloud: '⚡ Salvar na Nuvem', keyboardShortcutsText: 'Atalhos de Teclado',
+      shortcutScale: 'Tocar Graus da Escala (Hold = Sustenta, Release = Solta)', shortcutNotes: 'Notas Fixas Absolutas',
+      shortcutPlay: 'Escutar / Pausar Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calcular Tap Tempo', shortcutMenu: 'Alternar Menu Lateral',
+      language: 'Idioma', saveLoopTitle: 'Salvar o loop atual na sua biblioteca', tapTempoTitle: 'Clique no ritmo para definir o BPM',
+      stopTitle: 'Interromper todos os áudios', keyboardShortcuts: 'Atalhos de Teclado', displayNamePlaceholder: 'Ex: Produtor Siara',
+      bioPlaceholder: 'Conte um pouco sobre seu estilo musical, ritmos favoritos ou produções...', loopNamePlaceholder: 'Ex: Bassline Baião Trap',
+      notesVibePlaceholder: 'Ex: Usar como introdução na faixa principal'
+    },
+    en: {
+      navigation: 'Navigation & Modules', scaleEngine: 'Scale Engine', mySparks: 'My Sparks', presets: 'Presets', harmonizer: 'Harmonizer',
+      grooveHumanizer: 'Groove & Humanizer', humanizer: 'Humanizer', swing: 'Swing', settings: 'Settings', masterTuning: 'Master Tuning',
+      standardTuning: '440 Hz (Standard)', organicTuning: '432 Hz (Organic)', activePlan: 'ACTIVE PLAN', visitor: 'Guest', menu: 'Menu',
+      saveSpark: '⚡ Save Spark', tapTempo: 'Tap Tempo', stop: '🛑 Stop', signInGoogle: 'Sign in with Google', myProfile: '👤 My Profile',
+      signOut: '🚪 Sign Out', volume: 'VOL', rootNote: 'Root Note (Key)', tempo: 'Tempo (BPM)', shortcuts: 'Shortcuts',
+      scaleVibe: 'Scale & Harmonic Vibe', scaleNotes: 'Scale Notes', instrument: 'Instrument', groove: 'Groove (8 Bars)',
+      pianoRoll: 'PIANO ROLL GRID (32 BEATS)', listenLoop: 'Listen to Loop', exportMidi: 'Export MIDI (.mid)', engineReady: 'Fagulha Scale Engine ready to process.',
+      my: 'My', sparks: 'Sparks', preset: 'Preset', library: 'Library', curatedPacks: 'CURATED PACKS', harmonizerTitle: 'Field', field: 'Harmonizer',
+      activeScale: 'Active Scale:', triads: 'Triads (3 Notes)', tetrads: 'Tetrads / 7ths (4 Notes)', recommendedProgressions: '💡 Recommended Progressions:',
+      myProfileTitle: 'My Profile', producer: 'Producer', backToStudio: 'Back to Studio', proPlan: 'Pro Unlimited Plan', chooseImage: 'Choose image',
+      imageFormats: 'PNG, JPG or WebP', displayInformation: 'Display Information', displayName: 'Display Name / Producer', bio: 'Bio / Musical Presentation (Optional)',
+      accountData: 'Account Data', linkedEmail: 'Linked E-mail', producerId: 'Producer ID (Firebase UID)', saveChanges: '⚡ Save Changes',
+      saveSparkDescription: 'Save this loop to your Cloud library and send a copy to Make.', loopName: 'Loop / Spark Name', notesVibe: 'Notes or Vibe (Optional)',
+      cancel: 'Cancel', saveToCloud: '⚡ Save to Cloud', keyboardShortcutsText: 'Keyboard Shortcuts', shortcutScale: 'Play Scale Degrees (Hold = Sustain, Release = Stop)',
+      shortcutNotes: 'Absolute Fixed Notes', shortcutPlay: 'Play / Pause Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calculate Tap Tempo',
+      shortcutMenu: 'Toggle Sidebar', language: 'Language', saveLoopTitle: 'Save the current loop to your library', tapTempoTitle: 'Tap the rhythm to set the BPM',
+      stopTitle: 'Stop all audio', keyboardShortcuts: 'Keyboard Shortcuts', displayNamePlaceholder: 'E.g. Producer Siara',
+      bioPlaceholder: 'Tell us about your musical style, favorite rhythms or productions...', loopNamePlaceholder: 'E.g. Bassline Baião Trap',
+      notesVibePlaceholder: 'E.g. Use as an intro for the main track'
+    },
+    es: {
+      navigation: 'Navegación y módulos', scaleEngine: 'Motor de escalas', mySparks: 'Mis chispas', presets: 'Presets', harmonizer: 'Armonizador',
+      grooveHumanizer: 'Groove y humanizador', humanizer: 'Humanizador', swing: 'Swing', settings: 'Configuración', masterTuning: 'Afinación maestra',
+      standardTuning: '440 Hz (Estándar)', organicTuning: '432 Hz (Orgánico)', activePlan: 'PLAN ACTIVO', visitor: 'Visitante', menu: 'Menú',
+      saveSpark: '⚡ Guardar chispa', tapTempo: 'Tap Tempo', stop: '🛑 Parar', signInGoogle: 'Entrar con Google', myProfile: '👤 Mi perfil',
+      signOut: '🚪 Cerrar sesión', volume: 'VOL', rootNote: 'Tónica (Clave)', tempo: 'Tempo (BPM)', shortcuts: 'Atajos',
+      scaleVibe: 'Escala y ambiente armónico', scaleNotes: 'Notas de la escala', instrument: 'Instrumento', groove: 'Groove (8 compases)',
+      pianoRoll: 'CUADRÍCULA PIANO ROLL (32 BEATS)', listenLoop: 'Escuchar loop', exportMidi: 'Exportar MIDI (.mid)', engineReady: 'Fagulha Scale Engine listo para procesar.',
+      my: 'Mis', sparks: 'Chispas', preset: 'Preset', library: 'Biblioteca', curatedPacks: 'PACKS CURADOS', harmonizerTitle: 'Armonizador', field: 'de campo',
+      activeScale: 'Escala activa:', triads: 'Tríadas (3 notas)', tetrads: 'Tétradas / 7ª (4 notas)', recommendedProgressions: '💡 Progresiones recomendadas:',
+      myProfileTitle: 'Mi perfil', producer: 'de productor', backToStudio: 'Volver al estudio', proPlan: 'Plan Pro Unlimited', chooseImage: 'Elegir imagen',
+      imageFormats: 'PNG, JPG o WebP', displayInformation: 'Información de pantalla', displayName: 'Nombre / productor', bio: 'Bio / Presentación musical (Opcional)',
+      accountData: 'Datos de la cuenta', linkedEmail: 'Correo vinculado', producerId: 'ID del productor (Firebase UID)', saveChanges: '⚡ Guardar cambios',
+      saveSparkDescription: 'Guarda este loop en tu biblioteca Cloud y envía una copia a Make.', loopName: 'Nombre del loop / chispa', notesVibe: 'Notas o ambiente (Opcional)',
+      cancel: 'Cancelar', saveToCloud: '⚡ Guardar en la nube', keyboardShortcutsText: 'Atajos de teclado', shortcutScale: 'Tocar grados de la escala (Mantener = sostener, soltar = parar)',
+      shortcutNotes: 'Notas fijas absolutas', shortcutPlay: 'Escuchar / pausar loop', shortcutMute: 'Silencio de emergencia (Panic)', shortcutTap: 'Calcular Tap Tempo',
+      shortcutMenu: 'Alternar menú lateral', language: 'Idioma', saveLoopTitle: 'Guardar el loop actual en tu biblioteca', tapTempoTitle: 'Toca el ritmo para definir el BPM',
+      stopTitle: 'Interrumpir todos los audios', keyboardShortcuts: 'Atajos de teclado', displayNamePlaceholder: 'Ej.: Productor Siara',
+      bioPlaceholder: 'Cuéntanos sobre tu estilo musical, ritmos favoritos o producciones...', loopNamePlaceholder: 'Ej.: Bassline Baião Trap',
+      notesVibePlaceholder: 'Ej.: Usar como introducción de la canción principal'
+    }
+  };
+
+  let currentLanguage = localStorage.getItem('fagulhaLanguage') || 'pt';
+
+  function translate(key) {
+    return translations[currentLanguage]?.[key] || translations.pt[key] || key;
+  }
+
+  function applyLanguage(language = currentLanguage) {
+    currentLanguage = translations[language] ? language : 'pt';
+    localStorage.setItem('fagulhaLanguage', currentLanguage);
+    document.documentElement.lang = currentLanguage === 'pt' ? 'pt-BR' : currentLanguage;
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+      element.textContent = translate(element.dataset.i18n);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+      element.placeholder = translate(element.dataset.i18nPlaceholder);
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach(element => {
+      element.title = translate(element.dataset.i18nTitle);
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+      element.setAttribute('aria-label', translate(element.dataset.i18nAriaLabel));
+    });
+    const languageSelect = document.getElementById('languageSelect');
+    if (languageSelect) languageSelect.value = currentLanguage;
+  }
+
+  function changeLanguage(language) {
+    applyLanguage(language);
+    if (document.getElementById('viewChords').style.display !== 'none') renderHarmonizerView();
+  }
 
   /* RASTREAMENTO DE ANALYTICS */
   let moduloAtual = 'generator';
@@ -948,7 +1048,7 @@
       loadUserSparksFromFirestore();
       populatePageProfileFields();
     } else {
-      authBtn.innerHTML = `<span>Entrar com Google</span>`;
+      authBtn.innerHTML = `<span>${translate('signInGoogle')}</span>`;
       authBtn.title = "Clique para entrar com sua conta Google";
       userPlanDisplay.innerText = "Visitante";
       userPlanDisplay.style.color = "var(--text-muted)";
@@ -999,7 +1099,7 @@
     document.getElementById('pageProfileUidDisabled').value = currentUser.uid || "";
     selectedProfileImage = null;
     document.getElementById('pageProfilePhoto').value = "";
-    document.getElementById('profilePhotoHelp').innerText = "PNG, JPG ou WebP";
+    document.getElementById('profilePhotoHelp').innerText = translate('imageFormats');
 
     db.collection('users').doc(currentUser.uid).get().then(doc => {
       if (doc.exists && doc.data().bio) {
@@ -2496,6 +2596,7 @@
     }
   });
 
+  applyLanguage(currentLanguage);
   updateScaleDisplay();
   updateVariationMenu();
 </script>
