@@ -1371,7 +1371,13 @@
       const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'P')}&background=C85A17&color=fff`;
       const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Produtor';
       
-      authBtn.innerHTML = `<img src="${avatarUrl}" class="user-avatar" /> <span>${firstName}</span> ▾`;
+      authBtn.replaceChildren();
+      const avatar = document.createElement('img');
+      avatar.src = avatarUrl;
+      avatar.className = 'user-avatar';
+      const name = document.createElement('span');
+      name.textContent = firstName;
+      authBtn.append(avatar, name, document.createTextNode(' ▾'));
       authBtn.title = `Conectado como ${user.email}`;
       userPlanDisplay.innerText = "Pro Unlimited";
       userPlanDisplay.style.color = "var(--accent-ochre)";
@@ -1379,7 +1385,10 @@
       loadUserSparksFromFirestore();
       populatePageProfileFields();
     } else {
-      authBtn.innerHTML = `<span>${translate('signInGoogle')}</span>`;
+      authBtn.replaceChildren();
+      const signInLabel = document.createElement('span');
+      signInLabel.textContent = translate('signInGoogle');
+      authBtn.appendChild(signInLabel);
       authBtn.title = "Clique para entrar com sua conta Google";
       userPlanDisplay.innerText = "Visitante";
       userPlanDisplay.style.color = "var(--text-muted)";
@@ -1538,7 +1547,14 @@
   function updateAuthButtonAvatar() {
     const avatarUrl = savedProfilePhotoUrl || currentUser?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.displayName || 'P')}&background=C85A17&color=fff`;
     const firstName = currentUser?.displayName ? currentUser.displayName.split(' ')[0] : 'Produtor';
-    document.getElementById('authBtn').innerHTML = `<img src="${avatarUrl}" class="user-avatar" /> <span>${firstName}</span> ▾`;
+    const authBtn = document.getElementById('authBtn');
+    authBtn.replaceChildren();
+    const avatar = document.createElement('img');
+    avatar.src = avatarUrl;
+    avatar.className = 'user-avatar';
+    const name = document.createElement('span');
+    name.textContent = firstName;
+    authBtn.append(avatar, name, document.createTextNode(' ▾'));
   }
 
   function savePageUserProfile() {
@@ -1771,17 +1787,34 @@
 
           const card = document.createElement('div');
           card.className = 'spark-card';
-          card.innerHTML = `
-            <div>
-              <div class="spark-info-title">${item.sparkTitle}</div>
-              <div class="spark-info-meta">🎵 Key: ${item.root} ${item.scale.toUpperCase()} • ${item.bpm} BPM • ${item.instrument} • ${item.tuning}Hz</div>
-              <div class="spark-info-notes">📝 ${item.sparkNotes} | 🕒 ${item.timestampStr || ''}</div>
-            </div>
-            <div class="spark-actions">
-              <button class="btn btn-primary" style="padding: 7px 12px; font-size: 11px;" onclick="loadSparkIntoGenerator('${item.root}', '${item.scale}', ${item.bpm}, '${item.instrument}', '${item.variation}', '${item.tuning}')">▶ Carregar</button>
-              <button class="btn btn-secondary" style="padding: 7px 10px; font-size: 11px; color: #FF9999;" onclick="deleteSparkFromFirestore('${docId}')">🗑️</button>
-            </div>
-          `;
+          const info = document.createElement('div');
+          const title = document.createElement('div');
+          title.className = 'spark-info-title';
+          title.textContent = item.sparkTitle || '';
+          const meta = document.createElement('div');
+          meta.className = 'spark-info-meta';
+          meta.textContent = `🎵 Key: ${item.root || ''} ${(item.scale || '').toUpperCase()} • ${item.bpm || ''} BPM • ${item.instrument || ''} • ${item.tuning || ''}Hz`;
+          const notes = document.createElement('div');
+          notes.className = 'spark-info-notes';
+          notes.textContent = `📝 ${item.sparkNotes || ''} | 🕒 ${item.timestampStr || ''}`;
+          info.append(title, meta, notes);
+
+          const actions = document.createElement('div');
+          actions.className = 'spark-actions';
+          const loadButton = document.createElement('button');
+          loadButton.className = 'btn btn-primary';
+          loadButton.style.cssText = 'padding: 7px 12px; font-size: 11px;';
+          loadButton.textContent = '▶ Carregar';
+          loadButton.addEventListener('click', () => loadSparkIntoGenerator(
+            item.root, item.scale, item.bpm, item.instrument, item.variation, item.tuning
+          ));
+          const deleteButton = document.createElement('button');
+          deleteButton.className = 'btn btn-secondary';
+          deleteButton.style.cssText = 'padding: 7px 10px; font-size: 11px; color: #FF9999;';
+          deleteButton.textContent = '🗑️';
+          deleteButton.addEventListener('click', () => deleteSparkFromFirestore(docId));
+          actions.append(loadButton, deleteButton);
+          card.append(info, actions);
           grid.appendChild(card);
         });
       })
