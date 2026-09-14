@@ -817,7 +817,6 @@
 <main id="mainWrapper" class="main-wrapper">
   
   <div class="top-nav-bar">
-    <!-- GRUPO ESQUERDO: CONTROLES DE REPRODUÇÃO E AÇÕES -->
     <div class="top-nav-group left-group">
       <button class="btn-top" onclick="toggleSidebar()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -835,7 +834,6 @@
       </button>
     </div>
 
-    <!-- GRUPO DIREITO: ÁUDIO, IDIOMA E USUÁRIO -->
     <div class="top-nav-group right-group">
       <div class="vol-control">
         <span data-i18n="volume">VOL</span>
@@ -912,7 +910,6 @@
         </select>
       </div>
 
-      <!-- SELETOR DE BPM INTELIGENTE COM DROPDOWN DE PRESETS -->
       <div class="input-field">
         <label data-i18n="tempo">Andamento (BPM)</label>
         <div class="bpm-input-wrapper">
@@ -1046,7 +1043,6 @@
       <span class="status-badge" id="chordScaleBadge">A LYDIAN DOMINANT</span>
     </div>
 
-    <!-- LIVE KEYBOARD JAM COM SELETOR RÁPIDO DE ESCALA -->
     <div class="keyboard-guide-card">
       <div>
         <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand); margin-bottom: 2px;">🎹 LIVE KEYBOARD JAM (MAPEADO)</div>
@@ -1456,13 +1452,18 @@
     }
   });
 
+  /* AUTENTICAÇÃO CORRIGIDA (FIREBASE COMPAT) */
   function handleAuth() {
+    auth.useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then((result) => {
-      document.getElementById('statusMessage').innerText = `Bem-vindo, ${result.user.displayName}!`;
-    }).catch((error) => {
-      document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
-    });
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        document.getElementById('statusMessage').innerText = `Bem-vindo, ${result.user.displayName}!`;
+      })
+      .catch((error) => {
+        console.error("Erro na autenticação:", error);
+        document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
+      });
   }
 
   /* PREENCHE A PÁGINA DEDICADA DE PERFIL (#profile) */
@@ -2073,7 +2074,6 @@
 
     badge.innerText = `${root} ${scale.toUpperCase()}`;
 
-    // Sincroniza o valor do dropdown rápido do harmonizador com o gerador principal
     const quickScaleSelect = document.getElementById('quickHarmonizerScale');
     if (quickScaleSelect) quickScaleSelect.value = scale;
     const quickRootSelect = document.getElementById('quickHarmonizerRoot');
@@ -2142,7 +2142,6 @@
     }
   }
 
-  // Sincroniza a troca de escala feita na aba Harmonizador com a Engine principal
   function onQuickScaleChange(newScale) {
     document.getElementById('scaleType').value = newScale;
     onSettingChange();
@@ -3156,7 +3155,6 @@
     const key = e.key.toUpperCase();
     let noteToPlay = null;
 
-    // Teclas 1 a 7 -> Mapeamento Dinâmico dos Graus da Escala Selecionada
     if (['1','2','3','4','5','6','7'].includes(key)) {
       const degIdx = parseInt(key) - 1;
       const notes = getScaleNotes();
@@ -3164,7 +3162,6 @@
         noteToPlay = parseNote(notes, degIdx, 1);
       }
     } 
-    // Teclas C a B -> Notas Absolutas Fixas
     else if (['C','D','E','F','G','A','B'].includes(key)) {
       if (!e.ctrlKey && !e.metaKey && !e.altKey) {
         noteToPlay = key + "4";
