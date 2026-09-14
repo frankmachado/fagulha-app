@@ -871,10 +871,10 @@
   <div id="viewHome" class="app-card home-card" style="display: none;">
     <section class="home-intro">
       <h1 class="brand-title">Fagulha <span>Studio Hub</span></h1>
-      <p>Uma ferramenta para criar escalas, harmonias e loops musicais em um só lugar.</p>
+      <p data-i18n="homeDescription">Uma ferramenta para criar escalas, harmonias e loops musicais em um só lugar.</p>
       <div class="home-actions">
-        <button class="btn btn-primary" type="button" onclick="switchView('generator')">⚡ Abrir o Studio</button>
-        <button class="btn btn-secondary" type="button" onclick="switchView('faq')">Dúvidas frequentes</button>
+        <button class="btn btn-primary" type="button" onclick="switchView('generator')" data-i18n="openStudio">⚡ Abrir o Studio</button>
+        <button class="btn btn-secondary" type="button" onclick="switchView('faq')" data-i18n="homeFaq">Dúvidas frequentes</button>
       </div>
     </section>
 
@@ -1258,6 +1258,7 @@
       shortcutPlay: 'Escutar / Pausar Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calcular Tap Tempo', shortcutMenu: 'Alternar Menu Lateral',
       language: 'Idioma', saveLoopTitle: 'Salvar o loop atual na sua biblioteca', tapTempoTitle: 'Clique no ritmo para definir o BPM',
       stopTitle: 'Interromper todos os áudios', keyboardShortcuts: 'Atalhos de Teclado', faqTitle: 'Dúvidas Frequentes', faqSubtitle: 'GUIA RÁPIDO DO STUDIO', displayNamePlaceholder: 'Ex: Produtor Siara',
+      homeDescription: 'Uma ferramenta para criar escalas, harmonias e loops musicais em um só lugar.', openStudio: '⚡ Abrir o Studio', homeFaq: 'Dúvidas frequentes',
       termsTitle: 'Termos de Uso e Privacidade', termsDataHeading: '1. Coleta de Dados:', termsDataText: 'O Fagulha Studio Hub coleta apenas as informações necessárias para autenticação e personalização da sua experiência, como nome de exibição, e-mail e foto de perfil via Firebase Auth.',
       termsStorageHeading: '2. Armazenamento e Segurança:', termsStorageText: 'Seus dados de perfil e projetos salvos são armazenados na infraestrutura do Google Cloud (Firebase Firestore), sob regras de segurança que garantem que apenas você tenha permissão para editar ou excluir suas informações pessoais.',
       termsRightsHeading: '3. Seus Direitos (LGPD):', termsRightsText: 'Você tem total controle sobre seus dados. A qualquer momento, pode editar suas informações de perfil ou utilizar a opção', termsDeleteAccount: '"Excluir Minha Conta"', termsRightsSuffix: 'para remover definitivamente todos os seus registros do nosso banco de dados.',
@@ -1293,6 +1294,7 @@
       shortcutNotes: 'Absolute Fixed Notes', shortcutPlay: 'Play / Pause Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calculate Tap Tempo',
       shortcutMenu: 'Toggle Sidebar', language: 'Language', saveLoopTitle: 'Save the current loop to your library', tapTempoTitle: 'Tap the rhythm to set the BPM',
       stopTitle: 'Stop all audio', keyboardShortcuts: 'Keyboard Shortcuts', faqTitle: 'Frequently Asked Questions', faqSubtitle: 'QUICK STUDIO GUIDE', displayNamePlaceholder: 'E.g. Producer Siara',
+      homeDescription: 'A tool for creating scales, harmonies and musical loops in one place.', openStudio: '⚡ Open Studio', homeFaq: 'Frequently asked questions',
       termsTitle: 'Terms of Use and Privacy', termsDataHeading: '1. Data Collection:', termsDataText: 'Fagulha Studio Hub only collects the information needed for authentication and to personalize your experience, such as your display name, email and profile photo through Firebase Auth.',
       termsStorageHeading: '2. Storage and Security:', termsStorageText: 'Your profile data and saved projects are stored on Google Cloud infrastructure (Firebase Firestore), under security rules that ensure only you can edit or delete your personal information.',
       termsRightsHeading: '3. Your Rights (LGPD):', termsRightsText: 'You have full control over your data. At any time, you can edit your profile information or use the', termsDeleteAccount: '"Delete My Account"', termsRightsSuffix: 'option to permanently remove all your records from our database.',
@@ -1328,6 +1330,7 @@
       shortcutNotes: 'Notas fijas absolutas', shortcutPlay: 'Escuchar / pausar loop', shortcutMute: 'Silencio de emergencia (Panic)', shortcutTap: 'Calcular Tap Tempo',
       shortcutMenu: 'Alternar menú lateral', language: 'Idioma', saveLoopTitle: 'Guardar el loop actual en tu biblioteca', tapTempoTitle: 'Toca el ritmo para definir el BPM',
       stopTitle: 'Interrumpir todos los audios', keyboardShortcuts: 'Atajos de teclado', faqTitle: 'Preguntas frecuentes', faqSubtitle: 'GUÍA RÁPIDA DEL STUDIO', displayNamePlaceholder: 'Ej.: Productor Siara',
+      homeDescription: 'Una herramienta para crear escalas, armonías y loops musicales en un solo lugar.', openStudio: '⚡ Abrir el Studio', homeFaq: 'Preguntas frecuentes',
       termsTitle: 'Términos de Uso y Privacidad', termsDataHeading: '1. Recopilación de Datos:', termsDataText: 'Fagulha Studio Hub solo recopila la información necesaria para la autenticación y la personalización de tu experiencia, como tu nombre, correo y foto de perfil mediante Firebase Auth.',
       termsStorageHeading: '2. Almacenamiento y Seguridad:', termsStorageText: 'Tus datos de perfil y proyectos guardados se almacenan en la infraestructura de Google Cloud (Firebase Firestore), bajo reglas de seguridad que garantizan que solo tú puedas editar o eliminar tu información personal.',
       termsRightsHeading: '3. Tus Derechos (LGPD):', termsRightsText: 'Tienes control total sobre tus datos. En cualquier momento, puedes editar la información de tu perfil o usar la opción', termsDeleteAccount: '"Eliminar Mi Cuenta"', termsRightsSuffix: 'para eliminar definitivamente todos tus registros de nuestra base de datos.',
