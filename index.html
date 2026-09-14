@@ -1347,7 +1347,8 @@
     }
   };
 
-  let currentLanguage = localStorage.getItem('fagulhaLanguage') || 'pt';
+  const browserLanguage = (navigator.language || '').toLowerCase().split('-')[0];
+  let currentLanguage = localStorage.getItem('fagulhaLanguage') || (translations[browserLanguage] ? browserLanguage : 'pt');
 
   function translate(key) {
     return translations[currentLanguage]?.[key] || translations.pt[key] || key;
