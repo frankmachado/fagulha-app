@@ -562,6 +562,10 @@
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px var(--accent-glow); }
     .btn-secondary { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--input-border); }
     .btn-secondary:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--accent-terracotta); }
+    .btn-danger-outline {
+      background: transparent; color: #FF9999; border: 1px solid rgba(220, 60, 60, 0.4);
+    }
+    .btn-danger-outline:hover { background: rgba(220, 60, 60, 0.12); border-color: #FF9999; }
 
     .console-toast {
       margin-top: 18px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.02);
@@ -1125,6 +1129,9 @@
       <button class="btn btn-secondary" onclick="auth.signOut();" style="color: #FF9999; border-color: rgba(220,60,60,0.25);" data-i18n="signOut">🚪 Sair da Conta</button>
       <button class="btn btn-primary" onclick="savePageUserProfile()" style="padding: 10px 24px;" data-i18n="saveChanges">⚡ Salvar Alterações</button>
     </div>
+    <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+      <button class="btn btn-danger-outline" type="button" onclick="excluirContaUsuario()">🗑️ Excluir Minha Conta</button>
+    </div>
   </div>
 
   <!-- VIEW 6: DÚVIDAS FREQUENTES -->
@@ -1555,6 +1562,45 @@
     const name = document.createElement('span');
     name.textContent = firstName;
     authBtn.append(avatar, name, document.createTextNode(' ▾'));
+  }
+
+  async function excluirContaUsuario() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const confirmacao = confirm(
+      'Tem certeza que deseja excluir sua conta? Esta ação é permanente e removerá todos os seus dados e loops do Fagulha Studio.'
+    );
+    if (!confirmacao) return;
+
+    const deleteButton = document.querySelector('.btn-danger-outline');
+    if (deleteButton) {
+      deleteButton.disabled = true;
+      deleteButton.innerText = '⏳ Excluindo...';
+    }
+
+    try {
+      const sparksSnapshot = await db.collection('fagulhas')
+        .where('uid', '==', user.uid)
+        .get();
+      await Promise.all(sparksSnapshot.docs.map(spark => spark.ref.delete()));
+      await db.collection('users').doc(user.uid).delete();
+      await user.delete();
+
+      alert('Sua conta foi excluída com sucesso.');
+      window.location.reload();
+    } catch (error) {
+      console.error('Erro ao excluir conta:', error);
+      if (error.code === 'auth/requires-recent-login') {
+        alert('Por motivos de segurança, faça login novamente antes de excluir sua conta.');
+      } else {
+        alert('Erro ao excluir a conta. Tente novamente mais tarde.');
+      }
+      if (deleteButton) {
+        deleteButton.disabled = false;
+        deleteButton.innerText = '🗑️ Excluir Minha Conta';
+      }
+    }
   }
 
   function savePageUserProfile() {
