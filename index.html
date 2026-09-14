@@ -831,6 +831,7 @@
     </div>
 
     <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 20px;">
+      <span id="profileSaveStatus" class="profile-photo-help" aria-live="polite"></span>
       <button class="btn btn-secondary" onclick="auth.signOut();" style="color: #FF9999; border-color: rgba(220,60,60,0.25);" data-i18n="signOut">🚪 Sair da Conta</button>
       <button class="btn btn-primary" onclick="savePageUserProfile()" style="padding: 10px 24px;" data-i18n="saveChanges">⚡ Salvar Alterações</button>
     </div>
@@ -1253,8 +1254,10 @@
     if (!currentUser) return;
     const newName = document.getElementById('pageProfileName').value.trim();
     const newBio = document.getElementById('pageProfileBio').value.trim();
+    const profileSaveStatus = document.getElementById('profileSaveStatus');
 
     document.getElementById('statusMessage').innerText = "⏳ Atualizando perfil...";
+    if (profileSaveStatus) profileSaveStatus.innerText = "⏳ Salvando alterações...";
 
     const photoPromise = uploadSelectedProfileImage();
 
@@ -1270,10 +1273,12 @@
     }).then(() => {
       savedProfilePhotoUrl = newPhoto;
       document.getElementById('statusMessage').innerText = "⚡ Perfil atualizado com sucesso!";
+      if (profileSaveStatus) profileSaveStatus.innerText = "⚡ Alterações salvas!";
       populatePageProfileFields();
       updateAuthButtonAvatar();
     })).catch((err) => {
       document.getElementById('statusMessage').innerText = "⚠️ Erro ao atualizar perfil: " + err.message;
+      if (profileSaveStatus) profileSaveStatus.innerText = "⚠️ Erro ao salvar alterações.";
     });
   }
 
