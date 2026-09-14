@@ -798,7 +798,7 @@
         <div class="profile-photo-picker">
           <label for="pageProfilePhoto" class="btn btn-secondary" style="padding: 7px 10px; font-size: 11px;" data-i18n="chooseImage">Escolher imagem</label>
           <input type="file" id="pageProfilePhoto" accept="image/png,image/jpeg,image/webp" onchange="previewProfileImage(event)">
-          <button class="btn btn-primary" type="button" onclick="saveProfilePhoto()" style="padding: 7px 10px; font-size: 11px;" data-i18n="savePhoto">Salvar foto</button>
+          <button id="saveProfilePhotoButton" class="btn btn-primary" type="button" onclick="saveProfilePhoto()" style="padding: 7px 10px; font-size: 11px;" data-i18n="savePhoto">Salvar foto</button>
           <span id="profilePhotoHelp" class="profile-photo-help" data-i18n="imageFormats">PNG, JPG ou WebP</span>
         </div>
       </div>
@@ -1172,24 +1172,35 @@
   }
 
   function uploadSelectedProfileImage() {
-    if (!selectedProfileImage || !currentUser) return Promise.resolve(savedProfilePhotoUrl || currentUser.photoURL || '');
+    const user = auth.currentUser || currentUser;
+    if (!selectedProfileImage || !user) return Promise.resolve(savedProfilePhotoUrl || user?.photoURL || '');
 
     const fileExtension = selectedProfileImage.name.split('.').pop().toLowerCase();
-    const photoRef = storage.ref(`profile-images/${currentUser.uid}/avatar-${Date.now()}.${fileExtension}`);
+    const photoRef = storage.ref(`profile-images/${user.uid}/avatar-${Date.now()}.${fileExtension}`);
     return photoRef.put(selectedProfileImage, { contentType: selectedProfileImage.type }).then(() => photoRef.getDownloadURL());
   }
 
   function saveProfilePhoto() {
-    if (!currentUser || !selectedProfileImage) {
+    const user = auth.currentUser || currentUser;
+    const saveButton = document.getElementById('saveProfilePhotoButton');
+    if (!user) {
+      document.getElementById('statusMessage').innerText = "⚠️ Faça login antes de salvar a foto.";
+      return;
+    }
+    if (!selectedProfileImage) {
       document.getElementById('statusMessage').innerText = "⚠️ Escolha uma imagem antes de salvar.";
       return;
     }
 
     document.getElementById('statusMessage').innerText = "⏳ Salvando foto...";
+    if (saveButton) {
+      saveButton.disabled = true;
+      saveButton.innerText = "⏳ Salvando...";
+    }
     uploadSelectedProfileImage().then((newPhoto) => {
       savedProfilePhotoUrl = newPhoto;
-      return currentUser.updateProfile({ photoURL: newPhoto }).then(() => {
-        return db.collection('users').doc(currentUser.uid).set({
+      return user.updateProfile({ photoURL: newPhoto }).then(() => {
+        return db.collection('users').doc(user.uid).set({
           photoURL: newPhoto,
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
@@ -1200,7 +1211,13 @@
       populatePageProfileFields();
       updateAuthButtonAvatar();
     }).catch((err) => {
-      document.getElementById('statusMessage').innerText = "⚠️ Erro ao salvar foto: " + err.message;
+      console.error('Erro ao salvar foto de perfil:', err);
+      document.getElementById('statusMessage').innerText = "⚠️ Erro ao salvar foto: " + (err.message || err);
+    }).finally(() => {
+      if (saveButton) {
+        saveButton.disabled = false;
+        saveButton.innerText = translate('savePhoto');
+      }
     });
   }
 
