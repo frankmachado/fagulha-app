@@ -337,9 +337,23 @@
         padding-left: 10px;
         padding-right: 10px;
       }
+      .sidebar-brand {
+        margin-bottom: 18px;
+      }
+      .nav-section {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 18px;
+      }
+      .nav-title {
+        padding-left: 4px;
+      }
       .nav-item {
+        width: 100%;
         padding: 10px 10px;
         font-size: 12px;
+        justify-content: flex-start;
       }
       .top-nav-bar {
         flex-wrap: wrap;
@@ -347,13 +361,17 @@
         gap: 8px;
       }
       .top-nav-group {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 4px;
         width: 100%;
-        justify-content: space-between;
-        flex-wrap: wrap;
       }
       .left-group, .right-group {
-        justify-content: space-between;
+        justify-content: stretch;
+      }
+      .btn-top, .vol-control, .language-select, .btn-auth {
+        width: 100%;
+        justify-content: center;
       }
       .btn-top { padding-left: 8px; padding-right: 8px; }
       .vol-control { gap: 5px; padding-left: 6px; padding-right: 6px; }
