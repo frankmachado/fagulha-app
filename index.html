@@ -1175,9 +1175,33 @@
     const user = auth.currentUser || currentUser;
     if (!selectedProfileImage || !user) return Promise.resolve(savedProfilePhotoUrl || user?.photoURL || '');
 
-    const fileExtension = selectedProfileImage.name.split('.').pop().toLowerCase();
-    const photoRef = storage.ref(`profile-images/${user.uid}/avatar-${Date.now()}.${fileExtension}`);
-    return photoRef.put(selectedProfileImage, { contentType: selectedProfileImage.type }).then(() => photoRef.getDownloadURL());
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Não foi possível ler a imagem selecionada.'));
+      reader.onload = () => {
+        const image = new Image();
+        image.onerror = () => reject(new Error('O arquivo selecionado não é uma imagem válida.'));
+        image.onload = () => {
+          const canvas = document.createElement('canvas');
+          const size = 400;
+          const context = canvas.getContext('2d');
+          const scale = Math.max(size / image.width, size / image.height);
+          const width = image.width * scale;
+          const height = image.height * scale;
+          const offsetX = (size - width) / 2;
+          const offsetY = (size - height) / 2;
+
+          canvas.width = size;
+          canvas.height = size;
+          context.fillStyle = '#1C1511';
+          context.fillRect(0, 0, size, size);
+          context.drawImage(image, offsetX, offsetY, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.82));
+        };
+        image.src = reader.result;
+      };
+      reader.readAsDataURL(selectedProfileImage);
+    });
   }
 
   function saveProfilePhoto() {
@@ -1199,12 +1223,10 @@
     }
     uploadSelectedProfileImage().then((newPhoto) => {
       savedProfilePhotoUrl = newPhoto;
-      return user.updateProfile({ photoURL: newPhoto }).then(() => {
-        return db.collection('users').doc(user.uid).set({
-          photoURL: newPhoto,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-      });
+      return db.collection('users').doc(user.uid).set({
+        photoURL: newPhoto,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
     }).then(() => {
       selectedProfileImage = null;
       document.getElementById('statusMessage').innerText = "⚡ Foto salva com sucesso!";
@@ -1237,8 +1259,7 @@
     const photoPromise = uploadSelectedProfileImage();
 
     photoPromise.then((newPhoto) => currentUser.updateProfile({
-      displayName: newName || currentUser.displayName,
-      photoURL: newPhoto
+      displayName: newName || currentUser.displayName
     }).then(() => {
       return db.collection('users').doc(currentUser.uid).set({
         displayName: newName,
