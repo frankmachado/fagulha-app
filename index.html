@@ -514,6 +514,10 @@
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       <span data-i18n="harmonizer">Harmonizador</span>
     </a>
+    <a id="navFaq" class="nav-item" onclick="switchView('faq')">
+      <span class="btn-shortcut-icon" style="width: 15px; height: 15px; font-size: 11px;">?</span>
+      <span data-i18n="faqTitle">Dúvidas Frequentes</span>
+    </a>
   </div>
 
   <div class="nav-section">
@@ -586,7 +590,7 @@
         <option value="en">EN</option>
         <option value="es">ES</option>
       </select>
-      <button class="btn-top btn-shortcut-icon" onclick="openShortcutsModal()" data-i18n-title="faqTitle" title="Dúvidas Frequentes">
+      <button class="btn-top btn-shortcut-icon" onclick="switchView('faq')" data-i18n-title="faqTitle" title="Dúvidas Frequentes">
         ?
       </button>
 
@@ -883,6 +887,22 @@
     </div>
   </div>
 
+  <!-- VIEW 6: DÚVIDAS FREQUENTES -->
+  <div id="viewFaq" class="app-card" style="display: none;">
+    <div class="header">
+      <h1 class="brand-title" data-i18n="faqTitle">Dúvidas Frequentes</h1>
+      <span class="status-badge" data-i18n="faqSubtitle">GUIA RÁPIDO DO STUDIO</span>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item"><summary data-i18n="faqGeneratorQuestion">Como crio um loop?</summary><div class="faq-answer" data-i18n="faqGeneratorAnswer">Escolha a tônica, a escala, o instrumento e o groove. Depois clique em Escutar Loop para ouvir o resultado.</div></details>
+      <details class="faq-item"><summary data-i18n="faqHarmonizerQuestion">Para que serve o Harmonizador?</summary><div class="faq-answer" data-i18n="faqHarmonizerAnswer">Ele mostra os acordes possíveis da escala ativa. Você pode trocar a tônica, o instrumento e a escala sem sair da tela.</div></details>
+      <details class="faq-item"><summary data-i18n="faqInstrumentQuestion">Como troco o instrumento?</summary><div class="faq-answer" data-i18n="faqInstrumentAnswer">Use o seletor Instrumento no gerador ou o seletor rápido dentro do Harmonizador.</div></details>
+      <details class="faq-item"><summary data-i18n="faqPhotoQuestion">Como salvo minha foto de perfil?</summary><div class="faq-answer" data-i18n="faqPhotoAnswer">Abra Meu Perfil, escolha uma imagem e clique em Salvar foto. A imagem é ajustada para o formato do avatar.</div></details>
+      <details class="faq-item"><summary data-i18n="faqLanguageQuestion">Como mantenho meu idioma?</summary><div class="faq-answer" data-i18n="faqLanguageAnswer">Escolha PT, EN ou ES no menu superior. A preferência fica salva neste navegador.</div></details>
+      <details class="faq-item"><summary data-i18n="faqMidiQuestion">Como exporto um arquivo MIDI?</summary><div class="faq-answer" data-i18n="faqMidiAnswer">Faça login, configure seu loop e clique em Exportar MIDI. O arquivo será baixado automaticamente.</div></details>
+    </div>
+  </div>
+
 </main>
 
 <!-- MODAL PARA SALVAR FAGULHA NOMEADA -->
@@ -910,23 +930,6 @@
     <div style="display: flex; gap: 8px; justify-content: flex-end;">
       <button class="btn btn-secondary" onclick="closeSaveSparkModal()" style="padding: 9px 14px;" data-i18n="cancel">Cancelar</button>
       <button class="btn btn-primary" onclick="confirmSendSparkToMake()" style="padding: 9px 18px;" data-i18n="saveToCloud">⚡ Salvar na Nuvem</button>
-    </div>
-  </div>
-</div>
-
-<div id="shortcutsModal" class="modal-overlay" onclick="closeShortcutsModal()">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: #FFF; font-size: 16px;" data-i18n="faqTitle">Dúvidas Frequentes</h3>
-      <span style="cursor: pointer; font-weight: 700;" onclick="closeShortcutsModal()">✕</span>
-    </div>
-    <div class="faq-list">
-      <details class="faq-item"><summary data-i18n="faqGeneratorQuestion">Como crio um loop?</summary><div class="faq-answer" data-i18n="faqGeneratorAnswer">Escolha a tônica, a escala, o instrumento e o groove. Depois clique em Escutar Loop para ouvir o resultado.</div></details>
-      <details class="faq-item"><summary data-i18n="faqHarmonizerQuestion">Para que serve o Harmonizador?</summary><div class="faq-answer" data-i18n="faqHarmonizerAnswer">Ele mostra os acordes possíveis da escala ativa. Você pode trocar a tônica, o instrumento e a escala sem sair da tela.</div></details>
-      <details class="faq-item"><summary data-i18n="faqInstrumentQuestion">Como troco o instrumento?</summary><div class="faq-answer" data-i18n="faqInstrumentAnswer">Use o seletor Instrumento no gerador ou o seletor rápido dentro do Harmonizador.</div></details>
-      <details class="faq-item"><summary data-i18n="faqPhotoQuestion">Como salvo minha foto de perfil?</summary><div class="faq-answer" data-i18n="faqPhotoAnswer">Abra Meu Perfil, escolha uma imagem e clique em Salvar foto. A imagem é ajustada para o formato do avatar.</div></details>
-      <details class="faq-item"><summary data-i18n="faqLanguageQuestion">Como mantenho meu idioma?</summary><div class="faq-answer" data-i18n="faqLanguageAnswer">Escolha PT, EN ou ES no menu superior. A preferência fica salva neste navegador.</div></details>
-      <details class="faq-item"><summary data-i18n="faqMidiQuestion">Como exporto um arquivo MIDI?</summary><div class="faq-answer" data-i18n="faqMidiAnswer">Faça login, configure seu loop e clique em Exportar MIDI. O arquivo será baixado automaticamente.</div></details>
     </div>
   </div>
 </div>
@@ -978,7 +981,7 @@
       shortcutScale: 'Tocar Graus da Escala (Hold = Sustenta, Release = Solta)', shortcutNotes: 'Notas Fixas Absolutas',
       shortcutPlay: 'Escutar / Pausar Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calcular Tap Tempo', shortcutMenu: 'Alternar Menu Lateral',
       language: 'Idioma', saveLoopTitle: 'Salvar o loop atual na sua biblioteca', tapTempoTitle: 'Clique no ritmo para definir o BPM',
-      stopTitle: 'Interromper todos os áudios', keyboardShortcuts: 'Atalhos de Teclado', faqTitle: 'Dúvidas Frequentes', displayNamePlaceholder: 'Ex: Produtor Siara',
+      stopTitle: 'Interromper todos os áudios', keyboardShortcuts: 'Atalhos de Teclado', faqTitle: 'Dúvidas Frequentes', faqSubtitle: 'GUIA RÁPIDO DO STUDIO', displayNamePlaceholder: 'Ex: Produtor Siara',
       faqGeneratorQuestion: 'Como crio um loop?', faqGeneratorAnswer: 'Escolha a tônica, a escala, o instrumento e o groove. Depois clique em Escutar Loop para ouvir o resultado.',
       faqHarmonizerQuestion: 'Para que serve o Harmonizador?', faqHarmonizerAnswer: 'Ele mostra os acordes possíveis da escala ativa. Você pode trocar a tônica, o instrumento e a escala sem sair da tela.',
       faqInstrumentQuestion: 'Como troco o instrumento?', faqInstrumentAnswer: 'Use o seletor Instrumento no gerador ou o seletor rápido dentro do Harmonizador.',
@@ -1009,7 +1012,7 @@
       cancel: 'Cancel', saveToCloud: '⚡ Save to Cloud', keyboardShortcutsText: 'Keyboard Shortcuts', shortcutScale: 'Play Scale Degrees (Hold = Sustain, Release = Stop)',
       shortcutNotes: 'Absolute Fixed Notes', shortcutPlay: 'Play / Pause Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calculate Tap Tempo',
       shortcutMenu: 'Toggle Sidebar', language: 'Language', saveLoopTitle: 'Save the current loop to your library', tapTempoTitle: 'Tap the rhythm to set the BPM',
-      stopTitle: 'Stop all audio', keyboardShortcuts: 'Keyboard Shortcuts', faqTitle: 'Frequently Asked Questions', displayNamePlaceholder: 'E.g. Producer Siara',
+      stopTitle: 'Stop all audio', keyboardShortcuts: 'Keyboard Shortcuts', faqTitle: 'Frequently Asked Questions', faqSubtitle: 'QUICK STUDIO GUIDE', displayNamePlaceholder: 'E.g. Producer Siara',
       faqGeneratorQuestion: 'How do I create a loop?', faqGeneratorAnswer: 'Choose the root, scale, instrument and groove, then click Listen to Loop to hear the result.',
       faqHarmonizerQuestion: 'What is the Harmonizer for?', faqHarmonizerAnswer: 'It shows the chords available in the active scale. You can change the root, instrument and scale without leaving the screen.',
       faqInstrumentQuestion: 'How do I change the instrument?', faqInstrumentAnswer: 'Use the Instrument selector in the generator or the quick selector inside the Harmonizer.',
@@ -1040,7 +1043,7 @@
       cancel: 'Cancelar', saveToCloud: '⚡ Guardar en la nube', keyboardShortcutsText: 'Atajos de teclado', shortcutScale: 'Tocar grados de la escala (Mantener = sostener, soltar = parar)',
       shortcutNotes: 'Notas fijas absolutas', shortcutPlay: 'Escuchar / pausar loop', shortcutMute: 'Silencio de emergencia (Panic)', shortcutTap: 'Calcular Tap Tempo',
       shortcutMenu: 'Alternar menú lateral', language: 'Idioma', saveLoopTitle: 'Guardar el loop actual en tu biblioteca', tapTempoTitle: 'Toca el ritmo para definir el BPM',
-      stopTitle: 'Interrumpir todos los audios', keyboardShortcuts: 'Atajos de teclado', faqTitle: 'Preguntas frecuentes', displayNamePlaceholder: 'Ej.: Productor Siara',
+      stopTitle: 'Interrumpir todos los audios', keyboardShortcuts: 'Atajos de teclado', faqTitle: 'Preguntas frecuentes', faqSubtitle: 'GUÍA RÁPIDA DEL STUDIO', displayNamePlaceholder: 'Ej.: Productor Siara',
       faqGeneratorQuestion: '¿Cómo creo un loop?', faqGeneratorAnswer: 'Elige la tónica, la escala, el instrumento y el groove. Después pulsa Escuchar loop para oír el resultado.',
       faqHarmonizerQuestion: '¿Para qué sirve el Armonizador?', faqHarmonizerAnswer: 'Muestra los acordes posibles de la escala activa. Puedes cambiar la tónica, el instrumento y la escala sin salir de la pantalla.',
       faqInstrumentQuestion: '¿Cómo cambio el instrumento?', faqInstrumentAnswer: 'Usa el selector Instrumento en el generador o el selector rápido dentro del Armonizador.',
@@ -1602,13 +1605,15 @@
     const pre = document.getElementById('viewPresets');
     const cho = document.getElementById('viewChords');
     const pro = document.getElementById('viewProfile');
+    const faq = document.getElementById('viewFaq');
 
     document.getElementById('navGenerator').classList.remove('active');
     document.getElementById('navLibrary').classList.remove('active');
     document.getElementById('navPresets').classList.remove('active');
     document.getElementById('navChords').classList.remove('active');
+    document.getElementById('navFaq').classList.remove('active');
 
-    gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none';
+    gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none'; faq.style.display = 'none';
 
     if (viewName === 'generator') {
       gen.style.display = 'block';
@@ -1628,6 +1633,9 @@
     } else if (viewName === 'profile') {
       pro.style.display = 'block';
       populatePageProfileFields();
+    } else if (viewName === 'faq') {
+      faq.style.display = 'block';
+      document.getElementById('navFaq').classList.add('active');
     }
   }
 
