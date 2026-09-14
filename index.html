@@ -59,13 +59,12 @@
       --sidebar-width: 270px;
     }
 
-    /* REGRA GLOBAL DA FONTE DE LEITURA (SORA) */
     * { 
       box-sizing: border-box;
       font-family: 'Sora', sans-serif;
     }
 
-    /* REGRA DE TÍTULOS E MARCA (SYNE) */
+    /* TÍTULOS E MARCA COM SYNE (AJUSTADO: REMOVIDO ACHATAMENTO) */
     h1, h2, h3, h4, 
     .brand-title, 
     .sidebar-brand div div:first-child,
@@ -77,7 +76,8 @@
     .scale-title,
     .piano-roll-header span {
       font-family: 'Syne', sans-serif !important;
-      letter-spacing: -0.3px;
+      letter-spacing: 0.2px;
+      line-height: 1.25;
     }
 
     body {
@@ -229,7 +229,7 @@
       background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.08); color: var(--text-main);
     }
 
-    /* CARD PRINCIPAL FLUTUANTE (SEM BORDA MARCADA) */
+    /* CARD PRINCIPAL FLUTUANTE */
     .app-card {
       width: 100%; max-width: 760px; background: var(--card-bg);
       backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
@@ -238,7 +238,7 @@
     }
 
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .brand-title { font-size: 20px; font-weight: 800; margin: 0; letter-spacing: -0.5px; }
+    .brand-title { font-size: 20px; font-weight: 800; margin: 0; }
     .brand-title span { color: var(--accent-terracotta); }
     
     .status-badge {
@@ -256,7 +256,6 @@
       text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;
     }
 
-    /* INPUTS E SELECTS FRAMELESS (APARECEM MAIS NO HOVER/FOCUS) */
     select, input[type="number"], input[type="text"] {
       width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
       color: var(--text-main); padding: 14px 16px; border-radius: 12px;
@@ -272,7 +271,7 @@
       box-shadow: 0 0 0 3px var(--accent-glow);
     }
 
-    /* CAIXA DE NOTAS DA ESCALA (NÃO CLICÁVEL) - SEM BORDA */
+    /* CAIXAS NÃO CLICÁVEIS FLUTUANTES */
     .scale-chips-container {
       background: rgba(0, 0, 0, 0.2); border: none;
       border-radius: 14px; padding: 14px 16px; margin-bottom: 24px;
@@ -281,7 +280,6 @@
     .scale-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
     .chips-wrapper { display: flex; gap: 6px; flex-wrap: wrap; }
     
-    /* CHIPS DE NOTAS - LIMPOS E SEM BORDA */
     .note-chip {
       background: rgba(200, 90, 23, 0.15); color: var(--accent-sand); border: none;
       font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 8px;
@@ -308,7 +306,6 @@
     .btn-secondary { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--input-border); }
     .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--accent-terracotta); }
 
-    /* CONSOLE DE STATUS (NÃO CLICÁVEL) - SEM BORDA */
     .console-toast {
       margin-top: 20px; background: rgba(0, 0, 0, 0.2); border: none;
       border-radius: 10px; padding: 12px 16px; font-size: 12px; color: var(--text-muted);
@@ -341,7 +338,6 @@
     .chord-symbol { font-size: 20px; font-weight: 800; color: #FFF; margin: 4px 0 8px 0; }
     .chord-notes { font-size: 11px; font-weight: 600; color: var(--accent-ochre); }
 
-    /* PROGRESSÕES RECOMENDADAS (NÃO CLICÁVEL) - SEM BORDA */
     .progression-card {
       background: rgba(0,0,0,0.18); border: none;
       border-radius: 12px; padding: 16px; margin-top: 20px; text-align: left;
@@ -351,7 +347,6 @@
       font-size: 13px; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
     }
 
-    /* GUIA TECLADO (NÃO CLICÁVEL) - SEM BORDA */
     .keyboard-guide-card {
       background: rgba(200, 90, 23, 0.06); border: none;
       border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; text-align: left;
@@ -374,7 +369,6 @@
       background: rgba(229, 169, 60, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block;
     }
 
-    /* ESTILOS DA BIBLIOTECA DE FAGULHAS */
     .sparks-grid { display: flex; flex-direction: column; gap: 12px; text-align: left; }
     .spark-card {
       background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.04);
@@ -607,16 +601,14 @@
     </div>
   </div>
 
-  <!-- VIEW 2: MINHAS FAGULHAS (BIBLIOTECA EM NUVEM) -->
+  <!-- VIEW 2: MINHAS FAGULHAS -->
   <div id="viewLibrary" class="app-card" style="display: none;">
     <div class="header">
       <h1 class="brand-title">Minhas <span>Fagulhas</span></h1>
       <span class="status-badge" id="libraryCountBadge">0 LOOPS SALVOS</span>
     </div>
 
-    <div id="sparksGrid" class="sparks-grid">
-      <!-- FAGULHAS SERÃO RENDERIZADAS AQUI -->
-    </div>
+    <div id="sparksGrid" class="sparks-grid"></div>
   </div>
 
   <!-- VIEW 3: PACK PRESET LIBRARY -->
@@ -681,6 +673,38 @@
   </div>
 
 </main>
+
+<!-- MODAL PARA EDITAÇÃO DE PERFIL DO USUÁRIO -->
+<div id="editProfileModal" class="modal-overlay" onclick="closeEditProfileModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="margin: 0; color: #FFF; font-size: 18px;">👤 Meu Perfil de Produtor</h3>
+      <span style="cursor: pointer; font-weight: 700; color: var(--text-muted);" onclick="closeEditProfileModal()">✕</span>
+    </div>
+
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;">
+      Atualize suas informações de exibição na plataforma.
+    </div>
+
+    <div class="input-field" style="margin-bottom: 14px;">
+      <label>Nome de Produtor / Exibição</label>
+      <input type="text" id="profileNameInput" placeholder="Ex: Produtor Siara">
+    </div>
+
+    <div class="input-field" style="margin-bottom: 20px;">
+      <label>URL da Foto de Perfil (Avatar)</label>
+      <input type="text" id="profilePhotoInput" placeholder="https://exemplo.com/sua-foto.jpg">
+    </div>
+
+    <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
+      <button class="btn btn-secondary" onclick="auth.signOut(); closeEditProfileModal();" style="padding: 10px 14px; color: #FF8888; border-color: rgba(220,60,60,0.3);">Sair da Conta</button>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary" onclick="closeEditProfileModal()" style="padding: 10px 16px;">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveUserProfile()" style="padding: 10px 20px;">Salvar Alterações</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL PARA SALVAR FAGULHA NOMEADA -->
 <div id="saveSparkModal" class="modal-overlay" onclick="closeSaveSparkModal()">
@@ -756,7 +780,6 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
   
-  // INICIALIZAÇÃO DO FIREBASE ANALYTICS
   let analytics = null;
   if (firebase.analytics) {
     analytics = firebase.analytics();
@@ -764,7 +787,7 @@
 
   let currentUser = null;
 
-  /* RASTREAMENTO DE TEMPO DE PERMANÊNCIA POR MÓDULO (ANALYTICS) */
+  /* RASTREAMENTO DE ANALYTICS */
   let moduloAtual = 'generator';
   let tempoEntradaModulo = Date.now();
 
@@ -779,7 +802,6 @@
         modulo_nome: moduloAtual,
         duracao_segundos: tempoGastoSegundos
       });
-      console.log(`[Analytics] Tempo gasto em '${moduloAtual}': ${tempoGastoSegundos}s`);
     }
 
     moduloAtual = novoModulo;
@@ -806,7 +828,7 @@
       const avatarUrl = user.photoURL || '';
       const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Produtor';
       authBtn.innerHTML = `${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar" />` : '👤'} <span>${firstName}</span>`;
-      authBtn.title = `Conectado como ${user.email} (Clique para sair)`;
+      authBtn.title = `Conectado como ${user.email} (Clique para editar perfil)`;
       userPlanDisplay.innerText = "Pro Unlimited • v2.6.0";
       userPlanDisplay.style.color = "var(--accent-ochre)";
       loadUserSparksFromFirestore();
@@ -819,14 +841,10 @@
     }
   });
 
-  /* LÓGICA DE LOGIN / LOGOUT VIA GOOGLE */
+  /* LÓGICA DE AUTH / MODAL DE PERFIL */
   function handleAuth() {
     if (currentUser) {
-      if (confirm("Deseja sair da sua conta?")) {
-        auth.signOut().then(() => {
-          document.getElementById('statusMessage').innerText = "Sessão encerrada com sucesso.";
-        });
-      }
+      openEditProfileModal();
     } else {
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider).then((result) => {
@@ -835,6 +853,40 @@
         document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
       });
     }
+  }
+
+  function openEditProfileModal() {
+    if (!currentUser) return;
+    document.getElementById('profileNameInput').value = currentUser.displayName || '';
+    document.getElementById('profilePhotoInput').value = currentUser.photoURL || '';
+    document.getElementById('editProfileModal').style.display = 'flex';
+  }
+
+  function closeEditProfileModal() {
+    document.getElementById('editProfileModal').style.display = 'none';
+  }
+
+  function saveUserProfile() {
+    if (!currentUser) return;
+    const newName = document.getElementById('profileNameInput').value.trim();
+    const newPhoto = document.getElementById('profilePhotoInput').value.trim();
+
+    document.getElementById('statusMessage').innerText = "⏳ Atualizando perfil...";
+
+    currentUser.updateProfile({
+      displayName: newName || currentUser.displayName,
+      photoURL: newPhoto || currentUser.photoURL
+    }).then(() => {
+      closeEditProfileModal();
+      document.getElementById('statusMessage').innerText = "⚡ Perfil atualizado com sucesso!";
+      
+      const avatarUrl = currentUser.photoURL || '';
+      const firstName = currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Produtor';
+      const authBtn = document.getElementById('authBtn');
+      authBtn.innerHTML = `${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar" />` : '👤'} <span>${firstName}</span>`;
+    }).catch((err) => {
+      document.getElementById('statusMessage').innerText = "⚠️ Erro ao atualizar perfil: " + err.message;
+    });
   }
 
   let audioCtx = null;
@@ -846,7 +898,6 @@
   let tapTimes = [];
   let currentChordType = 'triads';
 
-  /* URL DO MAKE DO FAGULHA */
   const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/810rdqwcg9y5aqmmllwwhrrq67jf2q36";
 
   const activeKeyVoices = {};
@@ -943,7 +994,6 @@
     lastTapTime = now;
   }
 
-  /* MODAL DE NOMEAR FAGULHA */
   function openSaveSparkModal() {
     if (!currentUser) {
       document.getElementById('statusMessage').innerText = "🔒 Recurso Pro: Faça login com o Google para salvar fagulhas na sua biblioteca!";
@@ -960,7 +1010,6 @@
     document.getElementById('saveSparkModal').style.display = 'none';
   }
 
-  /* SALVAR NO FIRESTORE + ENVIO AO MAKE */
   async function confirmSendSparkToMake() {
     closeSaveSparkModal();
 
@@ -988,10 +1037,8 @@
     document.getElementById('statusMessage').innerText = `⏳ Salvando "${sparkTitle}" na nuvem...`;
 
     try {
-      // 1. Grava no Firestore Database
       await db.collection('fagulhas').add(sparkData);
 
-      // 2. Dispara o Webhook para o Make
       if (MAKE_WEBHOOK_URL) {
         fetch(MAKE_WEBHOOK_URL, {
           method: 'POST',
@@ -1008,7 +1055,6 @@
     }
   }
 
-  /* CARREGAR BIBLIOTECA DO FIRESTORE */
   function loadUserSparksFromFirestore() {
     if (!currentUser) return;
 
@@ -1058,7 +1104,6 @@
     grid.innerHTML = `<div style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px;">${message}</div>`;
   }
 
-  /* RECARREGAR FAGULHA NO GERADOR */
   function loadSparkIntoGenerator(root, scale, bpm, instrument, variation, tuning) {
     stopAudio();
     document.getElementById('rootNote').value = root;
@@ -1076,7 +1121,6 @@
     previewPattern();
   }
 
-  /* EXCLUIR FAGULHA DO FIRESTORE */
   function deleteSparkFromFirestore(docId) {
     if (confirm("Deseja realmente excluir esta fagulha da sua nuvem?")) {
       db.collection('fagulhas').doc(docId).delete().then(() => {
@@ -1098,8 +1142,6 @@
 
   function switchView(viewName) {
     stopAudio();
-    
-    // Rastreia o tempo que o usuário passou na aba anterior
     registrarTempoModulo(viewName);
 
     const gen = document.getElementById('viewGenerator');
@@ -2065,7 +2107,7 @@
     osc.stop(now + 0.85);
 
     return {
-      release: () => { /* Percussivo */ }
+      release: () => {}
     };
   }
 
@@ -2136,13 +2178,10 @@
     }
   }
 
-  /* EXPORTAR MIDI COM TRAVA DE LOGIN */
   function exportMIDI() {
     if (!currentUser) {
       document.getElementById('statusMessage').innerText = "🔒 Recurso Pro: Faça login com o Google para liberar o download do arquivo MIDI!";
-      setTimeout(() => {
-        handleAuth();
-      }, 1500);
+      setTimeout(() => { handleAuth(); }, 1500);
       return;
     }
 
@@ -2200,7 +2239,6 @@
     document.getElementById('statusMessage').innerText = `⚡ Download concluído por ${currentUser.displayName}! MIDI em ${tuning}Hz exportado.`;
   }
 
-  /* EVENT LISTENERS PARA TECLADO */
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
     if (e.repeat) return;
