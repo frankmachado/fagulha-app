@@ -745,6 +745,12 @@
           <option value="A">A</option>
           <option value="B">B</option>
         </select>
+        <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="playingInstrument">Instrumento:</label>
+        <select id="quickHarmonizerInstrument" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickInstrumentChange(this.value)">
+          <option value="logdrum">🥁 Baixo / Logdrum</option>
+          <option value="rhodes">🎹 Rhodes / Teclados</option>
+          <option value="viola">🪕 Viola Caipira / Cordas Aço</option>
+        </select>
         <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="activeScale">Escala Ativa:</label>
         <select id="quickHarmonizerScale" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickScaleChange(this.value)">
           <optgroup label="✨ MODOS MAIORES & DOMINANTES">
@@ -926,7 +932,7 @@
       activePlan: 'PLANO ATIVO', visitor: 'Visitante', menu: 'Menu', saveSpark: '⚡ Salvar Fagulha', tapTempo: 'Tap Tempo',
       stop: '🛑 Stop', signInGoogle: 'Entrar com Google', myProfile: '👤 Meu Perfil', signOut: '🚪 Sair da Conta', volume: 'VOL',
       rootNote: 'Tônica (Key)', tempo: 'Andamento (BPM)', shortcuts: 'Atalhos', scaleVibe: 'Escala & Vibe Harmônica', scaleNotes: 'Notas da Escala',
-      instrument: 'Instrumento', groove: 'Groove (8 Compassos)', pianoRoll: 'GRID PIANO ROLL (32 BEATS)', listenLoop: 'Escutar Loop',
+      instrument: 'Instrumento', playingInstrument: 'Instrumento:', groove: 'Groove (8 Compassos)', pianoRoll: 'GRID PIANO ROLL (32 BEATS)', listenLoop: 'Escutar Loop',
       exportMidi: 'Exportar MIDI (.mid)', engineReady: 'Fagulha Scale Engine pronto para processar.', my: 'Minhas', sparks: 'Fagulhas',
       preset: 'Preset', library: 'Library', curatedPacks: 'PACKS CURADOS', harmonizerTitle: 'Harmonizador', field: 'de Campo', activeScale: 'Escala Ativa:',
       triads: 'Tríades (3 Notas)', tetrads: 'Tétrades / 7ªs (4 Notas)', recommendedProgressions: '💡 Progressões Recomendadas:',
@@ -953,7 +959,7 @@
       standardTuning: '440 Hz (Standard)', organicTuning: '432 Hz (Organic)', activePlan: 'ACTIVE PLAN', visitor: 'Guest', menu: 'Menu',
       saveSpark: '⚡ Save Spark', tapTempo: 'Tap Tempo', stop: '🛑 Stop', signInGoogle: 'Sign in with Google', myProfile: '👤 My Profile',
       signOut: '🚪 Sign Out', volume: 'VOL', rootNote: 'Root Note (Key)', tempo: 'Tempo (BPM)', shortcuts: 'Shortcuts',
-      scaleVibe: 'Scale & Harmonic Vibe', scaleNotes: 'Scale Notes', instrument: 'Instrument', groove: 'Groove (8 Bars)',
+      scaleVibe: 'Scale & Harmonic Vibe', scaleNotes: 'Scale Notes', instrument: 'Instrument', playingInstrument: 'Instrument:', groove: 'Groove (8 Bars)',
       pianoRoll: 'PIANO ROLL GRID (32 BEATS)', listenLoop: 'Listen to Loop', exportMidi: 'Export MIDI (.mid)', engineReady: 'Fagulha Scale Engine ready to process.',
       my: 'My', sparks: 'Sparks', preset: 'Preset', library: 'Library', curatedPacks: 'CURATED PACKS', harmonizerTitle: 'Field', field: 'Harmonizer',
       activeScale: 'Active Scale:', triads: 'Triads (3 Notes)', tetrads: 'Tetrads / 7ths (4 Notes)', recommendedProgressions: '💡 Recommended Progressions:',
@@ -978,7 +984,7 @@
       standardTuning: '440 Hz (Estándar)', organicTuning: '432 Hz (Orgánico)', activePlan: 'PLAN ACTIVO', visitor: 'Visitante', menu: 'Menú',
       saveSpark: '⚡ Guardar chispa', tapTempo: 'Tap Tempo', stop: '🛑 Parar', signInGoogle: 'Entrar con Google', myProfile: '👤 Mi perfil',
       signOut: '🚪 Cerrar sesión', volume: 'VOL', rootNote: 'Tónica (Clave)', tempo: 'Tempo (BPM)', shortcuts: 'Atajos',
-      scaleVibe: 'Escala y ambiente armónico', scaleNotes: 'Notas de la escala', instrument: 'Instrumento', groove: 'Groove (8 compases)',
+      scaleVibe: 'Escala y ambiente armónico', scaleNotes: 'Notas de la escala', instrument: 'Instrumento', playingInstrument: 'Instrumento:', groove: 'Groove (8 compases)',
       pianoRoll: 'CUADRÍCULA PIANO ROLL (32 BEATS)', listenLoop: 'Escuchar loop', exportMidi: 'Exportar MIDI (.mid)', engineReady: 'Fagulha Scale Engine listo para procesar.',
       my: 'Mis', sparks: 'Chispas', preset: 'Preset', library: 'Biblioteca', curatedPacks: 'PACKS CURADOS', harmonizerTitle: 'Armonizador', field: 'de campo',
       activeScale: 'Escala activa:', triads: 'Tríadas (3 notas)', tetrads: 'Tétradas / 7ª (4 notas)', recommendedProgressions: '💡 Progresiones recomendadas:',
@@ -1526,6 +1532,8 @@
     if (quickScaleSelect) quickScaleSelect.value = scale;
     const quickRootSelect = document.getElementById('quickHarmonizerRoot');
     if (quickRootSelect) quickRootSelect.value = root;
+    const quickInstrumentSelect = document.getElementById('quickHarmonizerInstrument');
+    if (quickInstrumentSelect) quickInstrumentSelect.value = document.getElementById('patternStyle').value;
 
     grid.innerHTML = "";
 
@@ -1597,6 +1605,12 @@
   function onQuickRootChange(newRoot) {
     document.getElementById('rootNote').value = newRoot;
     onSettingChange();
+  }
+
+  function onQuickInstrumentChange(newInstrument) {
+    document.getElementById('patternStyle').value = newInstrument;
+    updateVariationMenu();
+    renderHarmonizerView();
   }
 
   function getChordSymbol(rootNote, degIdx, isTetrad) {
