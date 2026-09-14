@@ -483,6 +483,19 @@
       border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 20px; padding: 28px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
+    .home-card { max-width: 820px; margin: 0 auto; }
+    .home-intro { padding: 12px 0 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+    .home-intro h1 { margin-bottom: 10px; }
+    .home-intro p { max-width: 620px; color: var(--text-muted); line-height: 1.6; }
+    .home-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .privacy-terms-container {
+      margin-top: 28px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem; line-height: 1.5; color: #ccc;
+    }
+    .privacy-terms-container h3 { color: var(--text-main); margin: 0 0 14px; }
+    .privacy-terms-container p { margin: 0 0 12px; }
+    .brand-home-link { cursor: pointer; }
+    .brand-home-link:focus-visible { outline: 2px solid var(--accent-ochre); outline-offset: 5px; border-radius: 8px; }
 
     .header {
       min-height: 52px; display: flex; justify-content: space-between; align-items: center;
@@ -722,7 +735,7 @@
 <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 
 <aside id="sidebar" class="sidebar">
-  <div class="sidebar-brand">
+  <div class="sidebar-brand brand-home-link" onclick="switchView('home')" role="link" tabindex="0" title="Página inicial" onkeydown="if (event.key === 'Enter' || event.key === ' ') switchView('home')">
     <div class="logo-icon" style="background: none; box-shadow: none;">
       <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="shape-rendering: crispEdges;">
         <circle cx="8" cy="8" r="7.5" fill="#100C09" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
@@ -854,6 +867,26 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- VIEW HOME: PÁGINA INICIAL -->
+  <div id="viewHome" class="app-card home-card" style="display: none;">
+    <section class="home-intro">
+      <h1 class="brand-title">Fagulha <span>Studio Hub</span></h1>
+      <p>Uma ferramenta para criar escalas, harmonias e loops musicais em um só lugar.</p>
+      <div class="home-actions">
+        <button class="btn btn-primary" type="button" onclick="switchView('generator')">⚡ Abrir o Studio</button>
+        <button class="btn btn-secondary" type="button" onclick="switchView('faq')">Dúvidas frequentes</button>
+      </div>
+    </section>
+
+    <section class="privacy-terms-container" aria-labelledby="privacyTermsTitle">
+      <h3 id="privacyTermsTitle">Termos de Uso e Privacidade</h3>
+      <p><strong>1. Coleta de Dados:</strong> O Fagulha Studio Hub coleta apenas as informações necessárias para autenticação e personalização da sua experiência, como nome de exibição, e-mail e foto de perfil via Firebase Auth.</p>
+      <p><strong>2. Armazenamento e Segurança:</strong> Seus dados de perfil e projetos salvos são armazenados na infraestrutura do Google Cloud (Firebase Firestore), sob regras de segurança que garantem que apenas você tenha permissão para editar ou excluir suas informações pessoais.</p>
+      <p><strong>3. Seus Direitos (LGPD):</strong> Você tem total controle sobre seus dados. A qualquer momento, pode editar suas informações de perfil ou utilizar a opção <em>"Excluir Minha Conta"</em> para remover definitivamente todos os seus registros do nosso banco de dados.</p>
+      <p><strong>4. Uso da Plataforma:</strong> O Fagulha Studio Hub é uma ferramenta para criação e apoio a produtores musicais. Respeite os direitos autorais e a comunidade ao compartilhar suas criações.</p>
+    </section>
   </div>
 
   <!-- VIEW 1: GERADOR -->
@@ -1963,6 +1996,7 @@
     }
 
     const gen = document.getElementById('viewGenerator');
+    const home = document.getElementById('viewHome');
     const lib = document.getElementById('viewLibrary');
     const pre = document.getElementById('viewPresets');
     const cho = document.getElementById('viewChords');
@@ -1975,9 +2009,11 @@
     document.getElementById('navChords').classList.remove('active');
     document.getElementById('navFaq').classList.remove('active');
 
-    gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none'; faq.style.display = 'none';
+    home.style.display = 'none'; gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none'; faq.style.display = 'none';
 
-    if (viewName === 'generator') {
+    if (viewName === 'home') {
+      home.style.display = 'block';
+    } else if (viewName === 'generator') {
       gen.style.display = 'block';
       document.getElementById('navGenerator').classList.add('active');
       drawPianoRoll();
@@ -2002,12 +2038,12 @@
   }
 
   window.addEventListener('hashchange', () => {
-    const currentView = window.location.hash.replace('#', '') || 'generator';
+    const currentView = window.location.hash.replace('#', '') || 'home';
     switchView(currentView);
   });
 
   window.addEventListener('load', () => {
-    const initialView = window.location.hash.replace('#', '') || 'generator';
+    const initialView = window.location.hash.replace('#', '') || 'home';
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     document.body.classList.toggle('is-standalone', isStandalone);
     switchView(initialView);
