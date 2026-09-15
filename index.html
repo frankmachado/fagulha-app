@@ -1323,7 +1323,7 @@
           displayName: user.displayName || user.email.split('@')[0],
           email: user.email,
           activeDaysThisWeek: [today]
-        });
+        }, { merge: true });
       }
     } catch (error) {
       console.error("Erro ao registrar atividade:", error);
@@ -1359,9 +1359,12 @@
       usersSnap.forEach((doc) => {
         const data = doc.data();
         const userId = doc.id;
+        const userEmail = (data.email || "").toLowerCase().trim();
         const isManualVerified = data.manualVerified === true;
-        const isFixedVerified = VERIFIED_EMAILS.includes(data.email);
-        const actionButton = isFixedVerified
+        const isFixedVerified = VERIFIED_EMAILS
+          .map(email => email.toLowerCase())
+          .includes(userEmail) || data.role === "admin";
+        const actionElement = isFixedVerified
           ? `<span style="padding: 4px 8px; font-size: 0.75rem; color: #888; background: #222; border: 1px solid #444; border-radius: 4px;">Selo Fixo (Admin)</span>`
           : `<button onclick="toggleManualVerification('${userId}', ${isManualVerified})" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; background: ${isManualVerified ? '#d9534f' : '#28a745'}; color: #fff;">
               ${isManualVerified ? 'Remover Selo' : 'Dar Selo'}
@@ -1373,7 +1376,7 @@
               <strong style="color: #fff;">${data.displayName || 'Sem nome'}</strong><br>
               <small style="color: #777;">${data.email || 'Sem e-mail'}</small>
             </div>
-            ${actionButton}
+            ${actionElement}
           </li>
         `;
       });
