@@ -1247,6 +1247,33 @@
 
     return false;
   }
+
+  async function recordDailyActivity(user) {
+    if (!user) return;
+
+    const today = new Date().toISOString().split('T')[0];
+    const userRef = db.collection("users").doc(user.uid);
+
+    try {
+      const userDoc = await userRef.get();
+
+      if (userDoc.exists) {
+        // Adiciona o dia de hoje no array sem duplicar
+        await userRef.update({
+          activeDaysThisWeek: firebase.firestore.FieldValue.arrayUnion(today)
+        });
+      } else {
+        // Cria o documento do usuário se for o primeiro acesso
+        await userRef.set({
+          displayName: user.displayName || user.email.split('@')[0],
+          email: user.email,
+          activeDaysThisWeek: [today]
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao registrar atividade:", error);
+    }
+  }
   
   let analytics = null;
   if (firebase.analytics) {
