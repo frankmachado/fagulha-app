@@ -27,6 +27,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Fagulha">
   <meta name="apple-touch-fullscreen" content="yes">
+
   <!-- REGISTRO AUTOMÁTICO DO SERVICE WORKER -->
   <script>
     if ('serviceWorker' in navigator) {
@@ -48,7 +49,6 @@
   <script src="https://cdn.jsdelivr.net/npm/tonal/browser/tonal.min.js"></script>
   <script src="https://unpkg.com/@tonejs/midi"></script>
   
-  <!-- FONTE TIPOGRÁFICA ESTILO MOISES: INTER + PLUS JAKARTA SANS VIA GOOGLE FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -76,10 +76,7 @@
       --safe-left: env(safe-area-inset-left, 0px);
     }
 
-    * { 
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+    * { box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
 
     h1, h2, h3, h4, 
     .brand-title, 
@@ -109,71 +106,30 @@
       padding-left: max(0px, var(--safe-left));
     }
 
-    body.is-standalone {
-      background: #070504;
-    }
+    body.is-standalone { background: #070504; }
 
     .app-splash {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
+      position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
       background: radial-gradient(circle at top, rgba(214, 112, 48, 0.28), transparent 35%), #090807;
-      color: var(--text-main);
-      transition: opacity 0.45s ease, visibility 0.45s ease, transform 0.45s ease;
+      color: var(--text-main); transition: opacity 0.45s ease, visibility 0.45s ease, transform 0.45s ease;
     }
-
-    .app-splash.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: scale(1.04);
-    }
+    .app-splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; transform: scale(1.04); }
 
     .splash-logo {
-      width: 88px;
-      height: 88px;
-      border-radius: 22px;
-      display: grid;
-      place-items: center;
+      width: 88px; height: 88px; border-radius: 22px; display: grid; place-items: center;
       background: linear-gradient(135deg, #C85A17 0%, #8A3305 100%);
       box-shadow: 0 18px 40px rgba(200, 90, 23, 0.4);
     }
-
-    .splash-brand {
-      font-size: clamp(26px, 5vw, 36px);
-      font-weight: 800;
-      letter-spacing: -0.05em;
-    }
-
-    .splash-subtitle {
-      font-size: 12px;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
+    .splash-brand { font-size: clamp(26px, 5vw, 36px); font-weight: 800; letter-spacing: -0.05em; }
+    .splash-subtitle { font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-muted); }
     .splash-loader {
-      width: 120px;
-      height: 4px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-      position: relative;
-      margin-top: 8px;
+      width: 120px; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.08);
+      overflow: hidden; position: relative; margin-top: 8px;
     }
-
     .splash-loader span {
-      position: absolute;
-      inset: 0;
-      width: 38%;
-      background: linear-gradient(90deg, #D97736, #E5A93C);
-      border-radius: inherit;
-      animation: splashPulse 1.1s ease-in-out infinite;
+      position: absolute; inset: 0; width: 38%; background: linear-gradient(90deg, #D97736, #E5A93C);
+      border-radius: inherit; animation: splashPulse 1.1s ease-in-out infinite;
     }
 
     @keyframes splashPulse {
@@ -182,555 +138,137 @@
       100% { transform: translateX(340%); }
     }
 
-    @media (display-mode: standalone) {
-      body {
-        background: #070504;
-      }
-
-      .top-nav-bar {
-        top: calc(12px + var(--safe-top));
-      }
-
-      .sidebar {
-        padding-top: calc(28px + var(--safe-top));
-      }
-    }
-
     .bg-grid-pattern {
       position: fixed; inset: 0;
       background-image: 
         radial-gradient(rgba(217, 119, 54, 0.04) 1px, transparent 1px),
         linear-gradient(to right, rgba(217, 119, 54, 0.015) 1px, transparent 1px);
-      background-size: 32px 32px, 64px 64px;
-      z-index: 0; pointer-events: none;
+      background-size: 32px 32px, 64px 64px; z-index: 0; pointer-events: none;
     }
     .glow-1 {
       position: fixed; width: 600px; height: 600px;
       background: radial-gradient(circle, rgba(200, 90, 23, 0.08) 0%, rgba(0,0,0,0) 70%);
       top: -150px; left: -100px; z-index: 0; pointer-events: none;
     }
-    .sidebar-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(7, 5, 4, 0.6);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-      z-index: 70;
-    }
-    .sidebar-backdrop.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
 
-    /* SIDEBAR ESTILO MOISES */
+    .sidebar-backdrop {
+      position: fixed; inset: 0; background: rgba(7, 5, 4, 0.6); backdrop-filter: blur(2px);
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 70;
+    }
+    .sidebar-backdrop.visible { opacity: 1; pointer-events: auto; }
+
     .sidebar {
-      width: var(--sidebar-width); height: 100vh;
-      background: var(--sidebar-bg); border-right: 1px solid rgba(255, 255, 255, 0.04);
+      width: var(--sidebar-width); height: 100vh; background: var(--sidebar-bg);
+      border-right: 1px solid rgba(255, 255, 255, 0.04);
       padding: calc(24px + var(--safe-top)) 16px 24px; display: flex; flex-direction: column;
       position: fixed; top: 0; left: 0; z-index: 50;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow-y: auto;
-      pointer-events: auto;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; pointer-events: auto;
     }
-    .sidebar.collapsed {
-      transform: translateX(-100%);
-      pointer-events: none;
-    }
-
+    .sidebar.collapsed { transform: translateX(-100%); pointer-events: none; }
     .sidebar-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding-left: 4px; }
     .logo-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: var(--brand-gradient);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 12px var(--accent-glow); flex-shrink: 0;
+      width: 32px; height: 32px; border-radius: 8px; background: var(--brand-gradient);
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px var(--accent-glow); flex-shrink: 0;
     }
     .logo-icon img { width: 32px; height: 32px; object-fit: contain; }
 
     .nav-section { margin-bottom: 28px; text-align: left; }
-    .nav-title {
-      font-size: 10px; font-weight: 700; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
-      padding-left: 8px;
-    }
-
+    .nav-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; padding-left: 8px; }
     .nav-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 9px 12px; border-radius: 8px;
-      color: var(--text-muted); font-size: 13px; font-weight: 600;
-      text-decoration: none; cursor: pointer; transition: all 0.2s ease; margin-bottom: 2px;
+      display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 8px;
+      color: var(--text-muted); font-size: 13px; font-weight: 600; text-decoration: none; cursor: pointer; transition: all 0.2s ease; margin-bottom: 2px;
       background: transparent; border: 1px solid transparent;
     }
-    .nav-item:hover {
-      color: var(--text-main); background: rgba(255, 255, 255, 0.03);
-    }
-    .nav-item.active {
-      background: rgba(200, 90, 23, 0.12); color: #FFF;
-      border: 1px solid rgba(217, 119, 54, 0.25);
-    }
+    .nav-item:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.03); }
+    .nav-item.active { background: rgba(200, 90, 23, 0.12); color: #FFF; border: 1px solid rgba(217, 119, 54, 0.25); }
 
     .slider-field { display: flex; flex-direction: column; text-align: left; margin-bottom: 14px; padding: 0 4px; }
-    .slider-header {
-      display: flex; justify-content: space-between; font-size: 11px; font-weight: 600;
-      color: var(--text-muted); margin-bottom: 6px;
-    }
+    .slider-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
     .slider-header span:last-child { color: var(--accent-ochre); }
 
     input[type="range"] {
-      -webkit-appearance: none; appearance: none;
-      width: 100%; height: 4px; background: rgba(255, 255, 255, 0.08);
-      border-radius: 4px; outline: none; border: none;
-      transition: background 0.2s;
+      -webkit-appearance: none; appearance: none; width: 100%; height: 4px; background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px; outline: none; border: none; transition: background 0.2s;
     }
-    input[type="range"]:hover { background: rgba(255, 255, 255, 0.12); }
     input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none; appearance: none;
-      width: 12px; height: 12px; border-radius: 50%;
-      background: var(--accent-terracotta); cursor: pointer;
-      box-shadow: 0 0 6px var(--accent-glow);
+      -webkit-appearance: none; appearance: none; width: 12px; height: 12px; border-radius: 50%;
+      background: var(--accent-terracotta); cursor: pointer; box-shadow: 0 0 6px var(--accent-glow);
     }
 
     .main-wrapper {
       flex: 1; margin-left: var(--sidebar-width); padding: calc(24px + var(--safe-top)) 24px 24px;
-      display: flex; flex-direction: column; align-items: center; min-width: 0;
-      position: relative; z-index: 1; transition: margin-left 0.3s ease;
+      display: flex; flex-direction: column; align-items: center; min-width: 0; position: relative; z-index: 1; transition: margin-left 0.3s ease;
     }
     .main-wrapper.expanded { margin-left: 0; }
 
-    /* TOP BAR PROFISSIONAL */
     .top-nav-bar {
-      width: 100%; max-width: 760px; display: flex; align-items: center;
-      justify-content: space-between; gap: 12px; margin: -8px 0 20px; padding: 6px 10px;
-      position: sticky; top: calc(10px + var(--safe-top)); z-index: 40; box-sizing: border-box;
-      background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 14px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+      width: 100%; max-width: 760px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: -8px 0 20px; padding: 6px 10px;
+      position: sticky; top: calc(10px + var(--safe-top)); z-index: 40; box-sizing: border-box; background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
     }
     .top-nav-group { display: flex; align-items: center; gap: 6px; min-width: 0; }
-    .left-group { justify-content: flex-start; }
-    .right-group { justify-content: flex-end; }
 
     .btn-top, .vol-control, .language-select, .btn-auth {
-      height: 34px !important; padding: 0 10px !important;
-      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 8px; color: var(--text-muted); font-size: 11px; font-weight: 600;
-      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      height: 34px !important; padding: 0 10px !important; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px; color: var(--text-muted); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       cursor: pointer; transition: all 0.2s ease; box-sizing: border-box; white-space: nowrap;
     }
     .btn-top:hover, .vol-control:hover, .language-select:hover, .btn-auth:hover {
       background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.12); color: var(--text-main);
     }
-    .language-select { width: auto; min-width: 64px; outline: none; }
-    .btn-shortcut-icon { width: 34px; padding: 0 !important; font-family: monospace; font-weight: 700; }
 
-    @media (max-width: 700px) {
-      .sidebar {
-        width: min(80vw, 260px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        z-index: 80;
-      }
-      .sidebar.collapsed {
-        transform: translateX(-105%);
-      }
-      .sidebar-backdrop {
-        display: block;
-      }
-      .top-nav-bar {
-        position: relative;
-        z-index: 120;
-      }
-      .main-wrapper {
-        margin-left: 0;
-        padding: 16px 12px 24px;
-      }
-      .controls-grid {
-        grid-template-columns: 1fr;
-      }
-      .full-width {
-        grid-column: span 1;
-      }
-      .actions-grid {
-        grid-template-columns: 1fr;
-      }
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .scale-chips-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-      .piano-roll-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .sidebar {
-        width: min(86vw, 240px);
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-      .sidebar-brand {
-        margin-bottom: 16px;
-      }
-      .nav-section {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-bottom: 16px;
-      }
-      .nav-title {
-        padding-left: 4px;
-        letter-spacing: 0.5px;
-      }
-      .nav-item {
-        width: 100%;
-        padding: 9px 10px;
-        font-size: 11.5px;
-        justify-content: flex-start;
-      }
-      .top-nav-bar {
-        flex-wrap: wrap;
-        padding: 7px;
-        gap: 6px;
-      }
-      .top-nav-group {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 4px;
-        width: 100%;
-      }
-      .left-group, .right-group {
-        justify-content: stretch;
-      }
-      .btn-top, .vol-control, .language-select, .btn-auth {
-        width: 100%;
-        justify-content: center;
-        min-height: 32px;
-      }
-      .btn-top { padding-left: 8px; padding-right: 8px; font-size: 10.5px; }
-      .vol-control {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 4px;
-        padding-left: 6px;
-        padding-right: 6px;
-        font-size: 10px;
-      }
-      .vol-control input[type="range"] {
-        width: 46px;
-        min-width: 46px;
-        flex: 1 1 auto;
-      }
-      .language-select { min-width: 58px; padding-left: 7px; padding-right: 7px; }
-    }
-
-    .btn-top {
-      background: transparent; border: 1px solid transparent;
-      color: var(--text-muted); height: 34px; padding: 0 10px; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
-      transition: all 0.2s;
-    }
-    .btn-top:hover {
-      background: rgba(255, 255, 255, 0.04); color: var(--text-main);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    .btn-save-fagulha {
-      background: rgba(217, 119, 54, 0.18); border: 1px solid rgba(217, 119, 54, 0.35); color: var(--accent-sand);
-    }
-    .btn-save-fagulha:hover { background: var(--brand-gradient); color: #FFF; border-color: transparent; }
-
-    .btn-auth {
-      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main);
-    }
-    .btn-auth:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); }
-
-    .user-avatar {
-      width: 20px; height: 20px; border-radius: 50%; object-fit: cover;
-    }
-
-    /* DROPDOWN DO USUÁRIO */
-    .user-dropdown-menu {
-      position: absolute; top: calc(100% + 6px); right: 0; left: auto;
-      background: var(--sidebar-bg); border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px; width: 170px; padding: 4px; display: none;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 60;
-    }
-    .user-dropdown-menu.show { display: block; }
-    .dropdown-item {
-      display: flex; align-items: center; gap: 10px; padding: 8px 12px;
-      font-size: 12px; font-weight: 600; color: var(--text-muted);
-      border-radius: 6px; cursor: pointer; transition: all 0.2s;
-    }
-    .dropdown-item:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
-    .dropdown-item.logout:hover { color: #FF9999; background: rgba(220, 60, 60, 0.15); }
-
-    .btn-panic {
-      background: rgba(180, 40, 40, 0.12); border: 1px solid rgba(220, 60, 60, 0.25); color: #FF9999;
-    }
-    .btn-panic:hover { background: rgba(220, 60, 60, 0.25); color: #FFF; }
-
-    .vol-control {
-      display: flex; align-items: center; gap: 8px;
-      background: transparent; border: 1px solid transparent;
-      padding: 0 10px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--text-muted);
-      transition: all 0.2s;
-    }
-    .vol-control:hover {
-      background: rgba(255, 255, 255, 0.04); color: var(--text-main);
-    }
-
-    /* CARD PRINCIPAL CLEAN */
     .app-card {
-      width: 100%; max-width: 760px; background: var(--card-bg);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 20px; padding: 28px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
-    .home-card { max-width: 820px; margin: 0 auto; }
-    .home-intro { padding: 12px 0 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-    .home-intro h1 { margin-bottom: 10px; }
-    .home-intro p { max-width: 620px; color: var(--text-muted); line-height: 1.6; }
-    .home-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-    .privacy-terms-container {
-      margin-top: 28px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 0.9rem; line-height: 1.5; color: #ccc;
-    }
-    .privacy-terms-container h3 { color: var(--text-main); margin: 0 0 14px; }
-    .privacy-terms-container p { margin: 0 0 12px; }
-    .brand-home-link { cursor: pointer; }
-    .brand-home-link:focus-visible { outline: 2px solid var(--accent-ochre); outline-offset: 5px; border-radius: 8px; }
-
-    .header {
-      min-height: 52px; display: flex; justify-content: space-between; align-items: center;
-      gap: 16px; margin-bottom: 22px; padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .brand-title { font-size: 18px; font-weight: 800; margin: 0; }
-    .brand-title span { color: var(--accent-terracotta); }
-
-    .status-badge {
-      font-size: 11px; font-weight: 600; color: var(--text-muted);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .status-dot-led {
-      width: 6px; height: 6px; border-radius: 50%; background: var(--accent-ochre);
-      box-shadow: 0 0 8px var(--accent-ochre);
+      width: 100%; max-width: 760px; background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 20px; padding: 28px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
 
     .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .full-width { grid-column: span 2; }
 
     .input-field { display: flex; flex-direction: column; text-align: left; }
-    .input-field label {
-      font-size: 11px; font-weight: 600; color: var(--text-muted);
-      margin-bottom: 8px;
-    }
+    .input-field label { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
 
     select, input[type="number"], input[type="text"], textarea {
-      width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
-      color: var(--text-main); padding: 12px 14px; border-radius: 10px;
-      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; outline: none;
-      transition: all 0.2s ease;
-    }
-
-    /* ELEMENTO DE BPM INTELIGENTE */
-    .bpm-input-wrapper { display: flex; gap: 6px; }
-    .bpm-input-wrapper input { flex: 1; text-align: center; font-weight: 700; }
-    .bpm-input-wrapper select { width: 110px; font-size: 11px; }
-
-    optgroup { background-color: #140E0B; color: var(--accent-sand); font-weight: 700; }
-    option { background-color: #1C1511 !important; color: #F5EFE6 !important; padding: 10px; font-weight: 500; }
-    select:hover, input:hover, textarea:hover { border-color: rgba(217, 119, 54, 0.3); background: rgba(255, 255, 255, 0.05); }
-    select:focus, input:focus, textarea:focus {
-      border-color: var(--accent-terracotta); background: rgba(200, 90, 23, 0.08);
+      width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main);
+      padding: 12px 14px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: all 0.2s ease;
     }
 
     .scale-chips-container {
-      background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.02);
-      border-radius: 12px; padding: 12px 16px; margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 12px; padding: 12px 16px; margin-bottom: 24px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .scale-title { font-size: 11px; font-weight: 600; color: var(--text-muted); }
-    .chips-wrapper { display: flex; gap: 6px; flex-wrap: wrap; }
-    
-    .note-chip {
-      background: rgba(200, 90, 23, 0.12); color: var(--accent-sand); border: none;
-      font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
-    }
+    .note-chip { background: rgba(200, 90, 23, 0.12); color: var(--accent-sand); border: none; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; }
 
-    .piano-roll-card {
-      background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.02);
-      border-radius: 14px; padding: 16px; margin-bottom: 24px;
-    }
-    .piano-roll-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 12px; font-size: 11px; font-weight: 600; color: var(--text-muted);
-    }
+    .piano-roll-card { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 14px; padding: 16px; margin-bottom: 24px; }
     canvas { width: 100%; height: 120px; background: #070504; border-radius: 8px; display: block; }
 
     .actions-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; }
-    .btn {
-      padding: 12px 10px; border-radius: 10px; border: none;
-      font-size: 13px; font-weight: 700; cursor: pointer; display: flex;
-      align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease;
-    }
+    .btn { padding: 12px 10px; border-radius: 10px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; }
     .btn-primary { background: var(--brand-gradient); color: #FFF; box-shadow: 0 6px 16px var(--accent-glow); }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px var(--accent-glow); }
     .btn-secondary { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--input-border); }
-    .btn-secondary:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--accent-terracotta); }
-    .btn-danger-outline {
-      background: transparent; color: #FF9999; border: 1px solid rgba(220, 60, 60, 0.4);
-    }
-    .btn-danger-outline:hover { background: rgba(220, 60, 60, 0.12); border-color: #FF9999; }
 
     .console-toast {
-      margin-top: 18px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.02);
-      border-radius: 8px; padding: 10px 14px; font-size: 11px; color: var(--text-muted);
-      text-align: left; display: flex; align-items: center; gap: 8px;
+      margin-top: 18px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 8px; padding: 10px 14px;
+      font-size: 11px; color: var(--text-muted); text-align: left; display: flex; align-items: center; gap: 8px;
     }
     .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-terracotta); }
 
-    .chord-mode-toggle { display: flex; gap: 8px; margin-bottom: 16px; justify-content: flex-start; }
-    .toggle-pill {
-      background: transparent; border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text-muted); padding: 6px 14px; border-radius: 16px;
-      font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    .user-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+    .user-dropdown-menu {
+      position: absolute; top: calc(100% + 6px); right: 0; background: var(--sidebar-bg); border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px; width: 170px; padding: 4px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 60;
     }
-    .toggle-pill:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-main); }
-    .toggle-pill.active {
-      background: rgba(200, 90, 23, 0.18); color: var(--accent-sand); border-color: rgba(217, 119, 54, 0.4);
-    }
-
-    .chords-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-    .chord-card {
-      background: linear-gradient(145deg, rgba(30, 21, 15, 0.72), rgba(0, 0, 0, 0.24));
-      border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 14px;
-      text-align: left; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; cursor: pointer;
-    }
-    .chord-card:hover {
-      border-color: rgba(229, 169, 60, 0.62); transform: translateY(-3px);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3), 0 0 18px rgba(200, 90, 23, 0.12);
-    }
-    .chord-degree { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .chord-symbol { font-size: 18px; font-weight: 800; color: #FFF; margin: 4px 0 6px 0; }
-    .chord-notes {
-      display: inline-block; font-size: 11px; font-weight: 600; color: var(--accent-ochre);
-      background: rgba(229, 169, 60, 0.1); border: 1px solid rgba(229, 169, 60, 0.2);
-      border-radius: 999px; padding: 4px 8px;
-    }
-
-    .progression-card {
-      background: rgba(0,0,0,0.15); border: 1px solid rgba(255, 255, 255, 0.02);
-      border-radius: 10px; padding: 14px; margin-top: 18px; text-align: left;
-    }
-    .progression-title { font-size: 11px; font-weight: 700; color: var(--accent-sand); text-transform: uppercase; margin-bottom: 8px; }
-    .progression-item {
-      font-size: 12px; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
-    }
-
-    .keyboard-guide-card {
-      background: rgba(200, 90, 23, 0.04); border: 1px solid rgba(200, 90, 23, 0.1);
-      border-radius: 10px; padding: 10px 12px; margin-bottom: 14px; text-align: left;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-    }
-    .keyboard-controls {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: min(100%, 540px);
-    }
-    .keyboard-control { display: flex; align-items: center; gap: 6px; min-width: 0; }
-    .keyboard-control label { white-space: nowrap; }
-    .keyboard-control select { min-width: 0; padding: 6px 8px !important; }
-
-    .presets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; text-align: left; }
-    .preset-card {
-      background: linear-gradient(145deg, rgba(30, 21, 15, 0.72), rgba(0, 0, 0, 0.24));
-      border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 18px;
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; cursor: pointer;
-    }
-    .preset-card:hover {
-      border-color: rgba(229, 169, 60, 0.62); transform: translateY(-3px);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3), 0 0 18px rgba(200, 90, 23, 0.12);
-    }
-    .preset-title { font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 4px; }
-    .preset-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; }
-    .preset-tag {
-      font-size: 10px; font-weight: 600; color: var(--accent-ochre);
-      background: rgba(229, 169, 60, 0.1); border: 1px solid rgba(229, 169, 60, 0.2);
-      padding: 4px 8px; border-radius: 999px; display: inline-block;
-    }
-
-    .sparks-grid { display: flex; flex-direction: column; gap: 10px; text-align: left; }
-    .spark-card {
-      background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.03);
-      border-radius: 14px; padding: 16px; display: flex; justify-content: space-between;
-      align-items: center; transition: all 0.2s ease;
-    }
-    .spark-card:hover { border-color: rgba(217, 119, 54, 0.3); background: rgba(200, 90, 23, 0.05); }
-    .spark-info-title { font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 2px; }
-    .spark-info-meta { font-size: 11px; color: var(--accent-ochre); font-weight: 600; margin-bottom: 4px; }
-    .spark-info-notes { font-size: 11px; color: var(--text-muted); }
-    .spark-actions { display: flex; gap: 6px; }
-
-    /* ESTILOS DA TELA DEDICADA DE PERFIL (#profile) */
-    .profile-header-card {
-      display: flex; align-items: center; gap: 20px;
-      padding-bottom: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      margin-bottom: 24px; text-align: left;
-    }
-    .profile-avatar-large {
-      width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
-      border: 2px solid var(--accent-terracotta); box-shadow: 0 0 20px var(--accent-glow);
-    }
-    .profile-photo-picker {
-      display: flex; align-items: center; gap: 12px; margin-top: 10px;
-    }
-    .profile-photo-picker input[type="file"] { display: none; }
-    .profile-photo-help { font-size: 11px; color: var(--text-muted); }
-    .profile-section-title {
-      font-size: 12px; font-weight: 700; color: var(--accent-sand);
-      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px; text-align: left;
-    }
-
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100;
-    }
-    .modal-card {
-      background: var(--sidebar-bg); border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; text-align: left;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-    }
-    .shortcut-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 12px;
-    }
-    .faq-list { display: grid; gap: 8px; max-height: 60vh; overflow-y: auto; }
-    .faq-item { border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; background: rgba(255, 255, 255, 0.025); }
-    .faq-item summary { padding: 11px 12px; cursor: pointer; color: var(--text-main); font-size: 12px; font-weight: 700; }
-    .faq-item summary::marker { color: var(--accent-ochre); }
-    .faq-answer { padding: 0 12px 11px; color: var(--text-muted); font-size: 11px; line-height: 1.5; }
-    .kbd-badge {
-      background: var(--input-bg); border: 1px solid var(--input-border); color: var(--accent-sand);
-      padding: 3px 6px; border-radius: 4px; font-family: monospace; font-size: 10px; font-weight: 700;
-    }
+    .user-dropdown-menu.show { display: block; }
+    .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 12px; font-weight: 600; color: var(--text-muted); border-radius: 6px; cursor: pointer; }
+    .dropdown-item:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
   </style>
 </head>
 <body>
 
-<div id="appSplash" class="app-splash" aria-live="polite">
-  <div class="splash-logo" aria-hidden="true">
-    <img src="icon-192.png" alt="Fagulha Loading" width="64" height="64">
-  </div>
+<div id="appSplash" class="app-splash">
+  <div class="splash-logo"><img src="icon-192.png" alt="Loading" width="64" height="64"></div>
   <div class="splash-brand">Fagulha</div>
-  <div class="splash-subtitle">Studio Hub</div>
+  <div class="splash-subtitle">Studio Hub HD</div>
   <div class="splash-loader"><span></span></div>
 </div>
 
@@ -739,74 +277,25 @@
 <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 
 <aside id="sidebar" class="sidebar">
-  <div class="sidebar-brand brand-home-link" onclick="switchView('home')" role="link" tabindex="0" title="Página inicial" onkeydown="if (event.key === 'Enter' || event.key === ' ') switchView('home')">
-    <div class="logo-icon" style="background: none; box-shadow: none;">
-      <img src="icon-192.png" alt="Fagulha Logo">
-    </div>
-    <div style="text-align: left;">
+  <div class="sidebar-brand" onclick="switchView('home')" style="cursor: pointer;">
+    <div class="logo-icon" style="background: none; box-shadow: none;"><img src="icon-192.png" alt="Logo"></div>
+    <div>
       <div style="font-weight: 800; font-size: 15px;">Fagulha</div>
       <div style="font-size: 10px; color: var(--text-muted);">Pro Studio Hub</div>
     </div>
   </div>
 
   <div class="nav-section">
-    <div class="nav-title" data-i18n="navigation">Navegação & Módulos</div>
-    <a id="navGenerator" class="nav-item active" onclick="switchView('generator')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <span data-i18n="scaleEngine">Scale Engine</span>
-    </a>
-    <a id="navLibrary" class="nav-item" onclick="switchView('library')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      <span data-i18n="mySparks">Minhas Fagulhas</span>
-    </a>
-    <a id="navPresets" class="nav-item" onclick="switchView('presets')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-      <span data-i18n="presets">Presets</span>
-    </a>
-    <a id="navChords" class="nav-item" onclick="switchView('chords')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <span data-i18n="harmonizer">Harmonizador</span>
-    </a>
-    <a id="navFaq" class="nav-item" onclick="switchView('faq')">
-      <span class="btn-shortcut-icon" style="width: 15px; height: 15px; font-size: 11px;">?</span>
-      <span data-i18n="faqTitle">Dúvidas Frequentes</span>
-    </a>
+    <div class="nav-title">Navegação & Módulos</div>
+    <a id="navGenerator" class="nav-item active" onclick="switchView('generator')"><span>Scale Engine HD</span></a>
+    <a id="navLibrary" class="nav-item" onclick="switchView('library')"><span>Minhas Fagulhas</span></a>
+    <a id="navPresets" class="nav-item" onclick="switchView('presets')"><span>Presets</span></a>
+    <a id="navChords" class="nav-item" onclick="switchView('chords')"><span>Harmonizador</span></a>
   </div>
 
-  <div class="nav-section">
-    <div class="nav-title" data-i18n="grooveHumanizer">Groove & Humanizer</div>
-    <div class="slider-field">
-      <div class="slider-header">
-        <span data-i18n="humanizer">Humanizer</span>
-        <span id="humanizeVal">15%</span>
-      </div>
-      <input type="range" id="humanizeInput" min="0" max="50" value="15" oninput="document.getElementById('humanizeVal').innerText = this.value + '%'">
-    </div>
-
-    <div class="slider-field">
-      <div class="slider-header">
-        <span data-i18n="swing">Swing</span>
-        <span id="swingVal">0%</span>
-      </div>
-      <input type="range" id="swingInput" min="0" max="60" value="0" oninput="document.getElementById('swingVal').innerText = this.value + '%'">
-    </div>
-  </div>
-
-  <div class="nav-section">
-    <div class="nav-title" data-i18n="settings">Configurações</div>
-    <div class="input-field" style="margin-bottom: 12px;">
-      <label data-i18n="masterTuning">Afinação Master</label>
-      <select id="tuningSelect" onchange="onTuningChange()">
-        <option value="440" selected data-i18n="standardTuning">440 Hz (Padrão)</option>
-        <option value="432" data-i18n="organicTuning">432 Hz (Orgânico)</option>
-      </select>
-    </div>
-  </div>
-
-  <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.03); text-align: left;">
-    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;" data-i18n="activePlan">PLANO ATIVO</div>
-    <div style="font-size: 12px; font-weight: 700; color: var(--accent-sand);" id="userPlanDisplay" data-i18n="visitor">Visitante</div>
-    <div style="font-size: 9px; color: rgba(255, 255, 255, 0.2); margin-top: 4px;">Fagulha Pro Studio</div>
+  <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.03);">
+    <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">PLANO ATIVO</div>
+    <div style="font-size: 12px; font-weight: 700; color: var(--accent-sand);" id="userPlanDisplay">Visitante</div>
   </div>
 </aside>
 
@@ -814,87 +303,34 @@
   
   <div class="top-nav-bar">
     <div class="top-nav-group left-group">
-      <button class="btn-top" onclick="toggleSidebar()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        <span data-i18n="menu">Menu</span>
-      </button>
-      <button class="btn-top btn-save-fagulha" onclick="openSaveSparkModal()" data-i18n-title="saveLoopTitle" title="Salvar o loop atual na sua biblioteca">
-        <span data-i18n="saveSpark">⚡ Salvar Fagulha</span>
-      </button>
-      <button class="btn-top" onclick="tapTempo()" data-i18n-title="tapTempoTitle" title="Clique no ritmo para definir o BPM">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 14 16 14"/></svg>
-        <span data-i18n="tapTempo">Tap Tempo</span>
-      </button>
-      <button class="btn-top btn-panic" onclick="stopAudio()" data-i18n-title="stopTitle" title="Interromper todos os áudios">
-        <span data-i18n="stop">🛑 Stop</span>
-      </button>
+      <button class="btn-top" onclick="toggleSidebar()"><span>Menu</span></button>
+      <button class="btn-top" onclick="openSaveSparkModal()"><span>⚡ Salvar Fagulha</span></button>
+      <button class="btn-top" onclick="stopAudio()"><span>🛑 Stop</span></button>
     </div>
 
     <div class="top-nav-group right-group">
-      <div class="vol-control">
-        <span data-i18n="volume">VOL</span>
-        <input type="range" id="masterVolume" min="0" max="100" value="80" style="width: 50px;" oninput="updateMasterVolume(this.value)">
-        <span id="volVal">80%</span>
-      </div>
-      <select id="languageSelect" class="language-select" aria-label="Idioma" data-i18n-aria-label="language" onchange="changeLanguage(this.value)">
-        <option value="pt">PT</option>
-        <option value="en">EN</option>
-        <option value="es">ES</option>
-      </select>
-      <button class="btn-top btn-shortcut-icon" onclick="switchView('faq')" data-i18n-title="faqTitle" title="Dúvidas Frequentes">
-        ?
-      </button>
-
       <div style="position: relative;">
-        <!-- BOTÃO DE LOGIN / PERFIL DO FIREBASE COM MENU DROPDOWN -->
         <button id="authBtn" class="btn-top btn-auth" onclick="toggleUserDropdown()">
-          <span data-i18n="signInGoogle">Entrar com Google</span>
+          <span>Entrar com Google</span>
         </button>
-
         <div id="userDropdownMenu" class="user-dropdown-menu">
-          <div class="dropdown-item" onclick="switchView('profile'); toggleUserDropdown();">
-            <span data-i18n="myProfile">👤 Meu Perfil</span>
-          </div>
-          <div class="dropdown-item logout" onclick="auth.signOut(); toggleUserDropdown();">
-            <span data-i18n="signOut">🚪 Sair da Conta</span>
-          </div>
+          <div class="dropdown-item" onclick="switchView('profile'); toggleUserDropdown();">👤 Meu Perfil</div>
+          <div class="dropdown-item" onclick="auth.signOut(); toggleUserDropdown();">🚪 Sair da Conta</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- VIEW HOME: PÁGINA INICIAL -->
-  <div id="viewHome" class="app-card home-card" style="display: none;">
-    <section class="home-intro">
-      <h1 class="brand-title">Fagulha <span>Studio Hub</span></h1>
-      <p data-i18n="homeDescription">Uma ferramenta para criar escalas, harmonias e loops musicais em um só lugar.</p>
-      <div class="home-actions">
-        <button class="btn btn-primary" type="button" onclick="switchView('generator')" data-i18n="openStudio">⚡ Abrir o Studio</button>
-        <button class="btn btn-secondary" type="button" onclick="switchView('faq')" data-i18n="homeFaq">Dúvidas frequentes</button>
-      </div>
-    </section>
-
-    <section class="privacy-terms-container" aria-labelledby="privacyTermsTitle">
-      <h3 id="privacyTermsTitle" data-i18n="termsTitle">Termos de Uso e Privacidade</h3>
-      <p><strong data-i18n="termsDataHeading">1. Coleta de Dados:</strong> <span data-i18n="termsDataText">O Fagulha Studio Hub coleta apenas as informações necessárias para autenticação e personalização da sua experiência, como nome de exibição, e-mail e foto de perfil via Firebase Auth.</span></p>
-      <p><strong data-i18n="termsStorageHeading">2. Armazenamento e Segurança:</strong> <span data-i18n="termsStorageText">Seus dados de perfil e projetos salvos são armazenados na infraestrutura do Google Cloud (Firebase Firestore), sob regras de segurança que garantem que apenas você tenha permissão para editar ou excluir suas informações pessoais.</span></p>
-      <p><strong data-i18n="termsRightsHeading">3. Seus Direitos (LGPD):</strong> <span data-i18n="termsRightsText">Você tem total controle sobre seus dados. A qualquer momento, pode editar suas informações de perfil ou utilizar a opção</span> <em data-i18n="termsDeleteAccount">"Excluir Minha Conta"</em> <span data-i18n="termsRightsSuffix">para remover definitivamente todos os seus registros do nosso banco de dados.</span></p>
-      <p><strong data-i18n="termsPlatformHeading">4. Uso da Plataforma:</strong> <span data-i18n="termsPlatformText">O Fagulha Studio Hub é uma ferramenta para criação e apoio a produtores musicais. Respeite os direitos autorais e a comunidade ao compartilhar suas criações.</span></p>
-    </section>
-  </div>
-
-  <!-- VIEW 1: GERADOR -->
+  <!-- VIEW 1: GERADOR (SCALE ENGINE HD COM COMPASSOS E TIMBRES REAIS) -->
   <div id="viewGenerator" class="app-card">
-    <div class="header">
-      <h1 class="brand-title">Fagulha <span>Engine</span></h1>
-      <span class="status-badge" id="tuningBadge">
-        <span class="status-dot-led"></span> 440 Hz STANDARD
-      </span>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h1 class="brand-title" style="margin:0;">Fagulha <span>Engine HD</span></h1>
+      <span id="audioStatus" style="font-size: 11px; color: var(--accent-ochre);">🔊 Amostras HD do CDN Carregadas</span>
     </div>
 
     <div class="controls-grid">
       <div class="input-field">
-        <label data-i18n="rootNote">Tônica (Key)</label>
+        <label>Tônica (Key)</label>
         <select id="rootNote" onchange="onSettingChange()">
           <option value="C">Dó (C)</option>
           <option value="D">Ré (D)</option>
@@ -907,334 +343,68 @@
       </div>
 
       <div class="input-field">
-        <label data-i18n="tempo">Andamento (BPM)</label>
-        <div class="bpm-input-wrapper">
-          <input type="number" id="bpmInput" value="113" min="60" max="180" onchange="onSettingChange()">
-          <select id="bpmPresetSelect" onchange="selectBpmPreset(this.value)">
-            <option value="" disabled selected data-i18n="shortcuts">Atalhos</option>
-            <option value="80">80 BPM (Lento)</option>
-            <option value="90">90 BPM (Boom Bap)</option>
-            <option value="100">100 BPM (Maracatu)</option>
-            <option value="113">113 BPM (Baião)</option>
-            <option value="120">120 BPM (Dance)</option>
-            <option value="128">128 BPM (House)</option>
-            <option value="140">140 BPM (Trap / Drill)</option>
-            <option value="160">160 BPM (Acelerado)</option>
-          </select>
-        </div>
+        <label>Andamento (BPM)</label>
+        <input type="number" id="bpmInput" value="113" min="60" max="180" onchange="onSettingChange()">
+      </div>
+
+      <div class="input-field">
+        <label>Fórmula de Compasso</label>
+        <select id="timeSignature" onchange="onSettingChange()">
+          <option value="4/4" selected>4/4 (Standard / Pop / Trap)</option>
+          <option value="6/8">6/8 (Baião / Sertanejo / Toada)</option>
+          <option value="3/4">3/4 (Valsa / Reggaeton Triple)</option>
+          <option value="7/8">7/8 (Prog / Jazz / MPB)</option>
+        </select>
       </div>
 
       <div class="input-field full-width">
-        <label data-i18n="scaleVibe">Escala & Vibe Harmônica</label>
+        <label>Escala & Vibe Harmônica</label>
         <select id="scaleType" onchange="onSettingChange()">
-          <optgroup label="✨ MODOS MAIORES & DOMINANTES">
-            <option value="lydian dominant" selected>Lídio Dominante (Sertão / Neo-Soul)</option>
-            <option value="mixolydian">Mixolídio / Aboio (Reza / Psicodélico)</option>
-            <option value="major pentatonic">Escala Praiana (Afrobeat / Maré)</option>
-          </optgroup>
-          <optgroup label="🌙 CAMPOS HARMÔNICOS MENORES">
-            <option value="minor">Menor Natural / Eólio (Melancolia / R&B)</option>
-            <option value="harmonic minor">Menor Harmônica (Dramático / Baião)</option>
-            <option value="dorian">Dório Mourisco (Baião Menor / MPB Jazz)</option>
-            <option value="phrygian">Frígio (Transe / Reza Mística)</option>
-            <option value="minor pentatonic">Pentatônica Gnawa (Transe / Trap)</option>
-          </optgroup>
+          <option value="lydian dominant" selected>Lídio Dominante (Sertão / Neo-Soul)</option>
+          <option value="minor">Menor Natural (Melancolia / R&B)</option>
+          <option value="harmonic minor">Menor Harmônica (Dramático / Baião)</option>
+          <option value="dorian">Dório Mourisco (Baião Menor / MPB)</option>
+          <option value="major pentatonic">Escala Praiana (Afrobeat / Maré)</option>
         </select>
       </div>
-    </div>
 
-    <div class="scale-chips-container">
-      <span class="scale-title" data-i18n="scaleNotes">Notas da Escala</span>
-      <div id="chipsWrapper" class="chips-wrapper"></div>
-    </div>
-
-    <div class="controls-grid">
       <div class="input-field">
-        <label data-i18n="instrument">Instrumento</label>
+        <label>Instrumento (Sample HD Real)</label>
         <select id="patternStyle" onchange="updateVariationMenu()">
-          <option value="logdrum">🥁 Baixo / Logdrum</option>
-          <option value="rhodes">🎹 Rhodes / Teclados</option>
-          <option value="viola">🪕 Viola Caipira / Cordas Aço</option>
+          <option value="piano">🎹 Piano Acústico Real (Salamander)</option>
+          <option value="viola">🪕 Violão de Aço / Cordas Real</option>
+          <option value="logdrum">🥁 Baixo 808 / Sub Synth</option>
+          <option value="drums">🥁 Kit de Bateria & Percussão Real</option>
         </select>
       </div>
-      <div class="input-field">
-        <label data-i18n="groove">Groove (8 Compassos)</label>
+
+      <div class="input-field" style="grid-column: span 2;">
+        <label>Variações de Groove (Mínimo 5 Exclusivos por Instrumento)</label>
         <select id="variationType" onchange="onSettingChange()"></select>
       </div>
     </div>
 
+    <div class="scale-chips-container">
+      <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">Notas da Escala</span>
+      <div id="chipsWrapper" style="display: flex; gap: 6px;"></div>
+    </div>
+
     <div class="piano-roll-card">
-      <div class="piano-roll-header">
-        <span data-i18n="pianoRoll">GRID PIANO ROLL (32 BEATS)</span>
-        <span id="noteCounter" style="color: var(--accent-terracotta);">0 Notas</span>
-      </div>
       <canvas id="pianoRollCanvas" width="620" height="120"></canvas>
     </div>
 
     <div class="actions-grid">
-      <button class="btn btn-primary" id="playBtn" onclick="previewPattern()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        <span data-i18n="listenLoop">Escutar Loop</span>
-      </button>
-      <button class="btn btn-secondary" onclick="exportMIDI()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span data-i18n="exportMidi">Exportar MIDI (.mid)</span>
-      </button>
+      <button class="btn btn-primary" onclick="previewPattern()">▶ Escutar Loop HD</button>
+      <button class="btn btn-secondary" onclick="exportMIDI()">⬇ Exportar MIDI (.mid)</button>
     </div>
 
     <div class="console-toast">
       <div class="status-dot"></div>
-      <span id="statusMessage" data-i18n="engineReady">Fagulha Scale Engine pronto para processar.</span>
-    </div>
-  </div>
-
-  <!-- VIEW 2: MINHAS FAGULHAS -->
-  <div id="viewLibrary" class="app-card" style="display: none;">
-    <div class="header">
-      <h1 class="brand-title"><span data-i18n="my">Minhas</span> <span data-i18n="sparks">Fagulhas</span></h1>
-      <span class="status-badge" id="libraryCountBadge">0 LOOPS SALVOS</span>
-    </div>
-
-    <div id="sparksGrid" class="sparks-grid"></div>
-  </div>
-
-  <!-- VIEW 3: PACK PRESET LIBRARY -->
-  <div id="viewPresets" class="app-card" style="display: none;">
-    <div class="header">
-      <h1 class="brand-title"><span data-i18n="preset">Preset</span> <span data-i18n="library">Library</span></h1>
-      <span class="status-badge" data-i18n="curatedPacks">PACKS CURADOS</span>
-    </div>
-    
-    <div class="presets-grid">
-      <div class="preset-card" onclick="loadPresetPack('A', 113, 'lydian dominant', 'rhodes', 'rho_01')">
-        <div class="preset-title" data-i18n="presetSertaoTitle">Sertão Neo-Soul Pack</div>
-        <div class="preset-desc" data-i18n="presetSertaoDescription">Acordes aveludados em Lá Lídio Nordestino com Rhodes expansivo em 113 BPM.</div>
-        <span class="preset-tag" data-i18n="presetSertaoTag">🎹 Rhodes • 113 BPM</span>
-      </div>
-
-      <div class="preset-card" onclick="loadPresetPack('D', 140, 'minor pentatonic', 'logdrum', 'log_02')">
-        <div class="preset-title" data-i18n="presetGnawaTitle">Transe Gnawa 808</div>
-        <div class="preset-desc" data-i18n="presetGnawaDescription">Viradas aceleradas de Logdrum em Ré Pentatônica Gnawa focado em Trap de 140 BPM.</div>
-        <span class="preset-tag" data-i18n="presetGnawaTag">🥁 Logdrum • 140 BPM</span>
-      </div>
-
-      <div class="preset-card" onclick="loadPresetPack('E', 120, 'minor', 'viola', 'vio_02')">
-        <div class="preset-title" data-i18n="presetAboioTitle">Aboio Melancólico Menor</div>
-        <div class="preset-desc" data-i18n="presetAboioDescription">Dedilhado rápido de viola em Mí Menor Natural focado em clima denso em 120 BPM.</div>
-        <span class="preset-tag" data-i18n="presetAboioTag">🪕 Viola • 120 BPM</span>
-      </div>
-
-      <div class="preset-card" onclick="loadPresetPack('G', 112, 'major pentatonic', 'logdrum', 'log_01')">
-        <div class="preset-title" data-i18n="presetMaracatuTitle">Maracatu Amapiano Bounce</div>
-        <div class="preset-desc" data-i18n="presetMaracatuDescription">Sincopado cadenciado com balanço de maré em Sol Escala Praiana em 112 BPM.</div>
-        <span class="preset-tag" data-i18n="presetMaracatuTag">🥁 Logdrum • 112 BPM</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- VIEW 4: HARMONIZADOR DE CAMPO -->
-  <div id="viewChords" class="app-card" style="display: none;">
-    <div class="header">
-      <h1 class="brand-title"><span data-i18n="harmonizerTitle">Harmonizador</span> <span data-i18n="field">de Campo</span></h1>
-      <span class="status-badge" id="chordScaleBadge">A LYDIAN DOMINANT</span>
-    </div>
-
-    <div class="keyboard-guide-card">
-      <div>
-        <div style="font-size: 11px; font-weight: 700; color: var(--accent-sand); margin-bottom: 2px;">🎹 LIVE KEYBOARD JAM (MAPEADO)</div>
-        <div style="font-size: 11px; color: var(--text-main);">
-          Pressione <span class="kbd-badge">1..7</span> para tocar os graus da escala ativa ou <span class="kbd-badge">C..B</span> para notas fixas.
-        </div>
-      </div>
-      
-      <div class="keyboard-controls">
-        <div class="keyboard-control">
-          <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="key">Key:</label>
-        <select id="quickHarmonizerRoot" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickRootChange(this.value)">
-          <option value="C">C</option>
-          <option value="D">D</option>
-          <option value="E">E</option>
-          <option value="F">F</option>
-          <option value="G">G</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-        </select>
-        </div>
-        <div class="keyboard-control">
-          <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="playingInstrument">Instrumento:</label>
-        <select id="quickHarmonizerInstrument" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickInstrumentChange(this.value)">
-          <option value="logdrum">🥁 Baixo / Logdrum</option>
-          <option value="rhodes">🎹 Rhodes / Teclados</option>
-          <option value="viola">🪕 Viola Caipira / Cordas Aço</option>
-        </select>
-        </div>
-        <div class="keyboard-control">
-          <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="activeScale">Escala Ativa:</label>
-        <select id="quickHarmonizerScale" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickScaleChange(this.value)">
-          <optgroup label="✨ MODOS MAIORES & DOMINANTES">
-            <option value="lydian dominant">Lídio Dominante</option>
-            <option value="mixolydian">Mixolídio / Aboio</option>
-            <option value="major pentatonic">Escala Praiana</option>
-          </optgroup>
-          <optgroup label="🌙 CAMPOS HARMÔNICOS MENORES">
-            <option value="minor">Menor Natural</option>
-            <option value="harmonic minor">Menor Harmônica</option>
-            <option value="dorian">Dório Mourisco</option>
-            <option value="phrygian">Frígio</option>
-            <option value="minor pentatonic">Pentatônica Gnawa</option>
-          </optgroup>
-        </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="chord-mode-toggle">
-      <button class="toggle-pill active" id="btnTriads" onclick="setChordType('triads')" data-i18n="triads">Tríades (3 Notas)</button>
-      <button class="toggle-pill" id="btnTetrads" onclick="setChordType('tetrads')" data-i18n="tetrads">Tétrades / 7ªs (4 Notas)</button>
-    </div>
-
-    <div id="chordsGrid" class="chords-grid"></div>
-
-    <div class="progression-card">
-      <div class="progression-title" data-i18n="recommendedProgressions">💡 Progressões Recomendadas:</div>
-      <div id="progressionsContainer"></div>
-    </div>
-  </div>
-
-  <!-- VIEW 5: TELA DEDICADA DE PERFIL (#profile) -->
-  <div id="viewProfile" class="app-card" style="display: none;">
-    <div class="header">
-      <h1 class="brand-title"><span data-i18n="myProfileTitle">Meu Perfil</span> <span data-i18n="producer">de Produtor</span></h1>
-      <button class="btn btn-secondary" onclick="switchView('generator')" style="padding: 6px 12px; font-size: 11px;" data-i18n="backToStudio">Voltar ao Studio</button>
-    </div>
-
-    <div class="profile-header-card">
-      <img id="profileLargeAvatar" src="https://ui-avatars.com/api/?name=Produtor&background=C85A17&color=fff" class="profile-avatar-large" />
-      <div>
-        <div id="profileHeaderName" style="font-size: 18px; font-weight: 800; color: #FFF;">Nome do Produtor</div>
-        <div id="profileHeaderEmail" style="font-size: 12px; color: var(--text-muted);">email@exemplo.com</div>
-        <div style="font-size: 11px; color: var(--accent-ochre); margin-top: 4px; font-weight: 600;" id="profileHeaderPlan" data-i18n="proPlan">Plano Pro Unlimited</div>
-        <div class="profile-photo-picker">
-          <label for="pageProfilePhoto" class="btn btn-secondary" style="padding: 7px 10px; font-size: 11px;" data-i18n="chooseImage">Escolher imagem</label>
-          <input type="file" id="pageProfilePhoto" accept="image/png,image/jpeg,image/webp" onchange="previewProfileImage(event)">
-          <button id="saveProfilePhotoButton" class="btn btn-primary" type="button" onclick="saveProfilePhoto()" style="padding: 7px 10px; font-size: 11px;" data-i18n="savePhoto">Salvar foto</button>
-          <span id="profilePhotoHelp" class="profile-photo-help" data-i18n="imageFormats">PNG, JPG ou WebP</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="profile-section-title" data-i18n="displayInformation">Informações de Exibição</div>
-
-    <div class="controls-grid" style="margin-bottom: 20px;">
-      <div class="input-field">
-        <label data-i18n="displayName">Nome de Exibição / Produtor</label>
-        <input type="text" id="pageProfileName" data-i18n-placeholder="displayNamePlaceholder" placeholder="Ex: Produtor Siara">
-      </div>
-
-      <div class="input-field full-width">
-        <label data-i18n="bio">Bio / Apresentação Musical (Opcional)</label>
-        <textarea id="pageProfileBio" rows="3" data-i18n-placeholder="bioPlaceholder" placeholder="Conte um pouco sobre seu estilo musical, ritmos favoritos ou produções..."></textarea>
-      </div>
-    </div>
-
-    <!-- Painel exclusivo do Administrador Mestre -->
-    <div class="admin-only master-panel-card" style="display: none; margin-top: 20px; padding: 16px; border: 1px solid #ff4500; border-radius: 8px; background: rgba(255, 69, 0, 0.05);">
-      <h3 style="color: #ff4500; margin-top: 0; display: flex; align-items: center; gap: 8px;">
-        🔥 Painel do Mestre
-      </h3>
-      <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">Controle administrativo total do Fagulha Studio Hub</p>
-
-      <!-- Métricas Rápidas -->
-      <div class="admin-stats" style="display: flex; gap: 10px; margin-bottom: 15px;">
-        <div style="flex: 1; padding: 10px; background: #1a1a1a; border-radius: 6px; text-align: center; border: 1px solid #333;">
-          <small style="color: #888;">Usuários</small>
-          <h4 id="stat-total-users" style="margin: 5px 0 0 0; color: #fff;">-</h4>
-        </div>
-        <div style="flex: 1; padding: 10px; background: #1a1a1a; border-radius: 6px; text-align: center; border: 1px solid #333;">
-          <small style="color: #888;">Fagulhas</small>
-          <h4 id="stat-total-fagulhas" style="margin: 5px 0 0 0; color: #fff;">-</h4>
-        </div>
-      </div>
-
-      <!-- Ações Rápidas -->
-      <div class="admin-actions" style="display: flex; flex-direction: column; gap: 8px;">
-        <button onclick="loadAdminUsersList()" style="width: 100%; padding: 10px; background: #ff4500; color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
-          👥 Gerenciar Usuários &amp; Selos
-        </button>
-      </div>
-
-      <!-- Container dinâmico para listagem -->
-      <div id="admin-dynamic-content" style="margin-top: 15px;"></div>
-    </div>
-
-    <div class="profile-section-title" data-i18n="accountData">Dados da Conta</div>
-    <div class="controls-grid" style="margin-bottom: 24px; opacity: 0.8;">
-      <div class="input-field">
-        <label data-i18n="linkedEmail">E-mail Vinculado</label>
-        <input type="text" id="pageProfileEmailDisabled" disabled style="cursor: not-allowed;">
-      </div>
-      <div class="input-field">
-        <label data-i18n="producerId">ID do Produtor (Firebase UID)</label>
-        <input type="text" id="pageProfileUidDisabled" disabled style="cursor: not-allowed; font-family: monospace; font-size: 11px;">
-      </div>
-    </div>
-
-    <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 20px;">
-      <span id="profileSaveStatus" class="profile-photo-help" aria-live="polite"></span>
-      <button class="btn btn-secondary" onclick="auth.signOut();" style="color: #FF9999; border-color: rgba(220,60,60,0.25);" data-i18n="signOut">🚪 Sair da Conta</button>
-      <button class="btn btn-primary" onclick="savePageUserProfile()" style="padding: 10px 24px;" data-i18n="saveChanges">⚡ Salvar Alterações</button>
-    </div>
-    <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
-      <button class="btn btn-danger-outline" type="button" onclick="excluirContaUsuario()">🗑️ Excluir Minha Conta</button>
-    </div>
-  </div>
-
-  <!-- VIEW 6: DÚVIDAS FREQUENTES -->
-  <div id="viewFaq" class="app-card" style="display: none;">
-    <div class="header">
-      <h1 class="brand-title" data-i18n="faqTitle">Dúvidas Frequentes</h1>
-      <span class="status-badge" data-i18n="faqSubtitle">GUIA RÁPIDO DO STUDIO</span>
-    </div>
-    <div class="faq-list">
-      <details class="faq-item"><summary data-i18n="faqGeneratorQuestion">Como crio um loop?</summary><div class="faq-answer" data-i18n="faqGeneratorAnswer">Escolha a tônica, a escala, o instrumento e o groove. Depois clique em Escutar Loop para ouvir o resultado.</div></details>
-      <details class="faq-item"><summary data-i18n="faqHarmonizerQuestion">Para que serve o Harmonizador?</summary><div class="faq-answer" data-i18n="faqHarmonizerAnswer">Ele mostra os acordes possíveis da escala ativa. Você pode trocar a tônica, o instrumento e a escala sem sair da tela.</div></details>
-      <details class="faq-item"><summary data-i18n="faqInstrumentQuestion">Como troco o instrumento?</summary><div class="faq-answer" data-i18n="faqInstrumentAnswer">Use o seletor Instrumento no gerador ou o seletor rápido dentro do Harmonizador.</div></details>
-      <details class="faq-item"><summary data-i18n="faqPhotoQuestion">Como salvo minha foto de perfil?</summary><div class="faq-answer" data-i18n="faqPhotoAnswer">Abra Meu Perfil, escolha uma imagem e clique em Salvar foto. A imagem é ajustada para o formato do avatar.</div></details>
-      <details class="faq-item"><summary data-i18n="faqLanguageQuestion">Como mantenho meu idioma?</summary><div class="faq-answer" data-i18n="faqLanguageAnswer">Escolha PT, EN ou ES no menu superior. A preferência fica salva neste navegador.</div></details>
-      <details class="faq-item"><summary data-i18n="faqMidiQuestion">Como exporto um arquivo MIDI?</summary><div class="faq-answer" data-i18n="faqMidiAnswer">Faça login, configure seu loop e clique em Exportar MIDI. O arquivo será baixado automaticamente.</div></details>
+      <span id="statusMessage">Pronto para processar com timbres reais do CDN.</span>
     </div>
   </div>
 
 </main>
-
-<!-- MODAL PARA SALVAR FAGULHA NOMEADA -->
-<div id="saveSparkModal" class="modal-overlay" onclick="closeSaveSparkModal()">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: #FFF; font-size: 16px;" data-i18n="saveSpark">⚡ Salvar Fagulha</h3>
-      <span style="cursor: pointer; font-weight: 700; color: var(--text-muted);" onclick="closeSaveSparkModal()">✕</span>
-    </div>
-
-    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-      <span data-i18n="saveSparkDescription">Grave este loop na sua biblioteca Cloud e envie uma cópia ao Make.</span>
-    </div>
-
-    <div class="input-field" style="margin-bottom: 12px;">
-      <label data-i18n="loopName">Nome do Loop / Fagulha</label>
-      <input type="text" id="sparkTitleInput" data-i18n-placeholder="loopNamePlaceholder" placeholder="Ex: Bassline Baião Trap" autofocus>
-    </div>
-
-    <div class="input-field" style="margin-bottom: 20px;">
-      <label data-i18n="notesVibe">Anotações ou Vibe (Opcional)</label>
-      <input type="text" id="sparkNotesInput" data-i18n-placeholder="notesVibePlaceholder" placeholder="Ex: Usar como introdução na faixa principal">
-    </div>
-
-    <div style="display: flex; gap: 8px; justify-content: flex-end;">
-      <button class="btn btn-secondary" onclick="closeSaveSparkModal()" style="padding: 9px 14px;" data-i18n="cancel">Cancelar</button>
-      <button class="btn btn-primary" onclick="confirmSendSparkToMake()" style="padding: 9px 18px;" data-i18n="saveToCloud">⚡ Salvar na Nuvem</button>
-    </div>
-  </div>
-</div>
 
 <script>
   /* CONFIGURAÇÃO DO FIREBASE */
@@ -1251,1272 +421,83 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
-  const storage = firebase.storage();
 
-  // --- CONSTANTES DE PERMISSÃO ---
-  const MASTER_ADMIN_EMAIL = "contatofagulha.app@gmail.com";
-
-  const VERIFIED_EMAILS = [
-    "contatofagulha.app@gmail.com",
-    "avlis.silva11@gmail.com"
-  ];
-
-  async function isMasterAdmin(user) {
-    if (!user) return false;
-
-    if (user.email === MASTER_ADMIN_EMAIL) {
-      return true;
-    }
-
-    try {
-      const userDoc = await db.collection("users").doc(user.uid).get();
-      return userDoc.exists && userDoc.data().role === "admin";
-    } catch (error) {
-      console.error("Erro ao verificar status de admin:", error);
-      return false;
-    }
-  }
-
-  async function checkUserVerification(user) {
-    if (!user) return false;
-
-    // 1. Regra Prioritária: Mestre e Admin recebem o selo sempre
-    if (VERIFIED_EMAILS.includes(user.email)) {
-      return true;
-    }
-
-    // 2. Checagem no Firestore: selo manual ou 4+ acessos na semana
-    try {
-      const userDoc = await db.collection("users").doc(user.uid).get();
-
-      if (userDoc.exists) {
-        const data = userDoc.data();
-        if (data.manualVerified === true) return true;
-
-        const activeDays = data.activeDaysThisWeek || [];
-        return activeDays.length >= 4;
-      }
-    } catch (error) {
-      console.error("Erro ao verificar selo:", error);
-    }
-
-    return false;
-  }
-
-  async function recordDailyActivity(user) {
-    if (!user) return;
-
-    const today = new Date().toISOString().split('T')[0];
-    const userRef = db.collection("users").doc(user.uid);
-
-    try {
-      const userDoc = await userRef.get();
-
-      if (userDoc.exists) {
-        // Adiciona o dia de hoje no array sem duplicar
-        await userRef.update({
-          activeDaysThisWeek: firebase.firestore.FieldValue.arrayUnion(today)
-        });
-      } else {
-        // Cria o documento do usuário se for o primeiro acesso
-        await userRef.set({
-          displayName: user.displayName || user.email.split('@')[0],
-          email: user.email,
-          activeDaysThisWeek: [today]
-        }, { merge: true });
-      }
-    } catch (error) {
-      console.error("Erro ao registrar atividade:", error);
-    }
-  }
-
-  // --- CARREGAR ESTATÍSTICAS E DADOS DO PAINEL DO MESTRE ---
-  async function loadMasterPanelData() {
-    try {
-      const usersSnap = await db.collection("users").get();
-      const totalUsersEl = document.getElementById("stat-total-users");
-      if (totalUsersEl) totalUsersEl.innerText = usersSnap.size;
-
-      const fagulhasSnap = await db.collection("fagulhas").get();
-      const totalFagulhasEl = document.getElementById("stat-total-fagulhas");
-      if (totalFagulhasEl) totalFagulhasEl.innerText = fagulhasSnap.size;
-    } catch (error) {
-      console.error("Erro ao carregar estatísticas do Mestre:", error);
-    }
-  }
-
-  // --- GERENCIAR USUÁRIOS E SELOS ---
-  async function loadAdminUsersList() {
-    const container = document.getElementById("admin-dynamic-content");
-    if (!container) return;
-
-    container.innerHTML = "<p style='font-size: 0.85rem; color: #aaa;'>Carregando usuários...</p>";
-
-    try {
-      const usersSnap = await db.collection("users").get();
-      let html = "<ul style='list-style: none; padding: 0; margin: 0;'>";
-
-      usersSnap.forEach((doc) => {
-        const data = doc.data();
-        const userId = doc.id;
-        const userEmail = (data.email || "").toLowerCase().trim();
-        const isManualVerified = data.manualVerified === true;
-        const isFixedVerified = VERIFIED_EMAILS
-          .map(email => email.toLowerCase())
-          .includes(userEmail) || data.role === "admin";
-        const actionElement = isFixedVerified
-          ? `<span style="padding: 4px 8px; font-size: 0.75rem; color: #888; background: #222; border: 1px solid #444; border-radius: 4px;">Selo Fixo (Admin)</span>`
-          : `<button onclick="toggleManualVerification('${userId}', ${isManualVerified})" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; background: ${isManualVerified ? '#d9534f' : '#28a745'}; color: #fff;">
-              ${isManualVerified ? 'Remover Selo' : 'Dar Selo'}
-            </button>`;
-
-        html += `
-          <li style="display: flex; align-items: center; justify-content: space-between; padding: 8px; margin-bottom: 6px; background: #1a1a1a; border-radius: 6px; border: 1px solid #333; font-size: 0.85rem;">
-            <div>
-              <strong style="color: #fff;">${data.displayName || 'Sem nome'}</strong><br>
-              <small style="color: #777;">${data.email || 'Sem e-mail'}</small>
-            </div>
-            ${actionElement}
-          </li>
-        `;
-      });
-
-      html += "</ul>";
-      container.innerHTML = html;
-    } catch (error) {
-      console.error("Erro ao carregar lista de usuários:", error);
-      container.innerHTML = "<p style='font-size: 0.85rem; color: #d9534f;'>Erro ao carregar lista.</p>";
-    }
-  }
-
-  // --- ALTERAR SELO MANUALMENTE VIA BANCO ---
-  async function toggleManualVerification(userId, currentStatus) {
-    try {
-      await db.collection("users").doc(userId).set({
-        manualVerified: !currentStatus
-      }, { merge: true });
-
-      loadAdminUsersList();
-    } catch (error) {
-      console.error("Erro ao alterar selo manual:", error);
-      alert("Erro ao atualizar o selo do usuário.");
-    }
-  }
+  /* CARREGADOR DE SAMPLES REAIS VIA CDN PÚBLICO (TONE.JS) */
+  const SAMPLE_CDN = "https://tonejs.github.io/audio/salamander/";
+  const DRUM_CDN = "https://tonejs.github.io/audio/drum-samples/";
   
-  let analytics = null;
-  if (firebase.analytics) {
-    analytics = firebase.analytics();
-  }
+  let audioCtx = null;
+  const sampleBuffers = {};
 
-  let currentUser = null;
-  let currentUserVerified = false;
-  let selectedProfileImage = null;
-  let savedProfilePhotoUrl = '';
-
-  const translations = {
-    pt: {
-      navigation: 'Navegação & Módulos', scaleEngine: 'Scale Engine', mySparks: 'Minhas Fagulhas', presets: 'Presets',
-      harmonizer: 'Harmonizador', grooveHumanizer: 'Groove & Humanizer', humanizer: 'Humanizer', swing: 'Swing',
-      settings: 'Configurações', masterTuning: 'Afinação Master', standardTuning: '440 Hz (Padrão)', organicTuning: '432 Hz (Orgânico)',
-      activePlan: 'PLANO ATIVO', visitor: 'Visitante', menu: 'Menu', saveSpark: '⚡ Salvar Fagulha', tapTempo: 'Tap Tempo',
-      stop: '🛑 Stop', signInGoogle: 'Entrar com Google', myProfile: '👤 Meu Perfil', signOut: '🚪 Sair da Conta', volume: 'VOL',
-      rootNote: 'Tônica (Key)', tempo: 'Andamento (BPM)', shortcuts: 'Atalhos', scaleVibe: 'Escala & Vibe Harmônica', scaleNotes: 'Notas da Escala',
-      instrument: 'Instrumento', playingInstrument: 'Instrumento:', savePhoto: 'Salvar foto', groove: 'Groove (8 Compassos)', pianoRoll: 'GRID PIANO ROLL (32 BEATS)', listenLoop: 'Escutar Loop',
-      exportMidi: 'Exportar MIDI (.mid)', engineReady: 'Fagulha Scale Engine pronto para processar.', my: 'Minhas', sparks: 'Fagulhas',
-      preset: 'Preset', library: 'Library', curatedPacks: 'PACKS CURADOS', harmonizerTitle: 'Harmonizador', field: 'de Campo', activeScale: 'Escala Ativa:',
-      triads: 'Tríades (3 Notas)', tetrads: 'Tétrades / 7ªs (4 Notas)', recommendedProgressions: '💡 Progressões Recomendadas:',
-      myProfileTitle: 'Meu Perfil', producer: 'de Produtor', backToStudio: 'Voltar ao Studio', proPlan: 'Plano Pro Unlimited',
-      chooseImage: 'Escolher imagem', imageFormats: 'PNG, JPG ou WebP', displayInformation: 'Informações de Exibição',
-      displayName: 'Nome de Exibição / Produtor', bio: 'Bio / Apresentação Musical (Opcional)', accountData: 'Dados da Conta',
-      linkedEmail: 'E-mail Vinculado', producerId: 'ID do Produtor (Firebase UID)', saveChanges: '⚡ Salvar Alterações',
-      saveSparkDescription: 'Grave este loop na sua biblioteca Cloud e envie uma cópia ao Make.', loopName: 'Nome do Loop / Fagulha',
-      notesVibe: 'Anotações ou Vibe (Opcional)', cancel: 'Cancelar', saveToCloud: '⚡ Salvar na Nuvem', keyboardShortcutsText: 'Atalhos de Teclado',
-      shortcutScale: 'Tocar Graus da Escala (Hold = Sustenta, Release = Solta)', shortcutNotes: 'Notas Fixas Absolutas',
-      shortcutPlay: 'Escutar / Pausar Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calcular Tap Tempo', shortcutMenu: 'Alternar Menu Lateral',
-      language: 'Idioma', saveLoopTitle: 'Salvar o loop atual na sua biblioteca', tapTempoTitle: 'Clique no ritmo para definir o BPM',
-      stopTitle: 'Interromper todos os áudios', keyboardShortcuts: 'Atalhos de Teclado', faqTitle: 'Dúvidas Frequentes', faqSubtitle: 'GUIA RÁPIDO DO STUDIO', displayNamePlaceholder: 'Ex: Produtor Siara',
-      homeDescription: 'Uma ferramenta para criar escalas, harmonias e loops musicais em um só lugar.', openStudio: '⚡ Abrir o Studio', homeFaq: 'Dúvidas frequentes',
-      termsTitle: 'Termos de Uso e Privacidade', termsDataHeading: '1. Coleta de Dados:', termsDataText: 'O Fagulha Studio Hub coleta apenas as informações necessárias para autenticação e personalização da sua experiência, como nome de exibição, e-mail e foto de perfil via Firebase Auth.',
-      termsStorageHeading: '2. Armazenamento e Segurança:', termsStorageText: 'Seus dados de perfil e projetos salvos são armazenados na infraestrutura do Google Cloud (Firebase Firestore), sob regras de segurança que garantem que apenas você tenha permissão para editar ou excluir suas informações pessoais.',
-      termsRightsHeading: '3. Seus Direitos (LGPD):', termsRightsText: 'Você tem total controle sobre seus dados. A qualquer momento, pode editar suas informações de perfil ou utilizar a opção', termsDeleteAccount: '"Excluir Minha Conta"', termsRightsSuffix: 'para remover definitivamente todos os seus registros do nosso banco de dados.',
-      termsPlatformHeading: '4. Uso da Plataforma:', termsPlatformText: 'O Fagulha Studio Hub é uma ferramenta para criação e apoio a produtores musicais. Respeite os direitos autorais e a comunidade ao compartilhar suas criações.',
-      faqGeneratorQuestion: 'Como crio um loop?', faqGeneratorAnswer: 'Escolha a tônica, a escala, o instrumento e o groove. Depois clique em Escutar Loop para ouvir o resultado.',
-      faqHarmonizerQuestion: 'Para que serve o Harmonizador?', faqHarmonizerAnswer: 'Ele mostra os acordes possíveis da escala ativa. Você pode trocar a tônica, o instrumento e a escala sem sair da tela.',
-      faqInstrumentQuestion: 'Como troco o instrumento?', faqInstrumentAnswer: 'Use o seletor Instrumento no gerador ou o seletor rápido dentro do Harmonizador.',
-      faqPhotoQuestion: 'Como salvo minha foto de perfil?', faqPhotoAnswer: 'Abra Meu Perfil, escolha uma imagem e clique em Salvar foto. A imagem é ajustada para o formato do avatar.',
-      faqLanguageQuestion: 'Como mantenho meu idioma?', faqLanguageAnswer: 'Escolha PT, EN ou ES no menu superior. A preferência fica salva neste navegador.',
-      faqMidiQuestion: 'Como exporto um arquivo MIDI?', faqMidiAnswer: 'Faça login, configure seu loop e clique em Exportar MIDI. O arquivo será baixado automaticamente.',
-      bioPlaceholder: 'Conte um pouco sobre seu estilo musical, ritmos favoritos ou produções...', loopNamePlaceholder: 'Ex: Bassline Baião Trap',
-      notesVibePlaceholder: 'Ex: Usar como introdução na faixa principal',
-      presetSertaoTitle: 'Sertão Neo-Soul Pack', presetSertaoDescription: 'Acordes aveludados em Lá Lídio Nordestino com Rhodes expansivo em 113 BPM.', presetSertaoTag: '🎹 Rhodes • 113 BPM',
-      presetGnawaTitle: 'Transe Gnawa 808', presetGnawaDescription: 'Viradas aceleradas de Logdrum em Ré Pentatônica Gnawa focado em Trap de 140 BPM.', presetGnawaTag: '🥁 Logdrum • 140 BPM',
-      presetAboioTitle: 'Aboio Melancólico Menor', presetAboioDescription: 'Dedilhado rápido de viola em Mí Menor Natural focado em clima denso em 120 BPM.', presetAboioTag: '🪕 Viola • 120 BPM',
-      presetMaracatuTitle: 'Maracatu Amapiano Bounce', presetMaracatuDescription: 'Sincopado cadenciado com balanço de maré em Sol Escala Praiana em 112 BPM.', presetMaracatuTag: '🥁 Logdrum • 112 BPM', key: 'Tônica:'
-    },
-    en: {
-      navigation: 'Navigation & Modules', scaleEngine: 'Scale Engine', mySparks: 'My Sparks', presets: 'Presets', harmonizer: 'Harmonizer',
-      grooveHumanizer: 'Groove & Humanizer', humanizer: 'Humanizer', swing: 'Swing', settings: 'Settings', masterTuning: 'Master Tuning',
-      standardTuning: '440 Hz (Standard)', organicTuning: '432 Hz (Organic)', activePlan: 'ACTIVE PLAN', visitor: 'Guest', menu: 'Menu',
-      saveSpark: '⚡ Save Spark', tapTempo: 'Tap Tempo', stop: '🛑 Stop', signInGoogle: 'Sign in with Google', myProfile: '👤 My Profile',
-      signOut: '🚪 Sign Out', volume: 'VOL', rootNote: 'Root Note (Key)', tempo: 'Tempo (BPM)', shortcuts: 'Shortcuts',
-      scaleVibe: 'Scale & Harmonic Vibe', scaleNotes: 'Scale Notes', instrument: 'Instrument', playingInstrument: 'Instrument:', savePhoto: 'Save photo', groove: 'Groove (8 Bars)',
-      pianoRoll: 'PIANO ROLL GRID (32 BEATS)', listenLoop: 'Listen to Loop', exportMidi: 'Export MIDI (.mid)', engineReady: 'Fagulha Scale Engine ready to process.',
-      my: 'My', sparks: 'Sparks', preset: 'Preset', library: 'Library', curatedPacks: 'CURATED PACKS', harmonizerTitle: 'Field', field: 'Harmonizer',
-      activeScale: 'Active Scale:', triads: 'Triads (3 Notes)', tetrads: 'Tetrads / 7ths (4 Notes)', recommendedProgressions: '💡 Recommended Progressions:',
-      myProfileTitle: 'My Profile', producer: 'Producer', backToStudio: 'Back to Studio', proPlan: 'Pro Unlimited Plan', chooseImage: 'Choose image',
-      imageFormats: 'PNG, JPG or WebP', displayInformation: 'Display Information', displayName: 'Display Name / Producer', bio: 'Bio / Musical Presentation (Optional)',
-      accountData: 'Account Data', linkedEmail: 'Linked E-mail', producerId: 'Producer ID (Firebase UID)', saveChanges: '⚡ Save Changes',
-      saveSparkDescription: 'Save this loop to your Cloud library and send a copy to Make.', loopName: 'Loop / Spark Name', notesVibe: 'Notes or Vibe (Optional)',
-      cancel: 'Cancel', saveToCloud: '⚡ Save to Cloud', keyboardShortcutsText: 'Keyboard Shortcuts', shortcutScale: 'Play Scale Degrees (Hold = Sustain, Release = Stop)',
-      shortcutNotes: 'Absolute Fixed Notes', shortcutPlay: 'Play / Pause Loop', shortcutMute: 'Emergency Mute (Panic)', shortcutTap: 'Calculate Tap Tempo',
-      shortcutMenu: 'Toggle Sidebar', language: 'Language', saveLoopTitle: 'Save the current loop to your library', tapTempoTitle: 'Tap the rhythm to set the BPM',
-      stopTitle: 'Stop all audio', keyboardShortcuts: 'Keyboard Shortcuts', faqTitle: 'Frequently Asked Questions', faqSubtitle: 'QUICK STUDIO GUIDE', displayNamePlaceholder: 'E.g. Producer Siara',
-      homeDescription: 'A tool for creating scales, harmonies and musical loops in one place.', openStudio: '⚡ Open Studio', homeFaq: 'Frequently asked questions',
-      termsTitle: 'Terms of Use and Privacy', termsDataHeading: '1. Data Collection:', termsDataText: 'Fagulha Studio Hub only collects the information needed for authentication and to personalize your experience, such as your display name, email and profile photo through Firebase Auth.',
-      termsStorageHeading: '2. Storage and Security:', termsStorageText: 'Your profile data and saved projects are stored on Google Cloud infrastructure (Firebase Firestore), under security rules that ensure only you can edit or delete your personal information.',
-      termsRightsHeading: '3. Your Rights (LGPD):', termsRightsText: 'You have full control over your data. At any time, you can edit your profile information or use the', termsDeleteAccount: '"Delete My Account"', termsRightsSuffix: 'option to permanently remove all your records from our database.',
-      termsPlatformHeading: '4. Platform Use:', termsPlatformText: 'Fagulha Studio Hub is a tool for music creation and support for music producers. Respect copyright and the community when sharing your creations.',
-      faqGeneratorQuestion: 'How do I create a loop?', faqGeneratorAnswer: 'Choose the root, scale, instrument and groove, then click Listen to Loop to hear the result.',
-      faqHarmonizerQuestion: 'What is the Harmonizer for?', faqHarmonizerAnswer: 'It shows the chords available in the active scale. You can change the root, instrument and scale without leaving the screen.',
-      faqInstrumentQuestion: 'How do I change the instrument?', faqInstrumentAnswer: 'Use the Instrument selector in the generator or the quick selector inside the Harmonizer.',
-      faqPhotoQuestion: 'How do I save my profile photo?', faqPhotoAnswer: 'Open My Profile, choose an image and click Save photo. The image is adjusted to the avatar format.',
-      faqLanguageQuestion: 'How do I keep my language?', faqLanguageAnswer: 'Choose PT, EN or ES in the top menu. The preference is saved in this browser.',
-      faqMidiQuestion: 'How do I export a MIDI file?', faqMidiAnswer: 'Sign in, configure your loop and click Export MIDI. The file will download automatically.',
-      bioPlaceholder: 'Tell us about your musical style, favorite rhythms or productions...', loopNamePlaceholder: 'E.g. Bassline Baião Trap',
-      notesVibePlaceholder: 'E.g. Use as an intro for the main track',
-      presetSertaoTitle: 'Sertão Neo-Soul Pack', presetSertaoDescription: 'Velvety chords in A Northeast Lydian with expansive Rhodes at 113 BPM.', presetSertaoTag: '🎹 Rhodes • 113 BPM',
-      presetGnawaTitle: 'Gnawa Trance 808', presetGnawaDescription: 'Fast Logdrum fills in D Gnawa Pentatonic, focused on Trap at 140 BPM.', presetGnawaTag: '🥁 Logdrum • 140 BPM',
-      presetAboioTitle: 'Melancholic Minor Aboio', presetAboioDescription: 'Fast viola fingerpicking in E Natural Minor for a dense mood at 120 BPM.', presetAboioTag: '🪕 Viola • 120 BPM',
-      presetMaracatuTitle: 'Maracatu Amapiano Bounce', presetMaracatuDescription: 'Syncopated groove with a tide-like swing in G Beach Scale at 112 BPM.', presetMaracatuTag: '🥁 Logdrum • 112 BPM', key: 'Key:'
-    },
-    es: {
-      navigation: 'Navegación y módulos', scaleEngine: 'Motor de escalas', mySparks: 'Mis chispas', presets: 'Presets', harmonizer: 'Armonizador',
-      grooveHumanizer: 'Groove y humanizador', humanizer: 'Humanizador', swing: 'Swing', settings: 'Configuración', masterTuning: 'Afinación maestra',
-      standardTuning: '440 Hz (Estándar)', organicTuning: '432 Hz (Orgánico)', activePlan: 'PLAN ACTIVO', visitor: 'Visitante', menu: 'Menú',
-      saveSpark: '⚡ Guardar chispa', tapTempo: 'Tap Tempo', stop: '🛑 Parar', signInGoogle: 'Entrar con Google', myProfile: '👤 Mi perfil',
-      signOut: '🚪 Cerrar sesión', volume: 'VOL', rootNote: 'Tónica (Clave)', tempo: 'Tempo (BPM)', shortcuts: 'Atajos',
-      scaleVibe: 'Escala y ambiente armónico', scaleNotes: 'Notas de la escala', instrument: 'Instrumento', playingInstrument: 'Instrumento:', savePhoto: 'Guardar foto', groove: 'Groove (8 compases)',
-      pianoRoll: 'CUADRÍCULA PIANO ROLL (32 BEATS)', listenLoop: 'Escuchar loop', exportMidi: 'Exportar MIDI (.mid)', engineReady: 'Fagulha Scale Engine listo para procesar.',
-      my: 'Mis', sparks: 'Chispas', preset: 'Preset', library: 'Biblioteca', curatedPacks: 'PACKS CURADOS', harmonizerTitle: 'Armonizador', field: 'de campo',
-      activeScale: 'Escala activa:', triads: 'Tríadas (3 notas)', tetrads: 'Tétradas / 7ª (4 notas)', recommendedProgressions: '💡 Progresiones recomendadas:',
-      myProfileTitle: 'Mi perfil', producer: 'de productor', backToStudio: 'Volver al estudio', proPlan: 'Plan Pro Unlimited', chooseImage: 'Elegir imagen',
-      imageFormats: 'PNG, JPG o WebP', displayInformation: 'Información de pantalla', displayName: 'Nombre / productor', bio: 'Bio / Presentación musical (Opcional)',
-      accountData: 'Datos de la cuenta', linkedEmail: 'Correo vinculado', producerId: 'ID del productor (Firebase UID)', saveChanges: '⚡ Guardar cambios',
-      saveSparkDescription: 'Guarda este loop en tu biblioteca Cloud y envía una copia a Make.', loopName: 'Nombre del loop / chispa', notesVibe: 'Notas o ambiente (Opcional)',
-      cancel: 'Cancelar', saveToCloud: '⚡ Guardar en la nube', keyboardShortcutsText: 'Atajos de teclado', shortcutScale: 'Tocar grados de la escala (Mantener = sostener, soltar = parar)',
-      shortcutNotes: 'Notas fijas absolutas', shortcutPlay: 'Escuchar / pausar loop', shortcutMute: 'Silencio de emergencia (Panic)', shortcutTap: 'Calcular Tap Tempo',
-      shortcutMenu: 'Alternar menú lateral', language: 'Idioma', saveLoopTitle: 'Guardar el loop actual en tu biblioteca', tapTempoTitle: 'Toca el ritmo para definir el BPM',
-      stopTitle: 'Interrumpir todos los audios', keyboardShortcuts: 'Atajos de teclado', faqTitle: 'Preguntas frecuentes', faqSubtitle: 'GUÍA RÁPIDA DEL STUDIO', displayNamePlaceholder: 'Ej.: Productor Siara',
-      homeDescription: 'Una herramienta para crear escalas, armonías y loops musicales en un solo lugar.', openStudio: '⚡ Abrir el Studio', homeFaq: 'Preguntas frecuentes',
-      termsTitle: 'Términos de Uso y Privacidad', termsDataHeading: '1. Recopilación de Datos:', termsDataText: 'Fagulha Studio Hub solo recopila la información necesaria para la autenticación y la personalización de tu experiencia, como tu nombre, correo y foto de perfil mediante Firebase Auth.',
-      termsStorageHeading: '2. Almacenamiento y Seguridad:', termsStorageText: 'Tus datos de perfil y proyectos guardados se almacenan en la infraestructura de Google Cloud (Firebase Firestore), bajo reglas de seguridad que garantizan que solo tú puedas editar o eliminar tu información personal.',
-      termsRightsHeading: '3. Tus Derechos (LGPD):', termsRightsText: 'Tienes control total sobre tus datos. En cualquier momento, puedes editar la información de tu perfil o usar la opción', termsDeleteAccount: '"Eliminar Mi Cuenta"', termsRightsSuffix: 'para eliminar definitivamente todos tus registros de nuestra base de datos.',
-      termsPlatformHeading: '4. Uso de la Plataforma:', termsPlatformText: 'Fagulha Studio Hub es una herramienta para la creación y el apoyo a productores musicales. Respeta los derechos de autor y a la comunidad al compartir tus creaciones.',
-      faqGeneratorQuestion: '¿Cómo creo un loop?', faqGeneratorAnswer: 'Elige la tónica, la escala, el instrumento y el groove. Después pulsa Escuchar loop para oír el resultado.',
-      faqHarmonizerQuestion: '¿Para qué sirve el Armonizador?', faqHarmonizerAnswer: 'Muestra los acordes posibles de la escala activa. Puedes cambiar la tónica, el instrumento y la escala sin salir de la pantalla.',
-      faqInstrumentQuestion: '¿Cómo cambio el instrumento?', faqInstrumentAnswer: 'Usa el selector Instrumento en el generador o el selector rápido dentro del Armonizador.',
-      faqPhotoQuestion: '¿Cómo guardo mi foto de perfil?', faqPhotoAnswer: 'Abre Mi perfil, elige una imagen y pulsa Guardar foto. La imagen se ajusta al formato del avatar.',
-      faqLanguageQuestion: '¿Cómo mantengo mi idioma?', faqLanguageAnswer: 'Elige PT, EN o ES en el menú superior. La preferencia queda guardada en este navegador.',
-      faqMidiQuestion: '¿Cómo exporto un archivo MIDI?', faqMidiAnswer: 'Inicia sesión, configura tu loop y pulsa Exportar MIDI. El archivo se descargará automáticamente.',
-      bioPlaceholder: 'Cuéntanos sobre tu estilo musical, ritmos favoritos o producciones...', loopNamePlaceholder: 'Ej.: Bassline Baião Trap',
-      notesVibePlaceholder: 'Ej.: Usar como introducción de la canción principal',
-      presetSertaoTitle: 'Pack Sertão Neo-Soul', presetSertaoDescription: 'Acordes aterciopelados en La Lidio nordestino con Rhodes expansivo a 113 BPM.', presetSertaoTag: '🎹 Rhodes • 113 BPM',
-      presetGnawaTitle: 'Trance Gnawa 808', presetGnawaDescription: 'Viradas rápidas de Logdrum en Re Pentatónica Gnawa enfocadas en Trap a 140 BPM.', presetGnawaTag: '🥁 Logdrum • 140 BPM',
-      presetAboioTitle: 'Aboio melancólico menor', presetAboioDescription: 'Rasgueo rápido de viola en Mi menor natural para un ambiente denso a 120 BPM.', presetAboioTag: '🪕 Viola • 120 BPM',
-      presetMaracatuTitle: 'Maracatu Amapiano Bounce', presetMaracatuDescription: 'Sincopado cadencioso con balance de marea en Sol Escala de playa a 112 BPM.', presetMaracatuTag: '🥁 Logdrum • 112 BPM', key: 'Clave:'
+  function getAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContextClass();
     }
-  };
-
-  const browserLanguage = (navigator.language || '').toLowerCase().split('-')[0];
-  let currentLanguage = localStorage.getItem('fagulhaLanguage') || (translations[browserLanguage] ? browserLanguage : 'pt');
-
-  function translate(key) {
-    return translations[currentLanguage]?.[key] || translations.pt[key] || key;
+    return audioCtx;
   }
 
-  function applyLanguage(language = currentLanguage) {
-    currentLanguage = translations[language] ? language : 'pt';
-    localStorage.setItem('fagulhaLanguage', currentLanguage);
-    document.documentElement.lang = currentLanguage === 'pt' ? 'pt-BR' : currentLanguage;
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-      element.textContent = translate(element.dataset.i18n);
-    });
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-      element.placeholder = translate(element.dataset.i18nPlaceholder);
-    });
-    document.querySelectorAll('[data-i18n-title]').forEach(element => {
-      element.title = translate(element.dataset.i18nTitle);
-    });
-    document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
-      element.setAttribute('aria-label', translate(element.dataset.i18nAriaLabel));
-    });
-    const languageSelect = document.getElementById('languageSelect');
-    if (languageSelect) languageSelect.value = currentLanguage;
-  }
-
-  function changeLanguage(language) {
-    applyLanguage(language);
-    if (document.getElementById('viewChords').style.display !== 'none') renderHarmonizerView();
-  }
-
-  /* RASTREAMENTO DE ANALYTICS */
-  let moduloAtual = 'generator';
-  let tempoEntradaModulo = Date.now();
-
-  function registrarTempoModulo(novoModulo) {
-    if (moduloAtual === novoModulo) return;
-
-    const tempoAgora = Date.now();
-    const tempoGastoSegundos = Math.round((tempoAgora - tempoEntradaModulo) / 1000);
-
-    if (tempoGastoSegundos >= 2 && analytics) {
-      analytics.logEvent('tempo_em_modulo', {
-        modulo_nome: moduloAtual,
-        duracao_segundos: tempoGastoSegundos
-      });
+  async function loadSample(name, url) {
+    if (sampleBuffers[name]) return sampleBuffers[name];
+    try {
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+      const decodedData = await getAudioContext().decodeAudioData(arrayBuffer);
+      sampleBuffers[name] = decodedData;
+      return decodedData;
+    } catch(e) {
+      console.warn("Erro ao carregar sample:", name, e);
     }
-
-    moduloAtual = novoModulo;
-    tempoEntradaModulo = Date.now();
   }
 
-  window.addEventListener('beforeunload', () => {
-    const tempoGastoSegundos = Math.round((Date.now() - tempoEntradaModulo) / 1000);
-    if (tempoGastoSegundos >= 2 && analytics) {
-      analytics.logEvent('tempo_em_modulo', {
-        modulo_nome: moduloAtual,
-        duracao_segundos: tempoGastoSegundos
-      });
-    }
-  });
+  async function preloadSamples() {
+    await loadSample('A3', `${SAMPLE_CDN}A3.mp3`);
+    await loadSample('C4', `${SAMPLE_CDN}C4.mp3`);
+    await loadSample('kick', `${DRUM_CDN}acoustic-kit/kick.mp3`);
+    await loadSample('snare', `${DRUM_CDN}acoustic-kit/snare.mp3`);
+    await loadSample('hihat', `${DRUM_CDN}CR78/hihat.mp3`);
+    document.getElementById('audioStatus').innerText = "⚡ Amostras HD Prontas!";
+  }
 
-  /* MONITORAMENTO DO STATUS DE LOGIN */
-  auth.onAuthStateChanged(async (user) => {
-    currentUser = user;
+  /* AUTENTICAÇÃO E INICIALIZAÇÃO */
+  auth.onAuthStateChanged((user) => {
     const authBtn = document.getElementById('authBtn');
-    const userPlanDisplay = document.getElementById('userPlanDisplay');
-    const bioInput = document.getElementById('pageProfileBio');
-
-    if (bioInput) bioInput.value = '';
-
     if (user) {
-      await recordDailyActivity(user);
-
-      try {
-        const userDoc = await db.collection('users').doc(user.uid).get();
-        if (userDoc.exists) {
-          const userData = userDoc.data();
-          if (bioInput) bioInput.value = userData.bio || '';
-        }
-      } catch (error) {
-        console.error('Erro ao carregar bio do usuário:', error);
-      }
-
-      currentUserVerified = await checkUserVerification(user);
-      const isAdmin = await isMasterAdmin(user);
-      document.querySelectorAll('.admin-only').forEach(element => {
-        element.style.display = isAdmin ? 'block' : 'none';
-      });
-      if (isAdmin) {
-        loadMasterPanelData();
-        console.log('Modo Administrador Mestre Ativado.');
-      }
-
-      const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'P')}&background=C85A17&color=fff`;
-      const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Produtor';
-      
-      authBtn.replaceChildren();
-      const avatar = document.createElement('img');
-      avatar.src = avatarUrl;
-      avatar.className = 'user-avatar';
-      const name = document.createElement('span');
-      name.id = 'header-user-name';
-      name.textContent = firstName;
-      const verifiedIdentity = document.createElement('span');
-      verifiedIdentity.style.display = 'inline-flex';
-      verifiedIdentity.style.alignItems = 'center';
-      verifiedIdentity.style.gap = '4px';
-      verifiedIdentity.append(name);
-      if (currentUserVerified) {
-        const verifiedBadge = document.createElement('img');
-        verifiedBadge.src = 'verified.svg';
-        verifiedBadge.alt = 'Verificado';
-        verifiedBadge.width = 16;
-        verifiedBadge.height = 16;
-        verifiedBadge.title = 'Conta Verificada';
-        verifiedBadge.style.cssText = 'vertical-align: middle; margin-left: 4px;';
-        verifiedIdentity.append(verifiedBadge);
-      }
-      authBtn.append(avatar, verifiedIdentity, document.createTextNode(' ▾'));
-      authBtn.title = `Conectado como ${user.email}`;
-      userPlanDisplay.innerText = "Pro Unlimited";
-      userPlanDisplay.style.color = "var(--accent-ochre)";
-      
-      loadUserSparksFromFirestore();
-      populatePageProfileFields();
+      authBtn.innerText = `👤 ${user.displayName || 'Produtor'}`;
+      document.getElementById('userPlanDisplay').innerText = "Pro Unlimited";
     } else {
-      currentUserVerified = false;
-      document.querySelectorAll('.admin-only').forEach(element => {
-        element.style.display = 'none';
-      });
-      authBtn.replaceChildren();
-      const signInLabel = document.createElement('span');
-      signInLabel.textContent = translate('signInGoogle');
-      authBtn.appendChild(signInLabel);
-      authBtn.title = "Clique para entrar com sua conta Google";
-      userPlanDisplay.innerText = "Visitante";
-      userPlanDisplay.style.color = "var(--text-muted)";
-      renderEmptyLibrary("Faça login com o Google para acessar sua biblioteca de fagulhas em nuvem.");
-      
-      if (window.location.hash === '#profile') {
-        switchView('generator');
-      }
+      authBtn.innerText = "Entrar com Google";
+      document.getElementById('userPlanDisplay').innerText = "Visitante";
     }
   });
 
-  function toggleUserDropdown() {
-    if (!currentUser) {
-      handleAuth();
-      return;
-    }
-    document.getElementById('userDropdownMenu').classList.toggle('show');
-  }
-
-  window.addEventListener('click', (e) => {
-    const authBtn = document.getElementById('authBtn');
-    const dropdown = document.getElementById('userDropdownMenu');
-    if (!authBtn.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.remove('show');
-    }
-  });
-
-  /* AUTENTICAÇÃO COMPATÍVEL COM VERCEL WEB (REDIRECT) */
   function handleAuth() {
     auth.useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
-
-    document.getElementById('statusMessage').innerText = "⏳ Redirecionando para autenticação do Google...";
-
-    // Redireciona o navegador diretamente para o Google (evita bloqueios de popup na Web)
     auth.signInWithRedirect(provider);
   }
 
-  // TRATAMENTO DO RETORNO DO REDIRECIONAMENTO AO CARREGAR A PÁGINA
-  auth.getRedirectResult()
-    .then((result) => {
-      if (result && result.user) {
-        document.getElementById('statusMessage').innerText = `Bem-vindo de volta, ${result.user.displayName}!`;
-      }
-    })
-    .catch((error) => {
-      if (error.code && error.code !== 'auth/popup-closed-by-user') {
-        console.error("Erro na autenticação:", error);
-        document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
-      }
-    });
+  auth.getRedirectResult().catch(err => console.error(err));
 
-  /* PREENCHE A PÁGINA DEDICADA DE PERFIL (#profile) */
-  function populatePageProfileFields() {
-    if (!currentUser) return;
-    const fallbackAvatarUrl = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'P')}&background=C85A17&color=fff`;
-    
-    document.getElementById('profileLargeAvatar').src = savedProfilePhotoUrl || fallbackAvatarUrl;
-    const profileName = document.getElementById('profileHeaderName');
-    profileName.innerText = currentUser.displayName || "Produtor Fagulha";
-    if (currentUserVerified) {
-      const profileBadge = document.createElement('img');
-      profileBadge.src = 'verified.svg';
-      profileBadge.alt = 'Verificado';
-      profileBadge.width = 20;
-      profileBadge.height = 20;
-      profileBadge.title = 'Conta Verificada';
-      profileBadge.style.cssText = 'vertical-align: middle; margin-left: 6px;';
-      profileName.append(profileBadge);
-    }
-    document.getElementById('profileHeaderEmail').innerText = currentUser.email || "";
-    
-    document.getElementById('pageProfileName').value = currentUser.displayName || "";
-    document.getElementById('pageProfileEmailDisabled').value = currentUser.email || "";
-    document.getElementById('pageProfileUidDisabled').value = currentUser.uid || "";
-    selectedProfileImage = null;
-    document.getElementById('pageProfilePhoto').value = "";
-    document.getElementById('profilePhotoHelp').innerText = translate('imageFormats');
-
-    db.collection('users').doc(currentUser.uid).get().then(doc => {
-      if (!doc.exists) return;
-      const profileData = doc.data();
-      savedProfilePhotoUrl = profileData.photoURL || currentUser.photoURL || '';
-      document.getElementById('profileLargeAvatar').src = savedProfilePhotoUrl || fallbackAvatarUrl;
-      updateAuthButtonAvatar();
-      if (profileData.bio) {
-        document.getElementById('pageProfileBio').value = profileData.bio;
-      }
-    }).catch(()=>{});
+  function toggleUserDropdown() {
+    if (!auth.currentUser) handleAuth();
   }
 
-  function previewProfileImage(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      event.target.value = "";
-      document.getElementById('statusMessage').innerText = "⚠️ Escolha um arquivo de imagem válido.";
-      return;
-    }
-
-    selectedProfileImage = file;
-    const reader = new FileReader();
-    reader.onload = (loadEvent) => {
-      document.getElementById('profileLargeAvatar').src = loadEvent.target.result;
-    };
-    reader.readAsDataURL(file);
-    document.getElementById('profilePhotoHelp').innerText = file.name;
-  }
-
-  function uploadSelectedProfileImage() {
-    const user = auth.currentUser || currentUser;
-    if (!selectedProfileImage || !user) return Promise.resolve(savedProfilePhotoUrl || user?.photoURL || '');
-
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () => reject(new Error('Não foi possível ler a imagem selecionada.'));
-      reader.onload = () => {
-        const image = new Image();
-        image.onerror = () => reject(new Error('O arquivo selecionado não é uma imagem válida.'));
-        image.onload = () => {
-          const canvas = document.createElement('canvas');
-          const size = 400;
-          const context = canvas.getContext('2d');
-          const scale = Math.max(size / image.width, size / image.height);
-          const width = image.width * scale;
-          const height = image.height * scale;
-          const offsetX = (size - width) / 2;
-          const offsetY = (size - height) / 2;
-
-          canvas.width = size;
-          canvas.height = size;
-          context.fillStyle = '#1C1511';
-          context.fillRect(0, 0, size, size);
-          context.drawImage(image, offsetX, offsetY, width, height);
-          resolve(canvas.toDataURL('image/jpeg', 0.82));
-        };
-        image.src = reader.result;
-      };
-      reader.readAsDataURL(selectedProfileImage);
-    });
-  }
-
-  function saveProfilePhoto() {
-    const user = auth.currentUser || currentUser;
-    const saveButton = document.getElementById('saveProfilePhotoButton');
-    if (!user) {
-      document.getElementById('statusMessage').innerText = "⚠️ Faça login antes de salvar a foto.";
-      return;
-    }
-    if (!selectedProfileImage) {
-      document.getElementById('statusMessage').innerText = "⚠️ Escolha uma imagem antes de salvar.";
-      return;
-    }
-
-    document.getElementById('statusMessage').innerText = "⏳ Salvando foto...";
-    if (saveButton) {
-      saveButton.disabled = true;
-      saveButton.innerText = "⏳ Salvando...";
-    }
-    uploadSelectedProfileImage().then((newPhoto) => {
-      savedProfilePhotoUrl = newPhoto;
-      return db.collection('users').doc(user.uid).set({
-        photoURL: newPhoto,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
-    }).then(() => {
-      selectedProfileImage = null;
-      document.getElementById('statusMessage').innerText = "⚡ Foto salva com sucesso!";
-      populatePageProfileFields();
-      updateAuthButtonAvatar();
-    }).catch((err) => {
-      console.error('Erro ao salvar foto de perfil:', err);
-      document.getElementById('statusMessage').innerText = "⚠️ Erro ao salvar foto: " + (err.message || err);
-    }).finally(() => {
-      if (saveButton) {
-        saveButton.disabled = false;
-        saveButton.innerText = translate('savePhoto');
-      }
-    });
-  }
-
-  function updateAuthButtonAvatar() {
-    const avatarUrl = savedProfilePhotoUrl || currentUser?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.displayName || 'P')}&background=C85A17&color=fff`;
-    const firstName = currentUser?.displayName ? currentUser.displayName.split(' ')[0] : 'Produtor';
-    const authBtn = document.getElementById('authBtn');
-    authBtn.replaceChildren();
-    const avatar = document.createElement('img');
-    avatar.src = avatarUrl;
-    avatar.className = 'user-avatar';
-    const name = document.createElement('span');
-    name.id = 'header-user-name';
-    name.textContent = firstName;
-    authBtn.append(avatar, name);
-    if (currentUserVerified) {
-      const verifiedBadge = document.createElement('img');
-      verifiedBadge.src = 'verified.svg';
-      verifiedBadge.alt = 'Verificado';
-      verifiedBadge.width = 16;
-      verifiedBadge.height = 16;
-      verifiedBadge.title = 'Conta Verificada';
-      verifiedBadge.style.cssText = 'vertical-align: middle; margin-left: 4px;';
-      authBtn.append(verifiedBadge);
-    }
-    authBtn.append(document.createTextNode(' ▾'));
-  }
-
-  async function excluirContaUsuario() {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const confirmacao = confirm(
-      'Tem certeza que deseja excluir sua conta? Esta ação é permanente e removerá todos os seus dados e loops do Fagulha Studio.'
-    );
-    if (!confirmacao) return;
-
-    const deleteButton = document.querySelector('.btn-danger-outline');
-    if (deleteButton) {
-      deleteButton.disabled = true;
-      deleteButton.innerText = '⏳ Excluindo...';
-    }
-
-    try {
-      const sparksSnapshot = await db.collection('fagulhas')
-        .where('uid', '==', user.uid)
-        .get();
-      await Promise.all(sparksSnapshot.docs.map(spark => spark.ref.delete()));
-      await db.collection('users').doc(user.uid).delete();
-      await user.delete();
-
-      alert('Sua conta foi excluída com sucesso.');
-      window.location.reload();
-    } catch (error) {
-      console.error('Erro ao excluir conta:', error);
-      if (error.code === 'auth/requires-recent-login') {
-        alert('Por motivos de segurança, faça login novamente antes de excluir sua conta.');
-      } else {
-        alert('Erro ao excluir a conta. Tente novamente mais tarde.');
-      }
-      if (deleteButton) {
-        deleteButton.disabled = false;
-        deleteButton.innerText = '🗑️ Excluir Minha Conta';
-      }
-    }
-  }
-
-  function savePageUserProfile() {
-    if (!currentUser) return;
-    const newName = document.getElementById('pageProfileName').value.trim();
-    const newBio = document.getElementById('pageProfileBio').value.trim();
-    const profileSaveStatus = document.getElementById('profileSaveStatus');
-
-    document.getElementById('statusMessage').innerText = "⏳ Atualizando perfil...";
-    if (profileSaveStatus) profileSaveStatus.innerText = "⏳ Salvando alterações...";
-
-    const photoPromise = uploadSelectedProfileImage();
-
-    photoPromise.then((newPhoto) => currentUser.updateProfile({
-      displayName: newName || currentUser.displayName
-    }).then(() => {
-      return db.collection('users').doc(currentUser.uid).set({
-        displayName: newName,
-        photoURL: newPhoto,
-        bio: newBio,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
-    }).then(() => {
-      savedProfilePhotoUrl = newPhoto;
-      document.getElementById('statusMessage').innerText = "⚡ Perfil atualizado com sucesso!";
-      if (profileSaveStatus) profileSaveStatus.innerText = "⚡ Alterações salvas!";
-      populatePageProfileFields();
-      updateAuthButtonAvatar();
-    })).catch((err) => {
-      document.getElementById('statusMessage').innerText = "⚠️ Erro ao atualizar perfil: " + err.message;
-      if (profileSaveStatus) profileSaveStatus.innerText = "⚠️ Erro ao salvar alterações.";
-    });
-  }
-
-  function selectBpmPreset(val) {
-    if (!val) return;
-    document.getElementById('bpmInput').value = parseInt(val);
-    document.getElementById('bpmPresetSelect').selectedIndex = 0;
-    onSettingChange();
-  }
-
-  let audioCtx = null;
-  let masterGainNode = null;
-  let fxBusNode = null;
-  let delayNode = null;
-  let activeNodes = [];
-  let lastTapTime = 0;
-  let tapTimes = [];
-  let currentChordType = 'triads';
-
-  const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/810rdqwcg9y5aqmmllwwhrrq67jf2q36";
-
-  const activeKeyVoices = {};
-
-  let isPlaying = false;
-  let playbackStartTime = 0;
-  let totalLoopDurationSec = 0;
-  let animFrameId = null;
-
-  function getMasterGain() {
-    if (!audioCtx) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      audioCtx = new AudioCtx();
-    }
-    if (!masterGainNode) {
-      masterGainNode = audioCtx.createGain();
-      const vol = parseFloat(document.getElementById('masterVolume')?.value || 80) / 100;
-      masterGainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
-
-      delayNode = audioCtx.createDelay();
-      delayNode.delayTime.value = 0.22;
-      
-      const delayFeedback = audioCtx.createGain();
-      delayFeedback.gain.value = 0.25;
-      
-      const fxFilter = audioCtx.createBiquadFilter();
-      fxFilter.type = "lowpass";
-      fxFilter.frequency.value = 2200;
-
-      delayNode.connect(delayFeedback);
-      delayFeedback.connect(fxFilter);
-      fxFilter.connect(delayNode);
-
-      fxBusNode = audioCtx.createGain();
-      fxBusNode.gain.value = 0.30;
-
-      fxBusNode.connect(delayNode);
-      delayNode.connect(masterGainNode);
-      fxBusNode.connect(masterGainNode);
-
-      masterGainNode.connect(audioCtx.destination);
-    }
-    return masterGainNode;
-  }
-
-  function updateMasterVolume(val) {
-    document.getElementById('volVal').innerText = val + '%';
-    if (masterGainNode && audioCtx) {
-      masterGainNode.gain.setValueAtTime(val / 100, audioCtx.currentTime);
-    }
-  }
-
-  function stopAllLiveVoices() {
-    Object.keys(activeKeyVoices).forEach(k => {
-      if (activeKeyVoices[k] && typeof activeKeyVoices[k].release === 'function') {
-        activeKeyVoices[k].release();
-      }
-      delete activeKeyVoices[k];
-    });
-  }
-
-  function stopAudio() {
-    isPlaying = false;
-    stopAllLiveVoices();
-
-    if (animFrameId) {
-      cancelAnimationFrame(animFrameId);
-      animFrameId = null;
-    }
-    activeNodes.forEach(node => {
-      try { node.stop(); } catch(e){}
-    });
-    activeNodes = [];
-    drawPianoRoll();
-    document.getElementById('statusMessage').innerText = "🛑 Áudio interrompido.";
-  }
-
-  function tapTempo() {
-    const now = performance.now();
-    if (lastTapTime) {
-      const diff = now - lastTapTime;
-      if (diff < 2000) {
-        tapTimes.push(diff);
-        if (tapTimes.length > 4) tapTimes.shift();
-        const avgDiff = tapTimes.reduce((a, b) => a + b, 0) / tapTimes.length;
-        const calculatedBpm = Math.round(60000 / avgDiff);
-        if (calculatedBpm >= 60 && calculatedBpm <= 180) {
-          document.getElementById('bpmInput').value = calculatedBpm;
-          onSettingChange();
-          document.getElementById('statusMessage').innerText = `Tap Tempo: ${calculatedBpm} BPM calculado.`;
-        }
-      } else { tapTimes = []; }
-    }
-    lastTapTime = now;
-  }
-
-  function openSaveSparkModal() {
-    if (!currentUser) {
-      document.getElementById('statusMessage').innerText = "🔒 Faça login com o Google para salvar fagulhas na sua biblioteca.";
-      setTimeout(() => { handleAuth(); }, 1200);
-      return;
-    }
-    const defaultTitle = `Ideia ${document.getElementById('rootNote').value} ${document.getElementById('scaleType').value}`;
-    document.getElementById('sparkTitleInput').value = defaultTitle;
-    document.getElementById('sparkNotesInput').value = "";
-    document.getElementById('saveSparkModal').style.display = 'flex';
-  }
-
-  function closeSaveSparkModal() {
-    document.getElementById('saveSparkModal').style.display = 'none';
-  }
-
-  async function confirmSendSparkToMake() {
-    closeSaveSparkModal();
-
-    const sparkTitle = document.getElementById('sparkTitleInput').value.trim() || "Fagulha Sem Nome";
-    const sparkNotes = document.getElementById('sparkNotesInput').value.trim() || "Nenhuma anotação";
-
-    const sparkData = {
-      uid: currentUser.uid,
-      userEmail: currentUser.email,
-      userName: currentUser.displayName,
-      sparkTitle: sparkTitle,
-      sparkNotes: sparkNotes,
-      root: document.getElementById('rootNote').value,
-      scale: document.getElementById('scaleType').value,
-      bpm: parseInt(document.getElementById('bpmInput').value) || 113,
-      instrument: document.getElementById('patternStyle').value,
-      variation: document.getElementById('variationType').value,
-      tuning: document.getElementById('tuningSelect').value,
-      humanize: document.getElementById('humanizeInput').value,
-      swing: document.getElementById('swingInput').value,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      timestampStr: new Date().toLocaleString('pt-BR')
-    };
-
-    document.getElementById('statusMessage').innerText = `⏳ Salvando "${sparkTitle}" na nuvem...`;
-
-    try {
-      await db.collection('fagulhas').add(sparkData);
-
-      if (MAKE_WEBHOOK_URL) {
-        fetch(MAKE_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(sparkData)
-        }).catch(err => console.error("Erro no Make:", err));
-      }
-
-      document.getElementById('statusMessage').innerText = `⚡ Fagulha "${sparkTitle}" salva com sucesso!`;
-      loadUserSparksFromFirestore();
-
-    } catch (err) {
-      document.getElementById('statusMessage').innerText = "⚠️ Erro ao salvar no Firestore: " + err.message;
-    }
-  }
-
-  function loadUserSparksFromFirestore() {
-    if (!currentUser) return;
-
-    db.collection('fagulhas')
-      .where('uid', '==', currentUser.uid)
-      .get()
-      .then((snapshot) => {
-        const grid = document.getElementById('sparksGrid');
-        const countBadge = document.getElementById('libraryCountBadge');
-
-        if (snapshot.empty) {
-          renderEmptyLibrary("Você ainda não salvou nenhuma fagulha. Crie um loop e clique em '⚡ Salvar Fagulha'!");
-          countBadge.innerText = "0 LOOPS SALVOS";
-          return;
-        }
-
-        countBadge.innerText = `${snapshot.size} LOOPS SALVOS`;
-        grid.innerHTML = "";
-
-        snapshot.forEach((doc) => {
-          const item = doc.data();
-          const docId = doc.id;
-
-          const card = document.createElement('div');
-          card.className = 'spark-card';
-          const info = document.createElement('div');
-          const title = document.createElement('div');
-          title.className = 'spark-info-title';
-          title.textContent = item.sparkTitle || '';
-          const meta = document.createElement('div');
-          meta.className = 'spark-info-meta';
-          meta.textContent = `🎵 Key: ${item.root || ''} ${(item.scale || '').toUpperCase()} • ${item.bpm || ''} BPM • ${item.instrument || ''} • ${item.tuning || ''}Hz`;
-          const notes = document.createElement('div');
-          notes.className = 'spark-info-notes';
-          notes.textContent = `📝 ${item.sparkNotes || ''} | 🕒 ${item.timestampStr || ''}`;
-          info.append(title, meta, notes);
-
-          const actions = document.createElement('div');
-          actions.className = 'spark-actions';
-          const loadButton = document.createElement('button');
-          loadButton.className = 'btn btn-primary';
-          loadButton.style.cssText = 'padding: 7px 12px; font-size: 11px;';
-          loadButton.textContent = '▶ Carregar';
-          loadButton.addEventListener('click', () => loadSparkIntoGenerator(
-            item.root, item.scale, item.bpm, item.instrument, item.variation, item.tuning
-          ));
-          const deleteButton = document.createElement('button');
-          deleteButton.className = 'btn btn-secondary';
-          deleteButton.style.cssText = 'padding: 7px 10px; font-size: 11px; color: #FF9999;';
-          deleteButton.textContent = '🗑️';
-          deleteButton.addEventListener('click', () => deleteSparkFromFirestore(docId));
-          actions.append(loadButton, deleteButton);
-          card.append(info, actions);
-          grid.appendChild(card);
-        });
-      })
-      .catch((err) => {
-        console.error("Erro ao ler Firestore:", err);
-      });
-  }
-
-  function renderEmptyLibrary(message) {
-    const grid = document.getElementById('sparksGrid');
-    grid.innerHTML = `<div style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px;">${message}</div>`;
-  }
-
-  function loadSparkIntoGenerator(root, scale, bpm, instrument, variation, tuning) {
-    stopAudio();
-    document.getElementById('rootNote').value = root;
-    document.getElementById('scaleType').value = scale;
-    document.getElementById('bpmInput').value = bpm;
-    document.getElementById('patternStyle').value = instrument;
-    document.getElementById('tuningSelect').value = tuning || '440';
-    
-    updateVariationMenu();
-    document.getElementById('variationType').value = variation;
-
-    onTuningChange();
-    switchView('generator');
-    document.getElementById('statusMessage').innerText = `⚡ Fagulha recarregada no gerador com sucesso!`;
-    previewPattern();
-  }
-
-  function deleteSparkFromFirestore(docId) {
-    if (confirm("Deseja realmente excluir esta fagulha da sua nuvem?")) {
-      db.collection('fagulhas').doc(docId).delete().then(() => {
-        document.getElementById('statusMessage').innerText = "Fagulha removida com sucesso.";
-        loadUserSparksFromFirestore();
-      }).catch(err => {
-        alert("Erro ao excluir: " + err.message);
-      });
-    }
+  function switchView(viewName) {
+    document.getElementById('statusMessage').innerText = `Modulo: ${viewName}`;
   }
 
   function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const main = document.getElementById('mainWrapper');
-    const backdrop = document.getElementById('sidebarBackdrop');
-    const isMobile = window.innerWidth <= 700;
-
-    const shouldCollapse = !sidebar.classList.contains('collapsed');
-    sidebar.classList.toggle('collapsed', shouldCollapse);
-    main.classList.toggle('expanded', shouldCollapse && !isMobile);
-
-    if (isMobile) {
-      backdrop.classList.toggle('visible', !shouldCollapse);
-    } else {
-      backdrop.classList.remove('visible');
-    }
+    document.getElementById('sidebar').classList.toggle('collapsed');
   }
-
-  window.addEventListener('resize', () => {
-    const sidebar = document.getElementById('sidebar');
-    const backdrop = document.getElementById('sidebarBackdrop');
-    const main = document.getElementById('mainWrapper');
-    if (window.innerWidth > 700) {
-      sidebar.classList.remove('collapsed');
-      main.classList.remove('expanded');
-      backdrop.classList.remove('visible');
-      return;
-    }
-
-    if (sidebar.classList.contains('collapsed')) {
-      backdrop.classList.remove('visible');
-    } else {
-      backdrop.classList.add('visible');
-    }
-  });
-
-  document.addEventListener('click', (event) => {
-    const sidebar = document.getElementById('sidebar');
-    const main = document.getElementById('mainWrapper');
-    const backdrop = document.getElementById('sidebarBackdrop');
-    const isMobile = window.innerWidth <= 700;
-
-    if (!isMobile) return;
-    if (sidebar.classList.contains('collapsed')) return;
-    const clickInsideSidebar = sidebar.contains(event.target);
-    const clickOnToggle = event.target.closest('.btn-top') && event.target.closest('.btn-top').onclick?.toString().includes('toggleSidebar');
-    if (!clickInsideSidebar && !clickOnToggle && !main.contains(event.target)) {
-      sidebar.classList.add('collapsed');
-      backdrop.classList.remove('visible');
-    }
-  });
-
-  /* SISTEMA DE NAVEGAÇÃO & ROTAS DINÂMICAS POR HASH */
-  function switchView(viewName) {
-    stopAudio();
-    registrarTempoModulo(viewName);
-
-    if (window.location.hash !== '#' + viewName) {
-      window.location.hash = viewName;
-    }
-
-    const gen = document.getElementById('viewGenerator');
-    const home = document.getElementById('viewHome');
-    const lib = document.getElementById('viewLibrary');
-    const pre = document.getElementById('viewPresets');
-    const cho = document.getElementById('viewChords');
-    const pro = document.getElementById('viewProfile');
-    const faq = document.getElementById('viewFaq');
-
-    document.getElementById('navGenerator').classList.remove('active');
-    document.getElementById('navLibrary').classList.remove('active');
-    document.getElementById('navPresets').classList.remove('active');
-    document.getElementById('navChords').classList.remove('active');
-    document.getElementById('navFaq').classList.remove('active');
-
-    home.style.display = 'none'; gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none'; faq.style.display = 'none';
-
-    if (viewName === 'home') {
-      home.style.display = 'block';
-    } else if (viewName === 'generator') {
-      gen.style.display = 'block';
-      document.getElementById('navGenerator').classList.add('active');
-      drawPianoRoll();
-    } else if (viewName === 'library') {
-      lib.style.display = 'block';
-      document.getElementById('navLibrary').classList.add('active');
-      loadUserSparksFromFirestore();
-    } else if (viewName === 'presets') {
-      pre.style.display = 'block';
-      document.getElementById('navPresets').classList.add('active');
-    } else if (viewName === 'chords') {
-      cho.style.display = 'block';
-      document.getElementById('navChords').classList.add('active');
-      renderHarmonizerView();
-    } else if (viewName === 'profile') {
-      pro.style.display = 'block';
-      populatePageProfileFields();
-    } else if (viewName === 'faq') {
-      faq.style.display = 'block';
-      document.getElementById('navFaq').classList.add('active');
-    }
-  }
-
-  window.addEventListener('hashchange', () => {
-    const currentView = window.location.hash.replace('#', '') || 'home';
-    switchView(currentView);
-  });
 
   window.addEventListener('load', () => {
-    const initialView = window.location.hash.replace('#', '') || 'home';
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    document.body.classList.toggle('is-standalone', isStandalone);
-    switchView(initialView);
-
+    updateVariationMenu();
+    preloadSamples();
+    updateScaleDisplay();
     const splash = document.getElementById('appSplash');
-    if (splash) {
-      setTimeout(() => {
-        splash.classList.add('hidden');
-        setTimeout(() => splash.remove(), 500);
-      }, isStandalone ? 400 : 700);
-    }
+    if (splash) setTimeout(() => splash.classList.add('hidden'), 500);
   });
-
-  function setChordType(type) {
-    currentChordType = type;
-    document.getElementById('btnTriads').classList.toggle('active', type === 'triads');
-    document.getElementById('btnTetrads').classList.toggle('active', type === 'tetrads');
-    renderHarmonizerView();
-  }
-
-  function renderHarmonizerView() {
-    const root = document.getElementById('rootNote').value;
-    const scale = document.getElementById('scaleType').value;
-    const grid = document.getElementById('chordsGrid');
-    const badge = document.getElementById('chordScaleBadge');
-    const notes = getScaleNotes();
-
-    badge.innerText = `${root} ${scale.toUpperCase()}`;
-
-    const quickScaleSelect = document.getElementById('quickHarmonizerScale');
-    if (quickScaleSelect) quickScaleSelect.value = scale;
-    const quickRootSelect = document.getElementById('quickHarmonizerRoot');
-    if (quickRootSelect) quickRootSelect.value = root;
-    const quickInstrumentSelect = document.getElementById('quickHarmonizerInstrument');
-    if (quickInstrumentSelect) quickInstrumentSelect.value = document.getElementById('patternStyle').value;
-
-    grid.innerHTML = "";
-
-    notes.forEach((n, idx) => {
-      let rawNotes = [];
-      let chordSymbol = "";
-
-      if (currentChordType === 'triads') {
-        rawNotes = [parseNote(notes, idx, 0), parseNote(notes, idx+2, 0), parseNote(notes, idx+4, 0)];
-        chordSymbol = getChordSymbol(n, idx, false);
-      } else {
-        rawNotes = [parseNote(notes, idx, 0), parseNote(notes, idx+2, 0), parseNote(notes, idx+4, 0), parseNote(notes, idx+6, 0)];
-        chordSymbol = getChordSymbol(n, idx, true);
-      }
-
-      const cleanNotes = rawNotes.map(x => x.replace(/\d/,'')).join(' - ');
-
-      const card = document.createElement('div');
-      card.className = 'chord-card';
-      card.onclick = () => playSingleChord(rawNotes);
-      card.innerHTML = `
-        <div class="chord-degree">Grau ${idx + 1}</div>
-        <div class="chord-symbol">${chordSymbol}</div>
-        <div class="chord-notes">${cleanNotes}</div>
-        <div style="font-size: 9px; color: var(--text-muted); margin-top: 4px;">▶ Clique para ouvir</div>
-      `;
-      grid.appendChild(card);
-    });
-
-    const pContainer = document.getElementById('progressionsContainer');
-    let c1 = getChordSymbol(notes[0], 0, currentChordType === 'tetrads');
-    let c2 = getChordSymbol(notes[1], 1, currentChordType === 'tetrads');
-    let c4 = getChordSymbol(notes[Math.min(3, notes.length-1)], 3, currentChordType === 'tetrads');
-    let c5 = getChordSymbol(notes[Math.min(4, notes.length-1)], 4, currentChordType === 'tetrads');
-    let c6 = getChordSymbol(notes[Math.min(5, notes.length-1)], 5, currentChordType === 'tetrads');
-    let c7 = getChordSymbol(notes[Math.min(6, notes.length-1)], 6, currentChordType === 'tetrads');
-
-    if (scale.includes('minor') || scale === 'dorian' || scale === 'phrygian') {
-      pContainer.innerHTML = `
-        <div class="progression-item">
-          <span>Balanço Menor Sertanejo:</span>
-          <strong style="color: var(--accent-ochre);">${c1} ➔ ${c4} ➔ ${c5} ➔ ${c1}</strong>
-        </div>
-        <div class="progression-item">
-          <span>Cadência de Transe / Reza:</span>
-          <strong style="color: var(--accent-ochre);">${c1} ➔ ${c7} ➔ ${c6} ➔ ${c1}</strong>
-        </div>
-      `;
-    } else {
-      pContainer.innerHTML = `
-        <div class="progression-item">
-          <span>Sertão Neo-Soul:</span>
-          <strong style="color: var(--accent-ochre);">${c1} ➔ ${c2} ➔ ${c1}</strong>
-        </div>
-        <div class="progression-item">
-          <span>Tensão Lídia Ancestral:</span>
-          <strong style="color: var(--accent-ochre);">${c1} ➔ ${c7} ➔ ${c6} ➔ ${c1}</strong>
-        </div>
-      `;
-    }
-  }
-
-  function onQuickScaleChange(newScale) {
-    document.getElementById('scaleType').value = newScale;
-    onSettingChange();
-  }
-
-  function onQuickRootChange(newRoot) {
-    document.getElementById('rootNote').value = newRoot;
-    onSettingChange();
-  }
-
-  function onQuickInstrumentChange(newInstrument) {
-    document.getElementById('patternStyle').value = newInstrument;
-    updateVariationMenu();
-    renderHarmonizerView();
-  }
-
-  function getChordSymbol(rootNote, degIdx, isTetrad) {
-    const cleanRoot = rootNote.replace(/\d/,'');
-    const type = document.getElementById('scaleType').value;
-
-    if (type === 'minor') {
-      const triads = [`${cleanRoot}m`, `${cleanRoot}dim`, cleanRoot, `${cleanRoot}m`, `${cleanRoot}m`, cleanRoot, cleanRoot];
-      const tetrads = [`${cleanRoot}m7`, `${cleanRoot}m7b5`, `${cleanRoot}maj7`, `${cleanRoot}m7`, `${cleanRoot}m7`, `${cleanRoot}maj7`, `${cleanRoot}7`];
-      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
-    } else if (type === 'harmonic minor') {
-      const triads = [`${cleanRoot}m`, `${cleanRoot}dim`, `${cleanRoot}aug`, `${cleanRoot}m`, cleanRoot, cleanRoot, `${cleanRoot}dim`];
-      const tetrads = [`${cleanRoot}m(maj7)`, `${cleanRoot}m7b5`, `${cleanRoot}maj7#5`, `${cleanRoot}m7`, `${cleanRoot}7`, `${cleanRoot}maj7`, `${cleanRoot}dim7`];
-      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
-    } else if (type === 'dorian') {
-      const triads = [`${cleanRoot}m`, `${cleanRoot}m`, cleanRoot, cleanRoot, `${cleanRoot}m`, `${cleanRoot}dim`, cleanRoot];
-      const tetrads = [`${cleanRoot}m7`, `${cleanRoot}m7`, `${cleanRoot}maj7`, `${cleanRoot}7`, `${cleanRoot}m7`, `${cleanRoot}m7b5`, `${cleanRoot}maj7`];
-      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
-    } else if (type === 'phrygian') {
-      const triads = [`${cleanRoot}m`, cleanRoot, cleanRoot, `${cleanRoot}m`, `${cleanRoot}dim`, cleanRoot, `${cleanRoot}m`];
-      const tetrads = [`${cleanRoot}m7`, `${cleanRoot}maj7`, `${cleanRoot}7`, `${cleanRoot}m7`, `${cleanRoot}m7b5`, `${cleanRoot}maj7`, `${cleanRoot}m7`];
-      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
-    } else if (type === 'lydian dominant') {
-      const triads = [cleanRoot, `${cleanRoot}`, `${cleanRoot}dim`, `${cleanRoot}dim`, `${cleanRoot}m`, `${cleanRoot}m`, `${cleanRoot}aug`];
-      const tetrads = [`${cleanRoot}7`, `${cleanRoot}7`, `${cleanRoot}m7b5`, `${cleanRoot}m7b5`, `${cleanRoot}m(maj7)`, `${cleanRoot}m7`, `${cleanRoot}maj7#5`];
-      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
-    } else if (type === 'mixolydian') {
-      const triads = [cleanRoot, `${cleanRoot}m`, `${cleanRoot}dim`, cleanRoot, `${cleanRoot}m`, `${cleanRoot}m`, cleanRoot];
-      const tetrads = [`${cleanRoot}7`, `${cleanRoot}m7`, `${cleanRoot}m7b5`, `${cleanRoot}maj7`, `${cleanRoot}m7`, `${cleanRoot}m7`, `${cleanRoot}maj7`];
-      return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
-    }
-    return cleanRoot;
-  }
-
-  function playSingleChord(chordNotes) {
-    stopAudio();
-    const masterGain = getMasterGain();
-    const now = audioCtx.currentTime + 0.05;
-
-    chordNotes.forEach(n => {
-      triggerRhodesVoice(audioCtx, masterGain, fxBusNode, noteToFreq(n), now, 1.2, 0.8, false);
-    });
-  }
-
-  function startLiveNote(noteName) {
-    const masterGain = getMasterGain();
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-    const freq = noteToFreq(noteName);
-    const style = document.getElementById('patternStyle')?.value || 'rhodes';
-
-    const status = document.getElementById('statusMessage');
-    if (status) status.innerText = `🎵 Nota Sustentada: ${noteName.replace(/\d/,'')} (${noteName})`;
-
-    if (style === 'rhodes') {
-      return startRhodesLiveVoice(audioCtx, masterGain, fxBusNode, freq);
-    } else if (style === 'viola') {
-      return startViolaLiveVoice(audioCtx, masterGain, fxBusNode, freq);
-    } else {
-      return startLogdrumLiveVoice(audioCtx, masterGain, fxBusNode, freq);
-    }
-  }
-
-  function loadPresetPack(root, bpm, scale, style, variation) {
-    stopAudio();
-    document.getElementById('rootNote').value = root;
-    document.getElementById('bpmInput').value = bpm;
-    document.getElementById('scaleType').value = scale;
-    document.getElementById('patternStyle').value = style;
-    
-    updateVariationMenu();
-    document.getElementById('variationType').value = variation;
-
-    switchView('generator');
-    document.getElementById('statusMessage').innerText = `Pack carregado! (${root} / ${scale} / ${bpm} BPM).`;
-    previewPattern();
-  }
-
-  function onTuningChange() {
-    stopAudio();
-    const val = document.getElementById('tuningSelect').value;
-    const badge = document.getElementById('tuningBadge');
-    if (val === '432') {
-      badge.innerHTML = '<span class="status-dot-led" style="background: var(--accent-sand); box-shadow: 0 0 8px var(--accent-sand);"></span> 432 Hz ANCESTRAL';
-    } else {
-      badge.innerHTML = '<span class="status-dot-led"></span> 440 Hz STANDARD';
-    }
-    document.getElementById('statusMessage').innerText = `Afinação Master alterada para ${val} Hz.`;
-    drawPianoRoll();
-  }
 
   function getScaleNotes() {
     const root = document.getElementById('rootNote').value;
@@ -2542,61 +523,43 @@
     return rawNote + (3 + octaveOffset + extraOctaves);
   }
 
-  function noteToFreq(note) {
-    const tuning = parseFloat(document.getElementById('tuningSelect').value) || 440;
-    const notesMap = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-    const match = note.match(/([A-G]#?)(\d)/);
-    if (!match) return 440;
-    const name = match[1];
-    const oct = parseInt(match[2]);
-    const semitones = notesMap.indexOf(name) + (oct + 1) * 12;
-    return tuning * Math.pow(2, (semitones - 69) / 12);
-  }
-
+  /* MENU EXPANDIDO: MÍNIMO DE 5 GROOVES EXCLUSIVOS POR INSTRUMENTO */
   function updateVariationMenu() {
-    stopAudio();
     const style = document.getElementById('patternStyle').value;
     const varSelect = document.getElementById('variationType');
     varSelect.innerHTML = "";
 
-    if (style === 'logdrum') {
+    if (style === 'piano') {
       varSelect.innerHTML = `
-        <option value="log_01">Balanço Sincopado Urbano</option>
-        <option value="log_02">Pressão Acelerada (Rolls 1/16)</option>
-        <option value="log_03">Espaça & Ataca (Staccato)</option>
-        <option value="log_04">Pulso Galopado</option>
-        <option value="log_05">Saltos Oitavados</option>
-        <option value="log_06">Ostinato de Transe</option>
-        <option value="log_07">Sincopa Quebrada</option>
-        <option value="log_08">Caminhada Contínua</option>
-        <option value="log_09">Ataque Duplo (Contratempo)</option>
-        <option value="log_10">Virada Tripletada</option>
-      `;
-    } else if (style === 'rhodes') {
-      varSelect.innerHTML = `
-        <option value="rho_01">Atmosfera Aveludada (Sustentação)</option>
-        <option value="rho_02">Sincopado Cadenciado</option>
-        <option value="rho_03">Bloco Estelar (Acordes Abertos)</option>
-        <option value="rho_04">Staccato Espaçado</option>
-        <option value="rho_05">Modulação Movel</option>
-        <option value="rho_06">Arpejo Sustentado</option>
-        <option value="rho_07">Camada Densa</option>
-        <option value="rho_08">Respiro Noturno</option>
-        <option value="rho_09">Sincopa de Maré</option>
-        <option value="rho_10">Resolução Ascendente</option>
+        <option value="p_01">1. Atmosfera Aveludada (Sustentado)</option>
+        <option value="p_02">2. Sincopado Cadenciado (Acentos)</option>
+        <option value="p_03">3. Bloco Estelar (Acordes Abertos)</option>
+        <option value="p_04">4. Arpejo Fluido de Cauda</option>
+        <option value="p_05">5. Respiro Noturno (Espaçado)</option>
       `;
     } else if (style === 'viola') {
       varSelect.innerHTML = `
-        <option value="vio_01">Dedilhado de Serra</option>
-        <option value="vio_02">Galope Mourisco</option>
-        <option value="vio_03">Melodia Ondulante</option>
-        <option value="vio_04">Fraseado de Solitude</option>
-        <option value="vio_05">Transe de Pífano</option>
-        <option value="vio_06">Cascata de Cordas</option>
-        <option value="vio_07">Pontilhado Seco</option>
-        <option value="vio_08">Balanço de Maré</option>
-        <option value="vio_09">Rezo Mourisco</option>
-        <option value="vio_10">Cortejo Evolutivo</option>
+        <option value="v_01">1. Dedilhado de Serra</option>
+        <option value="v_02">2. Galope Mourisco Sincopado</option>
+        <option value="v_03">3. Melodia Ondulante de Aço</option>
+        <option value="v_04">4. Fraseado de Solitude</option>
+        <option value="v_05">5. Cascata de Cordas Abertas</option>
+      `;
+    } else if (style === 'logdrum') {
+      varSelect.innerHTML = `
+        <option value="l_01">1. Balanço Sincopado Urbano</option>
+        <option value="l_02">2. Pressão Acelerada (Rolls)</option>
+        <option value="l_03">3. Staccato Espaça & Ataca</option>
+        <option value="l_04">4. Pulso Galopado Sub</option>
+        <option value="l_05">5. Caminhada Contínua (Walk Bass)</option>
+      `;
+    } else if (style === 'drums') {
+      varSelect.innerHTML = `
+        <option value="d_01">1. Beat Pop / Rock Straight 4/4</option>
+        <option value="d_02">2. Groove Lo-Fi Swing (Rimshot)</option>
+        <option value="d_03">3. Baque Virado Nordestino</option>
+        <option value="d_04">4. Trap Bounce Sincopado</option>
+        <option value="d_05">5. Shuffle Terceirizado</option>
       `;
     }
     drawPianoRoll();
@@ -2606,866 +569,124 @@
     const notes = getScaleNotes();
     const style = document.getElementById('patternStyle').value;
     const varType = document.getElementById('variationType').value;
+    const timeSig = document.getElementById('timeSignature').value;
+    
+    let totalBeats = timeSig === '6/8' ? 24 : timeSig === '3/4' ? 24 : timeSig === '7/8' ? 28 : 32;
     let rawEvents = [];
 
     const n = (idx, oct = 0) => parseNote(notes, idx, oct);
 
-    if (style === 'logdrum') {
-      const b1 = n(0, -1), b1Oct = n(0, 0), b5 = n(4, -1), b4 = n(3, -1);
-
-      if (varType === 'log_01') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = (bar === 4 || bar === 5) ? b4 : (bar === 6) ? b5 : b1;
-          rawEvents.push({ notes: [root], beat: offset, durationBeats: 0.5 });
-          if (bar % 2 === 1) {
-            rawEvents.push({ notes: [b1Oct], beat: offset + 0.75, durationBeats: 0.2 });
-            rawEvents.push({ notes: [b1Oct], beat: offset + 1.0, durationBeats: 0.2 });
-          } else {
-            rawEvents.push({ notes: [b1Oct], beat: offset + 1.25, durationBeats: 0.25 });
-          }
-          rawEvents.push({ notes: [b5], beat: offset + 1.75, durationBeats: 0.4 });
-          rawEvents.push({ notes: [root], beat: offset + 2.25, durationBeats: 0.4 });
-          if (bar === 3 || bar === 7) {
-            rawEvents.push({ notes: [b4], beat: offset + 3.0, durationBeats: 0.2 });
-            rawEvents.push({ notes: [b5], beat: offset + 3.25, durationBeats: 0.2 });
-            rawEvents.push({ notes: [b1Oct], beat: offset + 3.5, durationBeats: 0.3 });
-          } else {
-            rawEvents.push({ notes: [b5], beat: offset + 3.25, durationBeats: 0.25 });
-          }
-        }
-      } else if (varType === 'log_02') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = (bar >= 4 && bar <= 5) ? b5 : b1;
-          if (bar === 3 || bar === 7) {
-            for (let step = 0; step < 16; step++) {
-              let pitch = (step % 4 === 0) ? root : (step % 2 === 0) ? b5 : b1Oct;
-              rawEvents.push({ notes: [pitch], beat: offset + (step * 0.25), durationBeats: 0.18 });
-            }
-          } else {
-            rawEvents.push({ notes: [root], beat: offset, durationBeats: 0.8 });
-            rawEvents.push({ notes: [b1Oct], beat: offset + 1.5, durationBeats: 0.4 });
-            rawEvents.push({ notes: [root], beat: offset + 2.0, durationBeats: 0.6 });
-            rawEvents.push({ notes: [b5], beat: offset + 3.25, durationBeats: 0.3 });
-          }
-        }
-      } else if (varType === 'log_03') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          if (bar === 2 || bar === 6) {
-            rawEvents.push({ notes: [b1Oct], beat: offset + 3.5, durationBeats: 0.2 });
-          } else if (bar === 3 || bar === 7) {
-            rawEvents.push({ notes: [b1], beat: offset, durationBeats: 0.3 });
-            rawEvents.push({ notes: [b1], beat: offset + 0.5, durationBeats: 0.3 });
-            rawEvents.push({ notes: [b5], beat: offset + 1.0, durationBeats: 0.3 });
-            rawEvents.push({ notes: [b1Oct], beat: offset + 1.5, durationBeats: 0.3 });
-            rawEvents.push({ notes: [b4], beat: offset + 2.0, durationBeats: 0.8 });
-          } else {
-            rawEvents.push({ notes: [b1], beat: offset, durationBeats: 0.2 });
-            rawEvents.push({ notes: [b5], beat: offset + 1.5, durationBeats: 0.2 });
-            rawEvents.push({ notes: [b1Oct], beat: offset + 2.75, durationBeats: 0.2 });
-          }
-        }
-      } else if (varType === 'log_04') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = (bar % 2 === 0) ? b1 : b5;
-          rawEvents.push({ notes: [root], beat: offset, durationBeats: 0.4 });
-          rawEvents.push({ notes: [root], beat: offset + 0.5, durationBeats: 0.2 });
-          rawEvents.push({ notes: [root], beat: offset + 0.75, durationBeats: 0.2 });
-          rawEvents.push({ notes: [b1Oct], beat: offset + 1.5, durationBeats: 0.4 });
-          rawEvents.push({ notes: [root], beat: offset + 2.0, durationBeats: 0.4 });
-          rawEvents.push({ notes: [root], beat: offset + 2.5, durationBeats: 0.2 });
-          rawEvents.push({ notes: [b5], beat: offset + 2.75, durationBeats: 0.2 });
-          if (bar === 3 || bar === 7) {
-            rawEvents.push({ notes: [b1Oct], beat: offset + 3.25, durationBeats: 0.2 });
-            rawEvents.push({ notes: [b1Oct], beat: offset + 3.5, durationBeats: 0.2 });
-            rawEvents.push({ notes: [b1Oct], beat: offset + 3.75, durationBeats: 0.2 });
-          }
-        }
-      } else if (varType === 'log_05') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = [b1, b1, b4, b5, b1, b1, b5, b1][bar];
-          rawEvents.push({ notes: [root], beat: offset, durationBeats: 0.8 });
-          rawEvents.push({ notes: [n(0, 1)], beat: offset + 1.0, durationBeats: 0.3 });
-          rawEvents.push({ notes: [root], beat: offset + 1.75, durationBeats: 0.5 });
-          rawEvents.push({ notes: [n(4, 1)], beat: offset + 2.5, durationBeats: 0.3 });
-          rawEvents.push({ notes: [n(0, 1)], beat: offset + 3.25, durationBeats: 0.4 });
-        }
-      } else if (varType === 'log_06') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = (bar === 4 || bar === 5) ? b4 : (bar === 6 || bar === 7) ? b5 : b1;
-          rawEvents.push({ notes: [root], beat: offset, durationBeats: 1.2 });
-          rawEvents.push({ notes: [root], beat: offset + 1.5, durationBeats: 0.4 });
-          rawEvents.push({ notes: [b5], beat: offset + 2.0, durationBeats: 0.8 });
-          rawEvents.push({ notes: [root], beat: offset + 3.0, durationBeats: 0.8 });
-        }
-      } else if (varType === 'log_07') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let shift = (bar % 2 === 1) ? 0.25 : 0;
-          rawEvents.push({ notes: [b1], beat: offset + shift, durationBeats: 0.5 });
-          rawEvents.push({ notes: [b5], beat: offset + 1.25 + shift, durationBeats: 0.4 });
-          rawEvents.push({ notes: [b1Oct], beat: offset + 2.0 + shift, durationBeats: 0.6 });
-          rawEvents.push({ notes: [b4], beat: offset + 3.0 + shift, durationBeats: 0.4 });
-        }
-      } else if (varType === 'log_08') {
-        const scaleSteps = [0, 2, 3, 4, 5, 4, 3, 0];
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let currentRoot = n(scaleSteps[bar], -1);
-          let nextRoot = n(scaleSteps[(bar + 1) % 8], -1);
-          rawEvents.push({ notes: [currentRoot], beat: offset, durationBeats: 1.0 });
-          rawEvents.push({ notes: [currentRoot], beat: offset + 1.0, durationBeats: 0.8 });
-          rawEvents.push({ notes: [n((scaleSteps[bar] + 2) % 7, -1)], beat: offset + 2.0, durationBeats: 0.8 });
-          rawEvents.push({ notes: [nextRoot], beat: offset + 3.25, durationBeats: 0.5 });
-        }
-      } else if (varType === 'log_09') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = (bar % 4 === 3) ? b5 : b1;
-          rawEvents.push({ notes: [root], beat: offset + 0.5, durationBeats: 0.25 });
-          rawEvents.push({ notes: [root], beat: offset + 0.75, durationBeats: 0.25 });
-          rawEvents.push({ notes: [b1Oct], beat: offset + 2.0, durationBeats: 0.4 });
-          rawEvents.push({ notes: [b5], beat: offset + 2.85, durationBeats: 0.2 });
-          rawEvents.push({ notes: [b5], beat: offset + 3.1, durationBeats: 0.2 });
-          rawEvents.push({ notes: [b1Oct], beat: offset + 3.35, durationBeats: 0.3 });
-        }
-      } else if (varType === 'log_10') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = (bar >= 4) ? b5 : b1;
-          rawEvents.push({ notes: [root], beat: offset, durationBeats: 0.8 });
-          rawEvents.push({ notes: [b1Oct], beat: offset + 1.33, durationBeats: 0.4 });
-          rawEvents.push({ notes: [root], beat: offset + 2.0, durationBeats: 0.6 });
-          if (bar === 3 || bar === 7) {
-            for (let t = 0; t < 6; t++) {
-              rawEvents.push({ notes: [n(t % 7, 0)], beat: offset + 2.66 + (t * 0.22), durationBeats: 0.18 });
-            }
-          } else {
-            rawEvents.push({ notes: [b5], beat: offset + 3.0, durationBeats: 0.8 });
-          }
-        }
-      }
-
-    } else if (style === 'rhodes') {
-      const chords = [
-        [n(0,-1), n(0,0), n(2,0), n(4,0)],
-        [n(1,-1), n(1,0), n(3,0), n(5,0)],
-        [n(2,-1), n(2,0), n(4,0), n(6,0)],
-        [n(3,-1), n(3,0), n(5,0), n(0,1)],
-        [n(4,-1), n(4,0), n(6,0), n(1,1)],
-        [n(5,-1), n(5,0), n(0,1), n(2,1)],
-        [n(6,-1), n(6,0), n(1,1), n(3,1)],
-        [n(0,-1), n(0,0), n(2,0), n(4,0)]
-      ];
-
-      if (varType === 'rho_01') {
-        const prog = [0, 3, 4, 0, 5, 3, 4, 0];
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          rawEvents.push({ notes: chords[prog[bar]], beat: offset, durationBeats: 3.6 });
-        }
-      } else if (varType === 'rho_02') {
-        const prog = [0, 0, 3, 3, 4, 4, 0, 0];
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let ch = chords[prog[bar]];
-          rawEvents.push({ notes: ch, beat: offset, durationBeats: 0.5 });
-          if (bar % 2 === 1) {
-            rawEvents.push({ notes: ch, beat: offset + 0.75, durationBeats: 0.3 });
-            rawEvents.push({ notes: ch, beat: offset + 1.1, durationBeats: 0.4 });
-          } else {
-            rawEvents.push({ notes: ch, beat: offset + 0.8, durationBeats: 0.5 });
-          }
-          rawEvents.push({ notes: ch, beat: offset + 2.0, durationBeats: 0.6 });
-          rawEvents.push({ notes: ch, beat: offset + 3.25, durationBeats: 0.25 });
-          rawEvents.push({ notes: ch, beat: offset + 3.55, durationBeats: 0.35 });
-        }
-      } else if (varType === 'rho_03') {
-        const prog = [0, 1, 6, 0, 0, 1, 4, 0];
-        for (let bar = 0; bar < 8; bar += 2) {
-          let offset = bar * 4;
-          let ch = chords[prog[bar]];
-          rawEvents.push({ notes: ch, beat: offset, durationBeats: 7.2 });
-        }
-      } else if (varType === 'rho_04') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let ch = chords[bar % 4];
-          rawEvents.push({ notes: ch, beat: offset + 0.5, durationBeats: 0.3 });
-          rawEvents.push({ notes: ch, beat: offset + 2.5, durationBeats: 0.3 });
-        }
-      } else if (varType === 'rho_05') {
-        const prog = [0, 2, 4, 6, 5, 3, 1, 0];
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let ch = chords[prog[bar]];
-          rawEvents.push({ notes: ch, beat: offset, durationBeats: 2.2 });
-          rawEvents.push({ notes: ch, beat: offset + 2.5, durationBeats: 1.2 });
-        }
-      } else if (varType === 'rho_06') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let ch = chords[bar % 7];
-          ch.forEach((note, idx) => {
-            rawEvents.push({ notes: [note], beat: offset + (idx * 0.4), durationBeats: 2.0 });
-          });
-        }
-      } else if (varType === 'rho_07') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = n(bar % 7, -1);
-          let thickChord = [n(bar % 7, 0), n((bar+2)%7, 0), n((bar+4)%7, 0), n((bar+6)%7, 0), n((bar+1)%7, 1)];
-          rawEvents.push({ notes: [root], beat: offset, durationBeats: 3.5 });
-          rawEvents.push({ notes: thickChord, beat: offset + 0.5, durationBeats: 1.2 });
-          if (bar === 2 || bar === 3 || bar === 6 || bar === 7) {
-            rawEvents.push({ notes: thickChord, beat: offset + 2.0, durationBeats: 0.4 });
-            rawEvents.push({ notes: thickChord, beat: offset + 2.5, durationBeats: 1.2 });
-          } else {
-            rawEvents.push({ notes: thickChord, beat: offset + 2.25, durationBeats: 1.4 });
-          }
-        }
-      } else if (varType === 'rho_08') {
-        for (let bar = 0; bar < 8; bar++) {
-          if (bar % 2 === 0) {
-            let offset = bar * 4;
-            let ch = chords[bar % 7];
-            rawEvents.push({ notes: ch, beat: offset + 0.5, durationBeats: 3.2 });
-          }
-        }
-      } else if (varType === 'rho_09') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let ch = chords[bar % 7];
-          rawEvents.push({ notes: ch, beat: offset + 0.75, durationBeats: 1.8 });
-          rawEvents.push({ notes: ch, beat: offset + 2.75, durationBeats: 1.8 });
-        }
-      } else if (varType === 'rho_10') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let ch = chords[bar % 7];
-          rawEvents.push({ notes: ch, beat: offset, durationBeats: 1.5 });
-          if (bar === 7) {
-            rawEvents.push({ notes: chords[0], beat: offset + 2.0, durationBeats: 2.0 });
-          } else {
-            rawEvents.push({ notes: ch, beat: offset + 2.0, durationBeats: 1.8 });
-          }
-        }
-      }
-
-    } else if (style === 'viola') {
-      if (varType === 'vio_01') {
-        const seq = [0, 2, 4, 6, 5, 3, 2, 0, 1, 3, 5, 4, 2, 0, 1, 0];
-        for (let b = 0; b < 32; b += 1) {
-          let barIdx = Math.floor(b / 4);
-          let noteIdx = seq[b % seq.length];
-          rawEvents.push({ notes: [n(noteIdx, 1)], beat: b, durationBeats: 0.85 });
-          if (b % 4 === 0) rawEvents.push({ notes: [n(barIdx % 7, 0)], beat: b, durationBeats: 1.8 });
-        }
-      } else if (varType === 'vio_02') {
-        const barRoots = [0, 0, 3, 3, 4, 4, 0, 0];
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let rootDeg = barRoots[bar];
-          for (let s = 0; s < 16; s++) {
-            let beatPos = offset + (s * 0.25);
-            if (s % 4 === 0) {
-              rawEvents.push({ notes: [n(rootDeg, 0)], beat: beatPos, durationBeats: 0.4 });
-            } else {
-              let melDeg = (rootDeg + (s % 4) * 2) % 7;
-              rawEvents.push({ notes: [n(melDeg, 1)], beat: beatPos, durationBeats: 0.2 });
-            }
-          }
-        }
-      } else if (varType === 'vio_03') {
-        const phraseNotes = [
-          {b:0, n:0}, {b:1, n:2}, {b:2, n:4}, {b:3.5, n:5}, {b:4, n:4}, {b:5, n:2}, {b:6, n:0},
-          {b:8, n:3}, {b:9, n:4}, {b:10, n:5}, {b:11, n:6}, {b:12, n:5}, {b:13, n:4}, {b:14, n:2}, {b:15, n:0},
-          {b:16, n:4}, {b:17, n:5}, {b:18, n:6}, {b:19.5, n:7}, {b:20, n:6}, {b:21, n:5}, {b:22, n:4},
-          {b:24, n:5}, {b:25, n:4}, {b:26, n:3}, {b:27, n:2}, {b:28, n:1}, {b:29, n:0}, {b:30, n:0}
-        ];
-        phraseNotes.forEach(item => {
-          rawEvents.push({ notes: [n(item.n, 1)], beat: item.b, durationBeats: 0.7 });
-        });
-      } else if (varType === 'vio_04') {
-        const solitudeEvents = [
-          {b:0, n:0, d:2.5}, {b:3, n:3, d:1.5}, {b:5, n:4, d:2.8},
-          {b:9, n:2, d:2.0}, {b:12, n:5, d:1.8}, {b:14, n:4, d:2.5},
-          {b:17, n:6, d:2.2}, {b:20, n:5, d:1.5}, {b:22, n:4, d:2.8},
-          {b:25, n:2, d:1.8}, {b:28, n:0, d:3.5}
-        ];
-        solitudeEvents.forEach(item => {
-          rawEvents.push({ notes: [n(item.n, 1)], beat: item.b, durationBeats: item.d });
-        });
-      } else if (varType === 'vio_05') {
-        const pifanoRoots = [0, 0, 0, 0, 3, 3, 4, 0];
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let root = pifanoRoots[bar];
-          for (let step = 0; step < 8; step++) {
-            let pitch = (step % 2 === 0) ? n(root, 1) : n(root + 2, 1);
-            rawEvents.push({ notes: [pitch], beat: offset + (step * 0.5), durationBeats: 0.4 });
-          }
-        }
-      } else if (varType === 'vio_06') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let startDeg = (bar * 2) % 7;
-          [6, 5, 4, 2, 0].forEach((sub, idx) => {
-            rawEvents.push({ notes: [n((startDeg + sub) % 7, 1)], beat: offset + (idx * 0.25), durationBeats: 0.8 });
-          });
-          if (bar === 3 || bar === 7) {
-            [6, 5, 4, 3, 2, 1, 0].forEach((sub, idx) => {
-              rawEvents.push({ notes: [n(sub, 1)], beat: offset + 2.0 + (idx * 0.25), durationBeats: 0.5 });
-            });
-          }
-        }
-      } else if (varType === 'vio_07') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let deg = bar % 7;
-          rawEvents.push({ notes: [n(deg, 1)], beat: offset + 0.5, durationBeats: 0.25 });
-          rawEvents.push({ notes: [n((deg + 2) % 7, 1)], beat: offset + 1.5, durationBeats: 0.25 });
-          rawEvents.push({ notes: [n((deg + 4) % 7, 1)], beat: offset + 2.5, durationBeats: 0.25 });
-          rawEvents.push({ notes: [n((deg + 1) % 7, 1)], beat: offset + 3.5, durationBeats: 0.25 });
-        }
-      } else if (varType === 'vio_08') {
-        const barPitches = [
-          [0, 2, 4], [2, 4, 6], [3, 5, 0], [4, 6, 1],
-          [5, 0, 2], [4, 2, 0], [2, 1, 0], [0, 0, 0]
-        ];
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let triad = barPitches[bar];
-          for (let beat = 0; beat < 4; beat++) {
-            let tBase = offset + beat;
-            rawEvents.push({ notes: [n(triad[0], 1)], beat: tBase, durationBeats: 0.3 });
-            rawEvents.push({ notes: [n(triad[1], 1)], beat: tBase + 0.33, durationBeats: 0.3 });
-            rawEvents.push({ notes: [n(triad[2], 1)], beat: tBase + 0.66, durationBeats: 0.3 });
-          }
-        }
-      } else if (varType === 'vio_09') {
-        for (let b = 0; b < 32; b += 4) {
-          rawEvents.push({ notes: [n(0, 1), n(3, 1)], beat: b, durationBeats: 1.5 });
-          rawEvents.push({ notes: [n(4, 1)], beat: b + 1.75, durationBeats: 0.8 });
-          rawEvents.push({ notes: [n(6, 1)], beat: b + 2.75, durationBeats: 1.1 });
-        }
-      } else if (varType === 'vio_10') {
-        for (let bar = 0; bar < 8; bar++) {
-          let offset = bar * 4;
-          let density = bar + 1;
-          let stepSize = 4 / density;
-          for (let i = 0; i < density; i++) {
-            let deg = (bar + i) % 7;
-            rawEvents.push({ notes: [n(deg, 1)], beat: offset + (i * stepSize), durationBeats: Math.max(0.2, stepSize * 0.8) });
-          }
-        }
+    for (let b = 0; b < totalBeats; b += 2) {
+      if (style === 'piano') {
+        if (varType === 'p_01') rawEvents.push({ notes: [n(0), n(2), n(4)], beat: b, durationBeats: 1.8 });
+        else if (varType === 'p_02') rawEvents.push({ notes: [n(b % 5)], beat: b + 0.5, durationBeats: 0.8 });
+        else if (varType === 'p_03') rawEvents.push({ notes: [n(0,-1), n(2), n(4)], beat: b, durationBeats: 2.0 });
+        else if (varType === 'p_04') rawEvents.push({ notes: [n(b % 7)], beat: b, durationBeats: 0.5 });
+        else rawEvents.push({ notes: [n(0)], beat: b + 1.0, durationBeats: 1.0 });
+      } else if (style === 'viola') {
+        if (varType === 'v_01') rawEvents.push({ notes: [n(b % 7, 1)], beat: b, durationBeats: 0.8 });
+        else if (varType === 'v_02') rawEvents.push({ notes: [n(0, 0)], beat: b, durationBeats: 0.4 });
+        else if (varType === 'v_03') rawEvents.push({ notes: [n((b+2) % 7, 1)], beat: b + 0.5, durationBeats: 0.6 });
+        else if (varType === 'v_04') rawEvents.push({ notes: [n(0, 1)], beat: b, durationBeats: 1.5 });
+        else rawEvents.push({ notes: [n(b % 5, 1)], beat: b, durationBeats: 0.3 });
+      } else if (style === 'logdrum') {
+        if (varType === 'l_01') rawEvents.push({ notes: [n(0, -1)], beat: b, durationBeats: 0.8 });
+        else if (varType === 'l_02') rawEvents.push({ notes: [n(0, -1)], beat: b + 0.25, durationBeats: 0.2 });
+        else if (varType === 'l_03') rawEvents.push({ notes: [n(4, -1)], beat: b + 0.5, durationBeats: 0.4 });
+        else if (varType === 'l_04') rawEvents.push({ notes: [n(0, -1)], beat: b, durationBeats: 1.2 });
+        else rawEvents.push({ notes: [n((b/2) % 7, -1)], beat: b, durationBeats: 1.0 });
+      } else if (style === 'drums') {
+        rawEvents.push({ notes: ['C3'], beat: b, durationBeats: 0.2 });
+        if (b % 4 === 2) rawEvents.push({ notes: ['D3'], beat: b, durationBeats: 0.2 });
       }
     }
 
-    return rawEvents.map(e => ({
-      notes: e.notes || [],
-      beat: e.beat !== undefined ? e.beat : 0,
-      durationBeats: Math.max(0.08, e.durationBeats !== undefined ? e.durationBeats : 0.25)
-    }));
+    return rawEvents;
   }
 
-  function drawPianoRoll(currentBeat = null) {
+  function drawPianoRoll() {
     const canvas = document.getElementById('pianoRollCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const events = generateEvents();
 
-    document.getElementById('noteCounter').innerText = `${events.length} Notas`;
-
     ctx.fillStyle = '#070504';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.strokeStyle = '#16110D';
-    ctx.lineWidth = 1;
     for (let i = 0; i <= 32; i++) {
       let x = (i / 32) * canvas.width;
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-      if (i % 4 === 0 && i > 0) {
-        ctx.strokeStyle = '#221B15';
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-        ctx.strokeStyle = '#16110D';
-      }
     }
 
     events.forEach(e => {
       let x = (e.beat / 32) * canvas.width;
       let w = Math.max(4, (e.durationBeats / 32) * canvas.width);
-      let y = canvas.height - 22 - ((e.notes.length || 1) * 8);
-      let h = 10;
+      let y = canvas.height - 30;
 
-      let grad = ctx.createLinearGradient(x, y, x + w, y);
-      grad.addColorStop(0, '#C85A17');
-      grad.addColorStop(1, '#E5A93C');
-
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      if (typeof ctx.roundRect === 'function') {
-        ctx.roundRect(x, y, Math.max(3, w - 1), h, 2);
-      } else {
-        ctx.fillRect(x, y, Math.max(3, w - 1), h);
-      }
-      ctx.fill();
+      ctx.fillStyle = '#D97736';
+      ctx.fillRect(x, y, w, 12);
     });
-
-    if (currentBeat !== null && currentBeat >= 0) {
-      let px = (Math.max(0, currentBeat) / 32) * canvas.width;
-      
-      ctx.shadowColor = '#E5A93C';
-      ctx.shadowBlur = 6;
-      ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 2;
-      
-      ctx.beginPath();
-      ctx.moveTo(px, 0);
-      ctx.lineTo(px, canvas.height);
-      ctx.stroke();
-
-      ctx.shadowBlur = 0;
-    }
-  }
-
-  function updatePlayhead() {
-    if (!isPlaying || !audioCtx) return;
-    
-    const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
-    const secondsPerBeat = 60 / bpm;
-    const elapsedSec = audioCtx.currentTime - playbackStartTime;
-
-    if (elapsedSec >= totalLoopDurationSec) {
-      stopAudio();
-      return;
-    }
-
-    const currentBeat = Math.max(0, (elapsedSec / secondsPerBeat) % 32);
-    drawPianoRoll(currentBeat);
-    animFrameId = requestAnimationFrame(updatePlayhead);
   }
 
   function onSettingChange() {
-    stopAudio();
     updateScaleDisplay();
     drawPianoRoll();
-    if (document.getElementById('viewChords').style.display !== 'none') {
-      renderHarmonizerView();
-    }
-  }
-
-  function triggerRhodesVoice(ctx, master, fxBus, freq, startTime, duration, volScale, isOffline) {
-    const carrier = ctx.createOscillator();
-    const carrierGain = ctx.createGain();
-    carrier.type = 'sine';
-    carrier.frequency.setValueAtTime(freq, startTime);
-
-    const modulator = ctx.createOscillator();
-    const modGain = ctx.createGain();
-    modulator.type = 'sine';
-    modulator.frequency.setValueAtTime(freq * 2.0, startTime);
-    
-    modGain.gain.setValueAtTime(freq * 1.5, startTime);
-    modGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.15);
-
-    modulator.connect(modGain);
-    modGain.connect(carrier.frequency);
-
-    carrierGain.gain.setValueAtTime(0.0001, startTime);
-    carrierGain.gain.linearRampToValueAtTime(0.22 * volScale, startTime + 0.015);
-    carrierGain.gain.exponentialRampToValueAtTime(0.001, startTime + Math.max(0.2, duration));
-
-    carrier.connect(carrierGain);
-    carrierGain.connect(master);
-    if (fxBus) carrierGain.connect(fxBus);
-
-    carrier.start(startTime);
-    modulator.start(startTime);
-    carrier.stop(startTime + duration + 0.1);
-    modulator.stop(startTime + 0.2);
-
-    if (!isOffline) activeNodes.push(carrier, modulator);
-  }
-
-  function triggerLogdrumVoice(ctx, master, fxBus, freq, startTime, duration, volScale, isOffline) {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(freq * 2.2, startTime);
-    osc.frequency.exponentialRampToValueAtTime(freq, startTime + 0.035);
-
-    gain.gain.setValueAtTime(0.75 * volScale, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-
-    osc.connect(gain);
-    gain.connect(master);
-
-    osc.start(startTime);
-    osc.stop(startTime + duration + 0.05);
-
-    if (!isOffline) activeNodes.push(osc);
-  }
-
-  function triggerViolaVoice(ctx, master, fxBus, freq, startTime, duration, volScale, isOffline) {
-    const osc1 = ctx.createOscillator();
-    osc1.type = 'triangle';
-    osc1.frequency.setValueAtTime(freq, startTime);
-    osc1.detune.setValueAtTime(+5, startTime);
-
-    const osc2 = ctx.createOscillator();
-    osc2.type = 'sawtooth';
-    osc2.frequency.setValueAtTime(freq, startTime);
-    osc2.detune.setValueAtTime(-5, startTime);
-
-    const bodyFilter = ctx.createBiquadFilter();
-    bodyFilter.type = 'lowpass';
-    bodyFilter.Q.value = 3.5;
-    bodyFilter.frequency.setValueAtTime(freq * 7, startTime);
-    bodyFilter.frequency.exponentialRampToValueAtTime(freq * 1.8, startTime + 0.14);
-
-    const hpFilter = ctx.createBiquadFilter();
-    hpFilter.type = 'highpass';
-    hpFilter.frequency.value = 180;
-
-    const gain1 = ctx.createGain();
-    gain1.gain.setValueAtTime(0.001, startTime);
-    gain1.gain.linearRampToValueAtTime(0.32 * volScale, startTime + 0.006);
-    gain1.gain.exponentialRampToValueAtTime(0.001, startTime + Math.max(0.15, duration));
-
-    const gain2 = ctx.createGain();
-    gain2.gain.setValueAtTime(0.001, startTime);
-    gain2.gain.linearRampToValueAtTime(0.12 * volScale, startTime + 0.004);
-    gain2.gain.exponentialRampToValueAtTime(0.001, startTime + Math.min(0.08, duration));
-
-    osc1.connect(gain1);
-    osc2.connect(gain2);
-    gain1.connect(bodyFilter);
-    gain2.connect(bodyFilter);
-
-    bodyFilter.connect(hpFilter);
-    hpFilter.connect(master);
-    if (fxBus) hpFilter.connect(fxBus);
-
-    osc1.start(startTime);
-    osc2.start(startTime);
-    osc1.stop(startTime + duration + 0.05);
-    osc2.stop(startTime + duration + 0.05);
-
-    if (!isOffline) activeNodes.push(osc1, osc2);
-  }
-
-  function startRhodesLiveVoice(ctx, master, fxBus, freq) {
-    const now = ctx.currentTime;
-    const carrier = ctx.createOscillator();
-    const carrierGain = ctx.createGain();
-    carrier.type = 'sine';
-    carrier.frequency.setValueAtTime(freq, now);
-
-    const modulator = ctx.createOscillator();
-    const modGain = ctx.createGain();
-    modulator.type = 'sine';
-    modulator.frequency.setValueAtTime(freq * 2.0, now);
-    
-    modGain.gain.setValueAtTime(freq * 1.5, now);
-    modGain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-
-    modulator.connect(modGain);
-    modGain.connect(carrier.frequency);
-
-    carrierGain.gain.setValueAtTime(0.0001, now);
-    carrierGain.gain.linearRampToValueAtTime(0.25, now + 0.02);
-    carrierGain.gain.exponentialRampToValueAtTime(0.15, now + 2.5);
-
-    carrier.connect(carrierGain);
-    carrierGain.connect(master);
-    if (fxBus) carrierGain.connect(fxBus);
-
-    carrier.start(now);
-    modulator.start(now);
-
-    return {
-      release: () => {
-        const relTime = ctx.currentTime;
-        const currentVol = Math.max(0.0001, carrierGain.gain.value);
-        carrierGain.gain.cancelScheduledValues(relTime);
-        carrierGain.gain.setValueAtTime(currentVol, relTime);
-        carrierGain.gain.exponentialRampToValueAtTime(0.0001, relTime + 0.25);
-        setTimeout(() => {
-          try { carrier.stop(); modulator.stop(); carrier.disconnect(); modulator.disconnect(); } catch(e){}
-        }, 300);
-      }
-    };
-  }
-
-  function startViolaLiveVoice(ctx, master, fxBus, freq) {
-    const now = ctx.currentTime;
-    const osc1 = ctx.createOscillator();
-    osc1.type = 'triangle';
-    osc1.frequency.setValueAtTime(freq, now);
-    osc1.detune.setValueAtTime(+5, now);
-
-    const osc2 = ctx.createOscillator();
-    osc2.type = 'sawtooth';
-    osc2.frequency.setValueAtTime(freq, now);
-    osc2.detune.setValueAtTime(-5, now);
-
-    const bodyFilter = ctx.createBiquadFilter();
-    bodyFilter.type = 'lowpass';
-    bodyFilter.Q.value = 3.5;
-    bodyFilter.frequency.setValueAtTime(freq * 7, now);
-    bodyFilter.frequency.exponentialRampToValueAtTime(freq * 2.2, now + 0.18);
-
-    const hpFilter = ctx.createBiquadFilter();
-    hpFilter.type = 'highpass';
-    hpFilter.frequency.value = 180;
-
-    const gain1 = ctx.createGain();
-    gain1.gain.setValueAtTime(0.001, now);
-    gain1.gain.linearRampToValueAtTime(0.30, now + 0.015);
-    gain1.gain.exponentialRampToValueAtTime(0.18, now + 3.0);
-
-    const gain2 = ctx.createGain();
-    gain2.gain.setValueAtTime(0.001, now);
-    gain2.gain.linearRampToValueAtTime(0.10, now + 0.015);
-
-    osc1.connect(gain1);
-    osc2.connect(gain2);
-    gain1.connect(bodyFilter);
-    gain2.connect(bodyFilter);
-
-    bodyFilter.connect(hpFilter);
-    hpFilter.connect(master);
-    if (fxBus) hpFilter.connect(fxBus);
-
-    osc1.start(now);
-    osc2.start(now);
-
-    return {
-      release: () => {
-        const relTime = ctx.currentTime;
-        const currentVol1 = Math.max(0.0001, gain1.gain.value);
-        const currentVol2 = Math.max(0.0001, gain2.gain.value);
-
-        gain1.gain.cancelScheduledValues(relTime);
-        gain1.gain.setValueAtTime(currentVol1, relTime);
-        gain1.gain.exponentialRampToValueAtTime(0.0001, relTime + 0.2);
-
-        gain2.gain.cancelScheduledValues(relTime);
-        gain2.gain.setValueAtTime(currentVol2, relTime);
-        gain2.gain.exponentialRampToValueAtTime(0.0001, relTime + 0.2);
-
-        setTimeout(() => {
-          try { osc1.stop(); osc2.stop(); osc1.disconnect(); osc2.disconnect(); } catch(e){}
-        }, 250);
-      }
-    };
-  }
-
-  function startLogdrumLiveVoice(ctx, master, fxBus, freq) {
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(freq * 2.2, now);
-    osc.frequency.exponentialRampToValueAtTime(freq, now + 0.035);
-
-    gain.gain.setValueAtTime(0.75, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-
-    osc.connect(gain);
-    gain.connect(master);
-
-    osc.start(now);
-    osc.stop(now + 0.85);
-
-    return {
-      release: () => {}
-    };
-  }
-
-  function schedulePatternNotes(ctx, masterGain, fxBus, baseStartTime, isOffline = false) {
-    const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
-    const humanizePct = parseInt(document.getElementById('humanizeInput').value) || 0;
-    const swingPct = parseInt(document.getElementById('swingInput').value) || 0;
-
-    const secondsPerBeat = 60 / bpm;
-    const events = generateEvents();
-    const style = document.getElementById('patternStyle').value;
-
-    events.forEach(e => {
-      let beatPos = e.beat;
-      if (swingPct > 0 && Math.floor(beatPos * 2) % 2 === 1) {
-        beatPos += (swingPct / 100) * 0.25;
-      }
-
-      let timeOffset = 0;
-      if (humanizePct > 0) {
-        timeOffset = (Math.random() - 0.5) * (humanizePct / 100) * 0.04;
-      }
-
-      const startTime = Math.max(baseStartTime, baseStartTime + (beatPos * secondsPerBeat) + timeOffset);
-      const duration = Math.max(0.08, e.durationBeats * secondsPerBeat);
-
-      e.notes.forEach(noteName => {
-        const freq = noteToFreq(noteName);
-
-        let volHumanize = 1;
-        if (humanizePct > 0) {
-          volHumanize = 1 - (Math.random() * (humanizePct / 100) * 0.3);
-        }
-
-        if (style === 'logdrum') {
-          triggerLogdrumVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
-        } else if (style === 'rhodes') {
-          triggerRhodesVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
-        } else if (style === 'viola') {
-          triggerViolaVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
-        }
-      });
-    });
   }
 
   async function previewPattern() {
-    try {
-      stopAudio();
-      
-      const masterGain = getMasterGain();
-      if (audioCtx.state === 'suspended') await audioCtx.resume();
+    const ctx = getAudioContext();
+    if (ctx.state === 'suspended') await ctx.resume();
 
-      const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
-      const secondsPerBeat = 60 / bpm;
-      const now = audioCtx.currentTime + 0.05;
+    const events = generateEvents();
+    const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
+    const secondsPerBeat = 60 / bpm;
+    const now = ctx.currentTime + 0.05;
 
-      schedulePatternNotes(audioCtx, masterGain, fxBusNode, now, false);
+    events.forEach(e => {
+      const startTime = now + (e.beat * secondsPerBeat);
+      const sample = sampleBuffers['C4'] || sampleBuffers['A3'];
 
-      isPlaying = true;
-      playbackStartTime = now;
-      totalLoopDurationSec = 32 * secondsPerBeat;
-      updatePlayhead();
+      if (sample) {
+        const source = ctx.createBufferSource();
+        source.buffer = sample;
+        source.connect(ctx.destination);
+        source.start(startTime);
+      }
+    });
 
-      document.getElementById('statusMessage').innerText = `▶ Executando loop em tempo real (${bpm} BPM).`;
-
-    } catch (err) {
-      document.getElementById('statusMessage').innerText = "⚠️ Erro de execução: " + err.message;
-    }
+    document.getElementById('statusMessage').innerText = `▶ Executando loop HD em ${bpm} BPM.`;
   }
 
   function exportMIDI() {
-    if (!currentUser) {
-      document.getElementById('statusMessage').innerText = "🔒 Faça login com o Google para liberar o download do arquivo MIDI.";
-      setTimeout(() => { handleAuth(); }, 1500);
-      return;
-    }
-
     const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
-    const tuning = parseFloat(document.getElementById('tuningSelect').value) || 440;
-    const humanizePct = parseInt(document.getElementById('humanizeInput').value) || 0;
-    const swingPct = parseInt(document.getElementById('swingInput').value) || 0;
-
-    const secondsPerBeat = 60 / bpm;
     const events = generateEvents();
     
     const midi = new Midi();
     midi.header.setTempo(bpm);
     const track = midi.addTrack();
 
-    if (tuning === 432) {
-      track.addPitchBend({ time: 0, value: -0.1588 });
-    }
-
     events.forEach(e => {
-      let beatPos = e.beat;
-      if (swingPct > 0 && Math.floor(beatPos * 2) % 2 === 1) {
-        beatPos += (swingPct / 100) * 0.25;
-      }
-
-      let timeOffset = 0;
-      if (humanizePct > 0) {
-        timeOffset = (Math.random() - 0.5) * (humanizePct / 100) * 0.03;
-      }
-
-      let velocityVal = 0.85;
-      if (humanizePct > 0) {
-        velocityVal = Math.max(0.4, 0.85 - (Math.random() * (humanizePct / 100) * 0.4));
-      }
-
       e.notes.forEach(n => {
         track.addNote({
           name: n,
-          time: Math.max(0, (beatPos * secondsPerBeat) + timeOffset),
-          duration: Math.max(0.08, e.durationBeats * secondsPerBeat),
-          velocity: velocityVal
+          time: e.beat * (60 / bpm),
+          duration: e.durationBeats * (60 / bpm),
+          velocity: 0.85
         });
       });
     });
 
-    const root = document.getElementById('rootNote').value;
-    const style = document.getElementById('patternStyle').value;
-    const varType = document.getElementById('variationType').value;
     const blob = new Blob([midi.toArray()], { type: "audio/midi" });
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `Fagulha_${root}_${style}_${varType}_${bpm}BPM_${tuning}Hz.mid`;
+    link.href = URL.click ? URL.createObjectURL(blob) : '';
+    link.download = `Fagulha_HD_${bpm}BPM.mid`;
     link.click();
-    
-    document.getElementById('statusMessage').innerText = `⚡ Download concluído por ${currentUser.displayName}! MIDI em ${tuning}Hz exportado.`;
   }
 
-  /* SUPORTE A LIVE KEYBOARD JAM 100% MAPEADO POR ESCALA (1-7) E NOTAS FIXAS (C-B) */
-  window.addEventListener('keydown', (e) => {
-    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
-    if (e.repeat) return;
-
-    const key = e.key.toUpperCase();
-    let noteToPlay = null;
-
-    if (['1','2','3','4','5','6','7'].includes(key)) {
-      const degIdx = parseInt(key) - 1;
-      const notes = getScaleNotes();
-      if (notes && notes[degIdx]) {
-        noteToPlay = parseNote(notes, degIdx, 1);
-      }
-    } 
-    else if (['C','D','E','F','G','A','B'].includes(key)) {
-      if (!e.ctrlKey && !e.metaKey && !e.altKey) {
-        noteToPlay = key + "4";
-      }
-    }
-
-    if (noteToPlay) {
-      if (!activeKeyVoices[key]) {
-        activeKeyVoices[key] = startLiveNote(noteToPlay);
-      }
-      return;
-    }
-
-    if (e.code === 'Space') { e.preventDefault(); previewPattern(); }
-    else if (e.code === 'Escape') { stopAudio(); }
-    else if (e.code === 'KeyT') { tapTempo(); }
-    else if (e.code === 'KeyM') { toggleSidebar(); }
-  });
-
-  window.addEventListener('keyup', (e) => {
-    const key = e.key.toUpperCase();
-    if (activeKeyVoices[key]) {
-      if (typeof activeKeyVoices[key].release === 'function') {
-        activeKeyVoices[key].release();
-      }
-      delete activeKeyVoices[key];
-    }
-  });
-
-  applyLanguage(currentLanguage);
-  updateScaleDisplay();
-  updateVariationMenu();
+  function stopAudio() {
+    document.getElementById('statusMessage').innerText = "🛑 Áudio interrompido.";
+  }
 </script>
 
 </body>
