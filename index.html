@@ -1222,6 +1222,31 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
   const storage = firebase.storage();
+
+  const CREATOR_EMAIL = "avlis.silva11@gmail.com";
+
+  async function checkUserVerification(user) {
+    if (!user) return false;
+
+    // 1. Você sempre recebe o selo de prioridade
+    if (user.email === CREATOR_EMAIL) {
+      return true;
+    }
+
+    // 2. Regra dos usuários: 4 ou mais acessos na semana
+    try {
+      const userDoc = await db.collection("users").doc(user.uid).get();
+
+      if (userDoc.exists) {
+        const activeDays = userDoc.data().activeDaysThisWeek || [];
+        return activeDays.length >= 4;
+      }
+    } catch (error) {
+      console.error("Erro ao verificar selo:", error);
+    }
+
+    return false;
+  }
   
   let analytics = null;
   if (firebase.analytics) {
