@@ -2483,7 +2483,7 @@
     const status = document.getElementById('statusMessage');
     if (status) status.innerText = `🎵 Nota Sustentada: ${noteName.replace(/\d/,'')} (${noteName})`;
 
-    if (style === 'rhodes') {
+    if (style === 'piano' || style === 'rhodes') {
       return startRhodesLiveVoice(audioCtx, masterGain, fxBusNode, freq);
     } else if (style === 'viola') {
       return startViolaLiveVoice(audioCtx, masterGain, fxBusNode, freq);
@@ -3444,9 +3444,9 @@
           volHumanize = 1 - (Math.random() * (humanizePct / 100) * 0.3);
         }
 
-        if (style === 'logdrum') {
+        if (style === 'logdrum' || style === 'drums') {
           triggerLogdrumVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
-        } else if (style === 'rhodes') {
+        } else if (style === 'piano' || style === 'rhodes') {
           triggerRhodesVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
         } else if (style === 'viola') {
           triggerViolaVoice(ctx, masterGain, fxBus, freq, startTime, duration, volHumanize, isOffline);
