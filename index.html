@@ -282,8 +282,8 @@
 
     .main-wrapper {
       flex: 1; margin-left: var(--sidebar-width); padding: calc(24px + var(--safe-top)) 24px 24px;
-      display: flex; flex-direction: column; align-items: center;
-      position: relative; z-index: 1; transition: margin-left 0.3s ease; width: 100%;
+      display: flex; flex-direction: column; align-items: center; min-width: 0;
+      position: relative; z-index: 1; transition: margin-left 0.3s ease;
     }
     .main-wrapper.expanded { margin-left: 0; }
 
