@@ -1281,6 +1281,7 @@
   }
 
   let currentUser = null;
+  let currentUserVerified = false;
   let selectedProfileImage = null;
   let savedProfilePhotoUrl = '';
 
@@ -1462,12 +1463,15 @@
   });
 
   /* MONITORAMENTO DO STATUS DE LOGIN */
-  auth.onAuthStateChanged((user) => {
+  auth.onAuthStateChanged(async (user) => {
     currentUser = user;
     const authBtn = document.getElementById('authBtn');
     const userPlanDisplay = document.getElementById('userPlanDisplay');
 
     if (user) {
+      await recordDailyActivity(user);
+      currentUserVerified = await checkUserVerification(user);
+
       const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'P')}&background=C85A17&color=fff`;
       const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Produtor';
       
@@ -1476,18 +1480,23 @@
       avatar.src = avatarUrl;
       avatar.className = 'user-avatar';
       const name = document.createElement('span');
+      name.id = 'header-user-name';
       name.textContent = firstName;
       const verifiedIdentity = document.createElement('span');
       verifiedIdentity.style.display = 'inline-flex';
       verifiedIdentity.style.alignItems = 'center';
       verifiedIdentity.style.gap = '4px';
-      const verifiedBadge = document.createElement('img');
-      verifiedBadge.src = 'verified.svg';
-      verifiedBadge.alt = 'Verificado';
-      verifiedBadge.width = 16;
-      verifiedBadge.height = 16;
-      verifiedBadge.title = 'Conta Verificada';
-      verifiedIdentity.append(name, verifiedBadge);
+      verifiedIdentity.append(name);
+      if (currentUserVerified) {
+        const verifiedBadge = document.createElement('img');
+        verifiedBadge.src = 'verified.svg';
+        verifiedBadge.alt = 'Verificado';
+        verifiedBadge.width = 16;
+        verifiedBadge.height = 16;
+        verifiedBadge.title = 'Conta Verificada';
+        verifiedBadge.style.cssText = 'vertical-align: middle; margin-left: 4px;';
+        verifiedIdentity.append(verifiedBadge);
+      }
       authBtn.append(avatar, verifiedIdentity, document.createTextNode(' ▾'));
       authBtn.title = `Conectado como ${user.email}`;
       userPlanDisplay.innerText = "Pro Unlimited";
@@ -1496,6 +1505,7 @@
       loadUserSparksFromFirestore();
       populatePageProfileFields();
     } else {
+      currentUserVerified = false;
       authBtn.replaceChildren();
       const signInLabel = document.createElement('span');
       signInLabel.textContent = translate('signInGoogle');
@@ -1547,7 +1557,18 @@
     const fallbackAvatarUrl = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || 'P')}&background=C85A17&color=fff`;
     
     document.getElementById('profileLargeAvatar').src = savedProfilePhotoUrl || fallbackAvatarUrl;
-    document.getElementById('profileHeaderName').innerText = currentUser.displayName || "Produtor Fagulha";
+    const profileName = document.getElementById('profileHeaderName');
+    profileName.innerText = currentUser.displayName || "Produtor Fagulha";
+    if (currentUserVerified) {
+      const profileBadge = document.createElement('img');
+      profileBadge.src = 'verified.svg';
+      profileBadge.alt = 'Verificado';
+      profileBadge.width = 20;
+      profileBadge.height = 20;
+      profileBadge.title = 'Conta Verificada';
+      profileBadge.style.cssText = 'vertical-align: middle; margin-left: 6px;';
+      profileName.append(profileBadge);
+    }
     document.getElementById('profileHeaderEmail').innerText = currentUser.email || "";
     
     document.getElementById('pageProfileName').value = currentUser.displayName || "";
@@ -1669,8 +1690,20 @@
     avatar.src = avatarUrl;
     avatar.className = 'user-avatar';
     const name = document.createElement('span');
+    name.id = 'header-user-name';
     name.textContent = firstName;
-    authBtn.append(avatar, name, document.createTextNode(' ▾'));
+    authBtn.append(avatar, name);
+    if (currentUserVerified) {
+      const verifiedBadge = document.createElement('img');
+      verifiedBadge.src = 'verified.svg';
+      verifiedBadge.alt = 'Verificado';
+      verifiedBadge.width = 16;
+      verifiedBadge.height = 16;
+      verifiedBadge.title = 'Conta Verificada';
+      verifiedBadge.style.cssText = 'vertical-align: middle; margin-left: 4px;';
+      authBtn.append(verifiedBadge);
+    }
+    authBtn.append(document.createTextNode(' ▾'));
   }
 
   async function excluirContaUsuario() {
