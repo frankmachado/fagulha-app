@@ -1137,6 +1137,36 @@
       </div>
     </div>
 
+    <!-- Painel exclusivo do Administrador Mestre -->
+    <div class="admin-only master-panel-card" style="display: none; margin-top: 20px; padding: 16px; border: 1px solid #ff4500; border-radius: 8px; background: rgba(255, 69, 0, 0.05);">
+      <h3 style="color: #ff4500; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+        🔥 Painel do Mestre
+      </h3>
+      <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">Controle administrativo total do Fagulha Studio Hub</p>
+
+      <!-- Métricas Rápidas -->
+      <div class="admin-stats" style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <div style="flex: 1; padding: 10px; background: #1a1a1a; border-radius: 6px; text-align: center; border: 1px solid #333;">
+          <small style="color: #888;">Usuários</small>
+          <h4 id="stat-total-users" style="margin: 5px 0 0 0; color: #fff;">-</h4>
+        </div>
+        <div style="flex: 1; padding: 10px; background: #1a1a1a; border-radius: 6px; text-align: center; border: 1px solid #333;">
+          <small style="color: #888;">Fagulhas</small>
+          <h4 id="stat-total-fagulhas" style="margin: 5px 0 0 0; color: #fff;">-</h4>
+        </div>
+      </div>
+
+      <!-- Ações Rápidas -->
+      <div class="admin-actions" style="display: flex; flex-direction: column; gap: 8px;">
+        <button onclick="loadAdminUsersList()" style="width: 100%; padding: 10px; background: #ff4500; color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
+          👥 Gerenciar Usuários &amp; Selos
+        </button>
+      </div>
+
+      <!-- Container dinâmico para listagem -->
+      <div id="admin-dynamic-content" style="margin-top: 15px;"></div>
+    </div>
+
     <div class="profile-section-title" data-i18n="accountData">Dados da Conta</div>
     <div class="controls-grid" style="margin-bottom: 24px; opacity: 0.8;">
       <div class="input-field">
@@ -1255,12 +1285,15 @@
       return true;
     }
 
-    // 2. Regra dos Usuários: 4 ou mais acessos na semana
+    // 2. Checagem no Firestore: selo manual ou 4+ acessos na semana
     try {
       const userDoc = await db.collection("users").doc(user.uid).get();
 
       if (userDoc.exists) {
-        const activeDays = userDoc.data().activeDaysThisWeek || [];
+        const data = userDoc.data();
+        if (data.manualVerified === true) return true;
+
+        const activeDays = data.activeDaysThisWeek || [];
         return activeDays.length >= 4;
       }
     } catch (error) {
@@ -1294,6 +1327,72 @@
       }
     } catch (error) {
       console.error("Erro ao registrar atividade:", error);
+    }
+  }
+
+  // --- CARREGAR ESTATÍSTICAS E DADOS DO PAINEL DO MESTRE ---
+  async function loadMasterPanelData() {
+    try {
+      const usersSnap = await db.collection("users").get();
+      const totalUsersEl = document.getElementById("stat-total-users");
+      if (totalUsersEl) totalUsersEl.innerText = usersSnap.size;
+
+      const fagulhasSnap = await db.collection("fagulhas").get();
+      const totalFagulhasEl = document.getElementById("stat-total-fagulhas");
+      if (totalFagulhasEl) totalFagulhasEl.innerText = fagulhasSnap.size;
+    } catch (error) {
+      console.error("Erro ao carregar estatísticas do Mestre:", error);
+    }
+  }
+
+  // --- GERENCIAR USUÁRIOS E SELOS ---
+  async function loadAdminUsersList() {
+    const container = document.getElementById("admin-dynamic-content");
+    if (!container) return;
+
+    container.innerHTML = "<p style='font-size: 0.85rem; color: #aaa;'>Carregando usuários...</p>";
+
+    try {
+      const usersSnap = await db.collection("users").get();
+      let html = "<ul style='list-style: none; padding: 0; margin: 0;'>";
+
+      usersSnap.forEach((doc) => {
+        const data = doc.data();
+        const userId = doc.id;
+        const isManualVerified = data.manualVerified === true;
+
+        html += `
+          <li style="display: flex; align-items: center; justify-content: space-between; padding: 8px; margin-bottom: 6px; background: #1a1a1a; border-radius: 6px; border: 1px solid #333; font-size: 0.85rem;">
+            <div>
+              <strong style="color: #fff;">${data.displayName || 'Sem nome'}</strong><br>
+              <small style="color: #777;">${data.email || 'Sem e-mail'}</small>
+            </div>
+            <button onclick="toggleManualVerification('${userId}', ${isManualVerified})" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; background: ${isManualVerified ? '#d9534f' : '#28a745'}; color: #fff;">
+              ${isManualVerified ? 'Remover Selo' : 'Dar Selo'}
+            </button>
+          </li>
+        `;
+      });
+
+      html += "</ul>";
+      container.innerHTML = html;
+    } catch (error) {
+      console.error("Erro ao carregar lista de usuários:", error);
+      container.innerHTML = "<p style='font-size: 0.85rem; color: #d9534f;'>Erro ao carregar lista.</p>";
+    }
+  }
+
+  // --- ALTERAR SELO MANUALMENTE VIA BANCO ---
+  async function toggleManualVerification(userId, currentStatus) {
+    try {
+      await db.collection("users").doc(userId).set({
+        manualVerified: !currentStatus
+      }, { merge: true });
+
+      loadAdminUsersList();
+    } catch (error) {
+      console.error("Erro ao alterar selo manual:", error);
+      alert("Erro ao atualizar o selo do usuário.");
     }
   }
   
@@ -1512,6 +1611,7 @@
         element.style.display = isAdmin ? 'block' : 'none';
       });
       if (isAdmin) {
+        loadMasterPanelData();
         console.log('Modo Administrador Mestre Ativado.');
       }
 
