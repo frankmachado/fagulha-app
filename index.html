@@ -1223,17 +1223,21 @@
   const db = firebase.firestore();
   const storage = firebase.storage();
 
-  const CREATOR_EMAIL = "avlis.silva11@gmail.com";
+  // E-mails com selo de verificação garantido (Mestre e Admin)
+  const VERIFIED_EMAILS = [
+    "contatofagulha.app@gmail.com",
+    "avlis.silva11@gmail.com"
+  ];
 
   async function checkUserVerification(user) {
     if (!user) return false;
 
-    // 1. Você sempre recebe o selo de prioridade
-    if (user.email === CREATOR_EMAIL) {
+    // 1. Regra Prioritária: Mestre e Admin recebem o selo sempre
+    if (VERIFIED_EMAILS.includes(user.email)) {
       return true;
     }
 
-    // 2. Regra dos usuários: 4 ou mais acessos na semana
+    // 2. Regra dos Usuários: 4 ou mais acessos na semana
     try {
       const userDoc = await db.collection("users").doc(user.uid).get();
 
@@ -1467,9 +1471,23 @@
     currentUser = user;
     const authBtn = document.getElementById('authBtn');
     const userPlanDisplay = document.getElementById('userPlanDisplay');
+    const bioInput = document.getElementById('pageProfileBio');
+
+    if (bioInput) bioInput.value = '';
 
     if (user) {
       await recordDailyActivity(user);
+
+      try {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          if (bioInput) bioInput.value = userData.bio || '';
+        }
+      } catch (error) {
+        console.error('Erro ao carregar bio do usuário:', error);
+      }
+
       currentUserVerified = await checkUserVerification(user);
 
       const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'P')}&background=C85A17&color=fff`;
