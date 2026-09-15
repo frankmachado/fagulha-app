@@ -442,7 +442,7 @@
       background: rgba(255, 255, 255, 0.04); color: var(--text-main);
       border-color: rgba(255, 255, 255, 0.08);
     }
-    
+
     .btn-save-fagulha {
       background: rgba(217, 119, 54, 0.18); border: 1px solid rgba(217, 119, 54, 0.35); color: var(--accent-sand);
     }
@@ -516,7 +516,7 @@
     }
     .brand-title { font-size: 18px; font-weight: 800; margin: 0; }
     .brand-title span { color: var(--accent-terracotta); }
-    
+
     .status-badge {
       font-size: 11px; font-weight: 600; color: var(--text-muted);
       display: flex; align-items: center; gap: 6px;
@@ -1690,19 +1690,30 @@
     }
   });
 
-  /* AUTENTICAÇÃO CORRIGIDA (FIREBASE COMPAT) */
+  /* AUTENTICAÇÃO COMPATÍVEL COM VERCEL WEB (REDIRECT) */
   function handleAuth() {
     auth.useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-      .then((result) => {
-        document.getElementById('statusMessage').innerText = `Bem-vindo, ${result.user.displayName}!`;
-      })
-      .catch((error) => {
+
+    document.getElementById('statusMessage').innerText = "⏳ Redirecionando para autenticação do Google...";
+
+    // Redireciona o navegador diretamente para o Google (evita bloqueios de popup na Web)
+    auth.signInWithRedirect(provider);
+  }
+
+  // TRATAMENTO DO RETORNO DO REDIRECIONAMENTO AO CARREGAR A PÁGINA
+  auth.getRedirectResult()
+    .then((result) => {
+      if (result && result.user) {
+        document.getElementById('statusMessage').innerText = `Bem-vindo de volta, ${result.user.displayName}!`;
+      }
+    })
+    .catch((error) => {
+      if (error.code && error.code !== 'auth/popup-closed-by-user') {
         console.error("Erro na autenticação:", error);
         document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
-      });
-  }
+      }
+    });
 
   /* PREENCHE A PÁGINA DEDICADA DE PERFIL (#profile) */
   function populatePageProfileFields() {
