@@ -952,15 +952,14 @@
       <div class="input-field full-width">
         <label>Instrumento & Timbre</label>
         <select id="patternStyle" onchange="updateVariationMenu()">
-          <option value="piano" selected>🎹 Piano Acústico (Salamander HD)</option>
+          <option value="rhodes" selected>🎹 Rhodes / Teclados</option>
           <option value="viola">🪕 Violão / Cordas de Aço</option>
           <option value="logdrum">🥁 Baixo Sub / 808 Synth</option>
-          <option value="drums">🥁 Kit Bateria & Percussão Real</option>
         </select>
       </div>
 
       <div class="input-field full-width">
-        <label>Variações de Groove (Mínimo 5 por Instrumento)</label>
+        <label>Variações de Groove (10 por Instrumento)</label>
         <select id="variationType" onchange="onSettingChange()"></select>
       </div>
     </div>
@@ -3309,122 +3308,6 @@
   // ATUALIZACAO DOS SITES DE SAMPLES E CARREGAMENTO DE TIMBRES
   const SAMPLE_CDN = "https://tonejs.github.io/audio/salamander/";
   const DRUM_CDN = "https://tonejs.github.io/audio/drum-samples/";
-
-  // MENU EXPANDIDO COM OS NOVOS INSTRUMENTOS E GROOVES
-  function updateVariationMenu() {
-    stopAudio();
-    const style = document.getElementById('patternStyle').value;
-    const varSelect = document.getElementById('variationType');
-    varSelect.innerHTML = "";
-
-    if (style === 'piano') {
-      varSelect.innerHTML = `
-        <option value="p_01">1. Atmosfera Aveludada (Sustentado)</option>
-        <option value="p_02">2. Sincopado Cadenciado (Acentos)</option>
-        <option value="p_03">3. Bloco Estelar (Acordes Abertos)</option>
-        <option value="p_04">4. Arpejo Fluido de Cauda</option>
-        <option value="p_05">5. Respiro Noturno (Espaçado)</option>
-      `;
-    } else if (style === 'viola') {
-      varSelect.innerHTML = `
-        <option value="v_01">1. Dedilhado de Serra</option>
-        <option value="v_02">2. Galope Mourisco Sincopado</option>
-        <option value="v_03">3. Melodia Ondulante de Aço</option>
-        <option value="v_04">4. Fraseado de Solitude</option>
-        <option value="v_05">5. Cascata de Cordas Abertas</option>
-      `;
-    } else if (style === 'logdrum') {
-      varSelect.innerHTML = `
-        <option value="l_01">1. Balanço Sincopado Urbano</option>
-        <option value="l_02">2. Pressão Acelerada (Rolls)</option>
-        <option value="l_03">3. Staccato Espaça & Ataca</option>
-        <option value="l_04">4. Pulso Galopado Sub</option>
-        <option value="l_05">5. Caminhada Contínua (Walk Bass)</option>
-      `;
-    } else if (style === 'drums') {
-      varSelect.innerHTML = `
-        <option value="d_01">1. Beat Pop / Rock Straight 4/4</option>
-        <option value="d_02">2. Groove Lo-Fi Swing (Rimshot)</option>
-        <option value="d_03">3. Baque Virado Nordestino</option>
-        <option value="d_04">4. Trap Bounce Sincopado</option>
-        <option value="d_05">5. Shuffle Terceirizado</option>
-      `;
-    }
-    drawPianoRoll();
-  }
-
-  // GERADOR DE NOTAS E RITMOS PARA OS NOVOS INSTRUMENTOS
-  function generateEvents() {
-    const notes = getScaleNotes();
-    const style = document.getElementById('patternStyle').value;
-    const varType = document.getElementById('variationType').value;
-
-    let rawEvents = [];
-    const parse = (idx, oct = 0) => {
-      let rawNote = notes[idx % notes.length].replace(/\d/, '');
-      let extraOctaves = Math.floor(idx / notes.length);
-      return rawNote + (3 + oct + extraOctaves);
-    };
-
-    for (let b = 0; b < 16; b += 1) {
-      if (style === 'piano') {
-        if (varType === 'p_01' && b % 4 === 0) rawEvents.push({ notes: [parse(0), parse(2), parse(4)], beat: b, duration: 1.5 });
-        else if (varType === 'p_02' && b % 2 === 1) rawEvents.push({ notes: [parse(b % 5)], beat: b, duration: 0.5 });
-        else if (varType === 'p_03' && b % 8 === 0) rawEvents.push({ notes: [parse(0, -1), parse(2), parse(4)], beat: b, duration: 3.5 });
-        else if (varType === 'p_04') rawEvents.push({ notes: [parse(b % 7)], beat: b, duration: 0.25 });
-        else if (varType === 'p_05' && b % 4 === 2) rawEvents.push({ notes: [parse(0)], beat: b, duration: 1.0 });
-      } else if (style === 'viola') {
-        if (varType === 'v_01' && b % 2 === 0) rawEvents.push({ notes: [parse(b % 7, 1)], beat: b, duration: 0.5 });
-        else if (varType === 'v_02') rawEvents.push({ notes: [parse(b % 3)], beat: b, duration: 0.25 });
-        else if (varType === 'v_03' && b % 3 === 0) rawEvents.push({ notes: [parse((b + 2) % 7, 1)], beat: b, duration: 0.75 });
-        else if (varType === 'v_04' && b % 4 === 0) rawEvents.push({ notes: [parse(0, 1)], beat: b, duration: 1.5 });
-        else if (varType === 'v_05') rawEvents.push({ notes: [parse(b % 5, 1)], beat: b, duration: 0.25 });
-      } else if (style === 'logdrum') {
-        if (varType === 'l_01' && (b === 0 || b === 6 || b === 10)) rawEvents.push({ notes: [parse(0, -1)], beat: b, duration: 0.75 });
-        else if (varType === 'l_02') rawEvents.push({ notes: [parse(0, -1)], beat: b, duration: 0.25 });
-        else if (varType === 'l_03' && b % 4 === 2) rawEvents.push({ notes: [parse(4, -1)], beat: b, duration: 0.5 });
-        else if (varType === 'l_04' && b % 3 === 0) rawEvents.push({ notes: [parse(0, -1)], beat: b, duration: 1.0 });
-        else if (varType === 'l_05') rawEvents.push({ notes: [parse(b % 7, -1)], beat: b, duration: 0.5 });
-      } else if (style === 'drums') {
-        if (b % 4 === 0) rawEvents.push({ notes: ['C2'], beat: b, duration: 0.2 });
-        if (b % 4 === 2) rawEvents.push({ notes: ['D2'], beat: b, duration: 0.2 });
-        if (varType === 'd_04' || b % 2 === 0) rawEvents.push({ notes: ['F#2'], beat: b, duration: 0.1 });
-      }
-    }
-    return rawEvents.map(event => ({ ...event, durationBeats: event.duration }));
-  }
-
-  // DESENHO ATUALIZADO DO PIANO ROLL
-  function drawPianoRoll(currentBeat = null) {
-    const canvas = document.getElementById('pianoRollCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const events = generateEvents();
-    const counter = document.getElementById('noteCounter');
-    if (counter) counter.innerText = `${events.length} Notas`;
-
-    ctx.fillStyle = '#070504';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.strokeStyle = '#16110D';
-    for (let i = 0; i <= 16; i++) {
-      let x = (i / 16) * canvas.width;
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-    }
-
-    events.forEach(e => {
-      let x = (e.beat / 16) * canvas.width;
-      let w = Math.max(6, (e.duration / 16) * canvas.width);
-      ctx.fillStyle = '#D97736';
-      ctx.fillRect(x + 2, 30, w - 2, 20);
-    });
-
-    if (currentBeat !== null && currentBeat >= 0) {
-      const x = (currentBeat / 16) * canvas.width;
-      ctx.strokeStyle = '#FFFFFF';
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-    }
-  }
 
   function schedulePatternNotes(ctx, masterGain, fxBus, baseStartTime, isOffline = false) {
     const bpm = parseInt(document.getElementById('bpmInput').value) || 113;
