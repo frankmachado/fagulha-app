@@ -1223,11 +1223,29 @@
   const db = firebase.firestore();
   const storage = firebase.storage();
 
-  // E-mails com selo de verificação garantido (Mestre e Admin)
+  // --- CONSTANTES DE PERMISSÃO ---
+  const MASTER_ADMIN_EMAIL = "contatofagulha.app@gmail.com";
+
   const VERIFIED_EMAILS = [
     "contatofagulha.app@gmail.com",
     "avlis.silva11@gmail.com"
   ];
+
+  async function isMasterAdmin(user) {
+    if (!user) return false;
+
+    if (user.email === MASTER_ADMIN_EMAIL) {
+      return true;
+    }
+
+    try {
+      const userDoc = await db.collection("users").doc(user.uid).get();
+      return userDoc.exists && userDoc.data().role === "admin";
+    } catch (error) {
+      console.error("Erro ao verificar status de admin:", error);
+      return false;
+    }
+  }
 
   async function checkUserVerification(user) {
     if (!user) return false;
@@ -1489,6 +1507,13 @@
       }
 
       currentUserVerified = await checkUserVerification(user);
+      const isAdmin = await isMasterAdmin(user);
+      document.querySelectorAll('.admin-only').forEach(element => {
+        element.style.display = isAdmin ? 'block' : 'none';
+      });
+      if (isAdmin) {
+        console.log('Modo Administrador Mestre Ativado.');
+      }
 
       const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'P')}&background=C85A17&color=fff`;
       const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Produtor';
@@ -1524,6 +1549,9 @@
       populatePageProfileFields();
     } else {
       currentUserVerified = false;
+      document.querySelectorAll('.admin-only').forEach(element => {
+        element.style.display = 'none';
+      });
       authBtn.replaceChildren();
       const signInLabel = document.createElement('span');
       signInLabel.textContent = translate('signInGoogle');
