@@ -1692,30 +1692,43 @@
     }
   });
 
-  /* AUTENTICAÇÃO COMPATÍVEL COM VERCEL WEB (REDIRECT) */
-  function handleAuth() {
-    auth.useDeviceLanguage();
+  /* AUTENTICAÇÃO GOOGLE POR POPUP */
+  async function handleAuth() {
+    const status = document.getElementById('statusMessage');
+    const authBtn = document.getElementById('authBtn');
     const provider = new firebase.auth.GoogleAuthProvider();
 
-    document.getElementById('statusMessage').innerText = "⏳ Redirecionando para autenticação do Google...";
+    auth.useDeviceLanguage();
+    if (authBtn) authBtn.disabled = true;
+    if (status) status.innerText = "⏳ Abrindo o login do Google...";
 
-    // Redireciona o navegador diretamente para o Google (evita bloqueios de popup na Web)
-    auth.signInWithRedirect(provider);
+    try {
+      // Mantém a sessão neste navegador mesmo após fechar ou recarregar o app.
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      const result = await auth.signInWithPopup(provider);
+      const signedInUser = result.user;
+
+      if (status && signedInUser) {
+        status.innerText = `⚡ Login concluído. Bem-vindo, ${signedInUser.displayName || 'Produtor'}!`;
+      }
+    } catch (error) {
+      const messages = {
+        'auth/popup-closed-by-user': 'O login foi cancelado antes de terminar.',
+        'auth/popup-blocked': 'O navegador bloqueou o popup. Permita popups para este site e tente novamente.',
+        'auth/unauthorized-domain': 'Este domínio ainda não está autorizado no Firebase Authentication.',
+        'auth/network-request-failed': 'Não foi possível conectar ao Google. Verifique sua internet e tente novamente.',
+        'auth/account-exists-with-different-credential': 'Este e-mail já está vinculado a outro método de login.'
+      };
+      const message = messages[error.code] || 'Não foi possível concluir o login com o Google.';
+
+      if (error.code !== 'auth/popup-closed-by-user') {
+        console.error('Erro na autenticação Google:', error);
+      }
+      if (status) status.innerText = `⚠️ ${message}`;
+    } finally {
+      if (authBtn) authBtn.disabled = false;
+    }
   }
-
-  // TRATAMENTO DO RETORNO DO REDIRECIONAMENTO AO CARREGAR A PÁGINA
-  auth.getRedirectResult()
-    .then((result) => {
-      if (result && result.user) {
-        document.getElementById('statusMessage').innerText = `Bem-vindo de volta, ${result.user.displayName}!`;
-      }
-    })
-    .catch((error) => {
-      if (error.code && error.code !== 'auth/popup-closed-by-user') {
-        console.error("Erro na autenticação:", error);
-        document.getElementById('statusMessage').innerText = "⚠️ Erro ao entrar: " + error.message;
-      }
-    });
 
   /* PREENCHE A PÁGINA DEDICADA DE PERFIL (#profile) */
   function populatePageProfileFields() {
