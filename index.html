@@ -544,8 +544,8 @@
 
     /* ELEMENTO DE BPM INTELIGENTE */
     .bpm-input-wrapper { display: flex; gap: 6px; }
-    .bpm-input-wrapper input { flex: 1; text-align: center; font-weight: 700; }
-    .bpm-input-wrapper select { width: 110px; font-size: 11px; }
+    .bpm-input-wrapper input { flex: 1 1 88px; min-width: 0; text-align: center; font-weight: 700; }
+    .bpm-input-wrapper select { flex: 0 1 110px; width: 110px; min-width: 0; font-size: 11px; }
 
     optgroup { background-color: #140E0B; color: var(--accent-sand); font-weight: 700; }
     option { background-color: #1C1511 !important; color: #F5EFE6 !important; padding: 10px; font-weight: 500; }
@@ -674,6 +674,20 @@
 
       .jam-controls .keyboard-control {
         width: 100% !important;
+      }
+
+      .bpm-input-wrapper {
+        width: 100%;
+      }
+
+      .bpm-input-wrapper input {
+        flex: 0 1 88px;
+        width: 88px !important;
+      }
+
+      .bpm-input-wrapper select {
+        flex: 1 1 auto;
+        width: auto !important;
       }
     }
 
@@ -2512,8 +2526,11 @@
     stopAudio();
     const masterGain = getMasterGain();
     const now = audioCtx.currentTime + 0.05;
-    const instrumentSelect = document.getElementById('chordInstrument');
-    const selectedInstrument = instrumentSelect?.value || document.getElementById('patternStyle')?.value || 'rhodes';
+    const harmonizerInstrument = document.getElementById('chordInstrument')?.value;
+    const engineInstrument = document.getElementById('patternStyle')?.value;
+    const selectedInstrument = ['rhodes', 'viola', 'logdrum'].includes(harmonizerInstrument)
+      ? harmonizerInstrument
+      : (['rhodes', 'viola', 'logdrum'].includes(engineInstrument) ? engineInstrument : 'rhodes');
 
     chordNotes.forEach(n => {
       const voiceArgs = [audioCtx, masterGain, fxBusNode, noteToFreq(n), now, 1.2, 0.8, false];
