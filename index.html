@@ -649,6 +649,34 @@
     .keyboard-control label { white-space: nowrap; }
     .keyboard-control select { min-width: 0; padding: 6px 8px !important; }
 
+    /* Ajuste de responsividade para os controles do Engine e Harmonizador */
+    @media (max-width: 600px) {
+      .controls-grid,
+      .jam-controls {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 12px !important;
+      }
+
+      .jam-controls label,
+      .controls-grid .control-group,
+      .controls-grid .input-field {
+        width: 100% !important;
+      }
+
+      .jam-controls select,
+      .controls-grid input,
+      .controls-grid select {
+        width: 100% !important;
+        min-width: unset !important;
+      }
+
+      .jam-controls .keyboard-control {
+        width: 100% !important;
+      }
+    }
+
     .presets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; text-align: left; }
     .preset-card {
       background: linear-gradient(145deg, rgba(30, 21, 15, 0.72), rgba(0, 0, 0, 0.24));
@@ -1048,7 +1076,7 @@
         </div>
       </div>
       
-      <div class="keyboard-controls">
+      <div class="keyboard-controls jam-controls">
         <div class="keyboard-control">
           <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="key">Key:</label>
         <select id="quickHarmonizerRoot" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickRootChange(this.value)">
@@ -1063,7 +1091,7 @@
         </div>
         <div class="keyboard-control">
           <label style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="playingInstrument">Instrumento:</label>
-        <select id="quickHarmonizerInstrument" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickInstrumentChange(this.value)">
+        <select id="chordInstrument" style="padding: 6px 10px; font-size: 11px; border-radius: 8px; width: auto;" onchange="onQuickInstrumentChange(this.value)">
           <option value="logdrum">🥁 Baixo / Logdrum</option>
           <option value="rhodes">🎹 Rhodes / Teclados</option>
           <option value="viola">🪕 Viola Caipira / Cordas Aço</option>
@@ -2364,7 +2392,7 @@
     if (quickScaleSelect) quickScaleSelect.value = scale;
     const quickRootSelect = document.getElementById('quickHarmonizerRoot');
     if (quickRootSelect) quickRootSelect.value = root;
-    const quickInstrumentSelect = document.getElementById('quickHarmonizerInstrument');
+    const quickInstrumentSelect = document.getElementById('chordInstrument');
     if (quickInstrumentSelect) quickInstrumentSelect.value = document.getElementById('patternStyle').value;
 
     grid.innerHTML = "";
@@ -2484,9 +2512,18 @@
     stopAudio();
     const masterGain = getMasterGain();
     const now = audioCtx.currentTime + 0.05;
+    const instrumentSelect = document.getElementById('chordInstrument');
+    const selectedInstrument = instrumentSelect?.value || document.getElementById('patternStyle')?.value || 'rhodes';
 
     chordNotes.forEach(n => {
-      triggerRhodesVoice(audioCtx, masterGain, fxBusNode, noteToFreq(n), now, 1.2, 0.8, false);
+      const voiceArgs = [audioCtx, masterGain, fxBusNode, noteToFreq(n), now, 1.2, 0.8, false];
+      if (selectedInstrument === 'viola') {
+        triggerViolaVoice(...voiceArgs);
+      } else if (selectedInstrument === 'logdrum') {
+        triggerLogdrumVoice(...voiceArgs);
+      } else {
+        triggerRhodesVoice(...voiceArgs);
+      }
     });
   }
 
