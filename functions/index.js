@@ -1,8 +1,12 @@
 const { onRequest } = require("firebase-functions/v2/https");
-const admin = require("firebase-admin");
 const { GoogleGenAI } = require("@google/genai");
+const admin = require("firebase-admin");
 
-admin.initializeApp();
+if (!admin.apps.length) {
+	admin.initializeApp();
+}
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 /**
  * Cloud Function: Valida o Token do chamador e atribui selos com segurança.
@@ -52,30 +56,45 @@ exports.setUserBadge = onRequest({ cors: true }, async (req, res) => {
 });
 
 exports.generateStudioIdea = onRequest({ cors: true }, async (req, res) => {
-	if (req.method !== "POST") {
-		return res.status(405).json({ success: false, error: "Use o método POST." });
-	}
-
-	const prompt = typeof req.body?.prompt === "string" ? req.body.prompt.trim() : "";
-	if (!prompt) {
-		return res.status(400).json({ success: false, error: "prompt é obrigatório." });
-	}
-
-	const apiKey = process.env.GEMINI_API_KEY;
-	if (!apiKey) {
-		return res.status(503).json({ success: false, error: "GEMINI_API_KEY não configurada." });
-	}
-
 	try {
-		const ai = new GoogleGenAI({ apiKey });
-		const result = await ai.models.generateContent({
+		const { prompt } = req.body;
+
+		if (!prompt) {
+			return res.status(400).json({ success: false, error: "O parâmetro 'prompt' é obrigatório." });
+		}
+
+		const response = await ai.models.generateContent({
 			model: "gemini-3.6-flash",
-			contents: `Você é um produtor musical colaborativo. Responda em português com uma ideia prática para estúdio, incluindo detalhes musicais quando fizer sentido.\n\nPedido: ${prompt}`
+			contents: prompt,
+			config: {
+				systemInstruction: "Você é um produtor musical sênior do Fagulha Studio Hub. Responda sempre de forma técnica, objetiva e estruturada.",
+				responseMimeType: "application/json",
+				responseSchema: {
+					type: "OBJECT",
+					properties: {
+						estilo: { type: "STRING" },
+						bpm: { type: "NUMBER" },
+						tom: { type: "STRING" },
+						progressao: {
+							type: "ARRAY",
+							items: { type: "STRING" }
+						},
+						bateria: { type: "STRING" },
+						dica_producao: { type: "STRING" }
+					},
+					required: ["estilo", "bpm", "tom", "progressao", "bateria", "dica_producao"]
+				}
+			}
 		});
 
-		return res.status(200).json({ success: true, idea: result.text });
+		const studioIdea = JSON.parse(response.text);
+
+		return res.status(200).json({
+			success: true,
+			data: studioIdea
+		});
 	} catch (error) {
-		console.error("Erro ao gerar ideia para o estúdio:", error);
-		return res.status(500).json({ success: false, error: "Não foi possível gerar a ideia." });
+		console.error("Erro ao gerar conteúdo com IA:", error);
+		return res.status(500).json({ success: false, error: error.message });
 	}
 });
