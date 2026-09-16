@@ -2770,24 +2770,14 @@
       }
 
     } else if (style === 'rhodes') {
-      const isMinorScale = ['minor', 'harmonic minor', 'dorian', 'phrygian', 'minor pentatonic'].includes(document.getElementById('scaleType').value);
-      const chords = [
-        [n(0,-1), n(0,0), n(2,0), n(4,0)], // i ou I
-        [n(1,-1), n(1,0), n(3,0), n(5,0)], // ii ou II
-        [n(2,-1), n(2,0), n(4,0), n(6,0)], // III
-        [n(3,-1), n(3,0), n(5,0), n(0,1)], // iv ou IV
-        [n(4,-1), n(4,0), n(6,0), n(1,1)], // v ou V
-        [n(5,-1), n(5,0), n(0,1), n(2,1)], // VI
-        [n(6,-1), n(6,0), n(1,1), n(3,1)], // VII
-        [n(0,-1), n(0,0), n(2,0), n(4,0)]
-      ];
-
-      // Mantém a terça diatônica menor nas escalas menores, incluindo a pentatônica.
-      if (isMinorScale) {
-        chords.forEach((chord, index) => {
-          if (index < 7) chord[2] = n(index + 2, 0);
-        });
-      }
+      // O mesmo loop acompanha qualquer escala: n() transpõe os graus
+      // diatônicos e também envolve corretamente a Pentatônica Menor.
+      const chords = Array.from({ length: 8 }, (_, degree) => [
+        n(degree, -1),
+        n(degree, 0),
+        n(degree + 2, 0),
+        n(degree + 4, 0)
+      ]);
 
       if (varType === 'rho_01') {
         const prog = [0, 3, 4, 0, 5, 3, 4, 0];
@@ -2890,7 +2880,7 @@
           let barIdx = Math.floor(b / 4);
           let noteIdx = seq[b % seq.length];
           rawEvents.push({ notes: [n(noteIdx, 1)], beat: b, durationBeats: 0.85 });
-          if (b % 4 === 0) rawEvents.push({ notes: [n(barIdx % 7, 0)], beat: b, durationBeats: 1.8 });
+          if (b % 4 === 0) rawEvents.push({ notes: [n(barIdx, 0)], beat: b, durationBeats: 1.8 });
         }
       } else if (varType === 'vio_02') {
         const barRoots = [0, 0, 3, 3, 4, 4, 0, 0];
@@ -2902,7 +2892,7 @@
             if (s % 4 === 0) {
               rawEvents.push({ notes: [n(rootDeg, 0)], beat: beatPos, durationBeats: 0.4 });
             } else {
-              let melDeg = (rootDeg + (s % 4) * 2) % 7;
+              let melDeg = rootDeg + (s % 4) * 2;
               rawEvents.push({ notes: [n(melDeg, 1)], beat: beatPos, durationBeats: 0.2 });
             }
           }
@@ -2940,9 +2930,9 @@
       } else if (varType === 'vio_06') {
         for (let bar = 0; bar < 8; bar++) {
           let offset = bar * 4;
-          let startDeg = (bar * 2) % 7;
+          let startDeg = bar * 2;
           [6, 5, 4, 2, 0].forEach((sub, idx) => {
-            rawEvents.push({ notes: [n((startDeg + sub) % 7, 1)], beat: offset + (idx * 0.25), durationBeats: 0.8 });
+            rawEvents.push({ notes: [n(startDeg + sub, 1)], beat: offset + (idx * 0.25), durationBeats: 0.8 });
           });
           if (bar === 3 || bar === 7) {
             [6, 5, 4, 3, 2, 1, 0].forEach((sub, idx) => {
@@ -2953,11 +2943,11 @@
       } else if (varType === 'vio_07') {
         for (let bar = 0; bar < 8; bar++) {
           let offset = bar * 4;
-          let deg = bar % 7;
+          let deg = bar;
           rawEvents.push({ notes: [n(deg, 1)], beat: offset + 0.5, durationBeats: 0.25 });
-          rawEvents.push({ notes: [n((deg + 2) % 7, 1)], beat: offset + 1.5, durationBeats: 0.25 });
-          rawEvents.push({ notes: [n((deg + 4) % 7, 1)], beat: offset + 2.5, durationBeats: 0.25 });
-          rawEvents.push({ notes: [n((deg + 1) % 7, 1)], beat: offset + 3.5, durationBeats: 0.25 });
+          rawEvents.push({ notes: [n(deg + 2, 1)], beat: offset + 1.5, durationBeats: 0.25 });
+          rawEvents.push({ notes: [n(deg + 4, 1)], beat: offset + 2.5, durationBeats: 0.25 });
+          rawEvents.push({ notes: [n(deg + 1, 1)], beat: offset + 3.5, durationBeats: 0.25 });
         }
       } else if (varType === 'vio_08') {
         const barPitches = [
@@ -2986,7 +2976,7 @@
           let density = bar + 1;
           let stepSize = 4 / density;
           for (let i = 0; i < density; i++) {
-            let deg = (bar + i) % 7;
+            let deg = bar + i;
             rawEvents.push({ notes: [n(deg, 1)], beat: offset + (i * stepSize), durationBeats: Math.max(0.2, stepSize * 0.8) });
           }
         }
