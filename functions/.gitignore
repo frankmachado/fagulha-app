@@ -1,2 +1,8 @@
 node_modules/
 *.local
+.secret.local
+.secret.*
+*.local
+.env
+.env.*
+node_modules/
