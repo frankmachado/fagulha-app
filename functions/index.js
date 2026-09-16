@@ -1,5 +1,6 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
+const { GoogleGenAI } = require("@google/genai");
 
 admin.initializeApp();
 
@@ -47,5 +48,34 @@ exports.setUserBadge = onRequest({ cors: true }, async (req, res) => {
 	} catch (error) {
 		console.error("Erro de autenticação ou execução na Cloud Function:", error);
 		return res.status(401).json({ success: false, error: "Token inválido ou expirado." });
+	}
+});
+
+exports.generateStudioIdea = onRequest({ cors: true }, async (req, res) => {
+	if (req.method !== "POST") {
+		return res.status(405).json({ success: false, error: "Use o método POST." });
+	}
+
+	const prompt = typeof req.body?.prompt === "string" ? req.body.prompt.trim() : "";
+	if (!prompt) {
+		return res.status(400).json({ success: false, error: "prompt é obrigatório." });
+	}
+
+	const apiKey = process.env.GEMINI_API_KEY;
+	if (!apiKey) {
+		return res.status(503).json({ success: false, error: "GEMINI_API_KEY não configurada." });
+	}
+
+	try {
+		const ai = new GoogleGenAI({ apiKey });
+		const result = await ai.models.generateContent({
+			model: "gemini-3.6-flash",
+			contents: `Você é um produtor musical colaborativo. Responda em português com uma ideia prática para estúdio, incluindo detalhes musicais quando fizer sentido.\n\nPedido: ${prompt}`
+		});
+
+		return res.status(200).json({ success: true, idea: result.text });
+	} catch (error) {
+		console.error("Erro ao gerar ideia para o estúdio:", error);
+		return res.status(500).json({ success: false, error: "Não foi possível gerar a ideia." });
 	}
 });
