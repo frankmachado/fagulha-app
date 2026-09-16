@@ -1,0 +1,30 @@
+[debug] [2026-09-16T10:53:17.085Z] ----------------------------------------------------------------------
+[debug] [2026-09-16T10:53:17.087Z] Command:       /usr/local/share/nvm/versions/node/v24.20.0/bin/node /home/codespace/nvm/current/bin/firebase init functions
+[debug] [2026-09-16T10:53:17.087Z] CLI Version:   15.30.1
+[debug] [2026-09-16T10:53:17.087Z] Platform:      linux
+[debug] [2026-09-16T10:53:17.087Z] Node Version:  v24.20.0
+[debug] [2026-09-16T10:53:17.087Z] Detected Agent: unknown
+[debug] [2026-09-16T10:53:17.088Z] Time:          Wed Sep 16 2026 10:53:17 GMT+0000 (Coordinated Universal Time)
+[debug] [2026-09-16T10:53:17.088Z] ----------------------------------------------------------------------
+[debug] 
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /workspaces/fagulha-app
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
