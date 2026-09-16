@@ -1,6 +1,7 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { GoogleGenAI } = require("@google/genai");
 const admin = require("firebase-admin");
+const { FieldValue } = require("firebase-admin/firestore");
 
 if (!admin.apps.length) {
 	admin.initializeApp();
@@ -41,7 +42,7 @@ exports.setUserBadge = onRequest({ cors: true }, async (req, res) => {
 
 		await admin.firestore().collection("users").doc(userId).set({
 			badge: badgeType,
-			updatedAt: admin.firestore.FieldValue.serverTimestamp()
+			updatedAt: FieldValue.serverTimestamp()
 		}, { merge: true });
 
 		return res.status(200).json({
@@ -57,6 +58,19 @@ exports.setUserBadge = onRequest({ cors: true }, async (req, res) => {
 
 exports.generateStudioIdea = onRequest({ cors: true }, async (req, res) => {
 	try {
+		const authHeader = req.headers.authorization;
+		let userId = "anonymous";
+
+		if (authHeader && authHeader.startsWith("Bearer ")) {
+			try {
+				const token = authHeader.split("Bearer ")[1];
+				const decodedToken = await admin.auth().verifyIdToken(token);
+				userId = decodedToken.uid;
+			} catch (authError) {
+				return res.status(401).json({ success: false, error: "Token de autenticação inválido." });
+			}
+		}
+
 		const { prompt } = req.body;
 
 		if (!prompt) {
@@ -88,9 +102,16 @@ exports.generateStudioIdea = onRequest({ cors: true }, async (req, res) => {
 		});
 
 		const studioIdea = JSON.parse(response.text);
+		const ideaRef = await admin.firestore().collection("studio_ideas").add({
+			userId,
+			prompt,
+			idea: studioIdea,
+			createdAt: FieldValue.serverTimestamp()
+		});
 
 		return res.status(200).json({
 			success: true,
+			ideaId: ideaRef.id,
 			data: studioIdea
 		});
 	} catch (error) {
