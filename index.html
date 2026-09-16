@@ -751,6 +751,10 @@
 
   <div class="nav-section">
     <div class="nav-title" data-i18n="navigation">Navegação & Módulos</div>
+    <a id="navAiStudio" class="nav-item" onclick="switchView('aistudio')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12L2.1 12a10 10 0 0 1 9.9-10v10z"/></svg>
+      <span>IA Studio Assistant</span>
+    </a>
     <a id="navGenerator" class="nav-item active" onclick="switchView('generator')">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       <span data-i18n="scaleEngine">Scale Engine</span>
@@ -1187,6 +1191,39 @@
     </div>
     <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
       <button class="btn btn-danger-outline" type="button" onclick="excluirContaUsuario()">🗑️ Excluir Minha Conta</button>
+    </div>
+  </div>
+
+  <!-- VIEW IA STUDIO ASSISTANT -->
+  <div id="viewAiStudio" class="app-card" style="display: none;">
+    <div class="header">
+      <h1 class="brand-title">Fagulha <span>IA Studio</span></h1>
+      <span class="status-badge">GEMINI 3.6 FLASH</span>
+    </div>
+
+    <div class="input-field full-width" style="margin-bottom: 16px;">
+      <label>O que você deseja produzir hoje?</label>
+      <textarea id="aiPromptInput" rows="3" placeholder="Ex: Crie uma progressão de acordes no estilo Neo-Soul com uma sugestão de ritmo de bateria."></textarea>
+    </div>
+
+    <button class="btn btn-primary" id="btnGenerateAi" onclick="generateStudioIdeaWithAI()" style="width: 100%; margin-bottom: 24px;">
+      ⚡ Gerar Ideia com IA
+    </button>
+
+    <div id="aiResultCard" style="display: none; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(217, 119, 54, 0.3); border-radius: 14px; padding: 20px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <span id="aiEstiloBadge" class="preset-tag">Neo-Soul</span>
+        <span id="aiMetaBadge" style="font-size: 11px; color: var(--accent-ochre); font-weight: 700;">82 BPM • Mib Maior</span>
+      </div>
+
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">PROGRESSÃO DE ACORDES</div>
+      <div id="aiChordsContainer" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;"></div>
+
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">SUGESTÃO DE BATERIA</div>
+      <p id="aiBateriaText" style="font-size: 12px; color: var(--text-main); margin-bottom: 16px; line-height: 1.5;"></p>
+
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">DICA DE PRODUÇÃO &amp; MIX</div>
+      <p id="aiDicaText" style="font-size: 12px; color: var(--accent-sand); margin: 0; line-height: 1.5;"></p>
     </div>
   </div>
 
@@ -2289,14 +2326,18 @@
     const cho = document.getElementById('viewChords');
     const pro = document.getElementById('viewProfile');
     const faq = document.getElementById('viewFaq');
+    const aiStudio = document.getElementById('viewAiStudio');
+    const navAiStudio = document.getElementById('navAiStudio');
 
     document.getElementById('navGenerator').classList.remove('active');
     document.getElementById('navLibrary').classList.remove('active');
     document.getElementById('navPresets').classList.remove('active');
     document.getElementById('navChords').classList.remove('active');
     document.getElementById('navFaq').classList.remove('active');
+    if (navAiStudio) navAiStudio.classList.remove('active');
 
     home.style.display = 'none'; gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none'; faq.style.display = 'none';
+    if (aiStudio) aiStudio.style.display = 'none';
 
     if (viewName === 'home') {
       home.style.display = 'block';
@@ -2321,6 +2362,9 @@
     } else if (viewName === 'faq') {
       faq.style.display = 'block';
       document.getElementById('navFaq').classList.add('active');
+    } else if (viewName === 'aistudio') {
+      if (aiStudio) aiStudio.style.display = 'block';
+      if (navAiStudio) navAiStudio.classList.add('active');
     }
   }
 
@@ -3435,6 +3479,72 @@
     link.click();
     
     document.getElementById('statusMessage').innerText = `⚡ Download concluído por ${currentUser.displayName}! MIDI em ${tuning}Hz exportado.`;
+  }
+
+  async function generateStudioIdeaWithAI() {
+    const prompt = document.getElementById('aiPromptInput').value.trim();
+    const btn = document.getElementById('btnGenerateAi');
+    const resultCard = document.getElementById('aiResultCard');
+    const statusMsg = document.getElementById('statusMessage');
+
+    if (!prompt) {
+      alert("Digite o que deseja gerar antes de acionar a IA.");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = "⏳ Criando arranjo e harmonia...";
+    if (statusMsg) statusMsg.innerText = "⏳ Conectando ao Gemini 3.6 Flash...";
+
+    try {
+      let token = "";
+      if (currentUser) {
+        token = await currentUser.getIdToken();
+      }
+
+      const endpoint = "http://127.0.0.1:5001/siara-engine/us-central1/generateStudioIdea";
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ prompt })
+      });
+
+      const resData = await response.json();
+
+      if (resData.success) {
+        const data = resData.data;
+
+        document.getElementById('aiEstiloBadge').innerText = data.estilo;
+        document.getElementById('aiMetaBadge').innerText = `${data.bpm} BPM • ${data.tom}`;
+        document.getElementById('aiBateriaText').innerText = data.bateria;
+        document.getElementById('aiDicaText').innerText = data.dica_producao;
+
+        const chordsContainer = document.getElementById('aiChordsContainer');
+        chordsContainer.innerHTML = "";
+        data.progressao.forEach(chord => {
+          const badge = document.createElement('span');
+          badge.className = 'chord-notes';
+          badge.style.fontSize = '13px';
+          badge.style.padding = '6px 12px';
+          badge.innerText = chord;
+          chordsContainer.appendChild(badge);
+        });
+
+        resultCard.style.display = 'block';
+        if (statusMsg) statusMsg.innerText = `⚡ Ideia gerada e salva no banco! ID: ${resData.ideaId || 'local'}`;
+      } else {
+        alert("Erro ao gerar ideia: " + resData.error);
+      }
+    } catch (error) {
+      console.error("Erro na requisição da IA:", error);
+      alert("Erro na conexão com o servidor de IA.");
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "⚡ Gerar Ideia com IA";
+    }
   }
 
   /* SUPORTE A LIVE KEYBOARD JAM 100% MAPEADO POR ESCALA (1-7) E NOTAS FIXAS (C-B) */
