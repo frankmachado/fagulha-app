@@ -2445,7 +2445,7 @@
   }
 
   function getChordSymbol(rootNote, degIdx, isTetrad) {
-    const cleanRoot = rootNote.replace(/\d/,'');
+    const cleanRoot = rootNote.replace(/\d/, '');
     const type = document.getElementById('scaleType').value;
 
     if (type === 'minor') {
@@ -2464,8 +2464,12 @@
       const triads = [`${cleanRoot}m`, cleanRoot, cleanRoot, `${cleanRoot}m`, `${cleanRoot}dim`, cleanRoot, `${cleanRoot}m`];
       const tetrads = [`${cleanRoot}m7`, `${cleanRoot}maj7`, `${cleanRoot}7`, `${cleanRoot}m7`, `${cleanRoot}m7b5`, `${cleanRoot}maj7`, `${cleanRoot}m7`];
       return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
+    } else if (type === 'minor pentatonic') {
+      const triads = [`${cleanRoot}m`, cleanRoot, cleanRoot, `${cleanRoot}m`, cleanRoot];
+      const tetrads = [`${cleanRoot}m7`, `${cleanRoot}7`, `${cleanRoot}7`, `${cleanRoot}m7`, `${cleanRoot}7`];
+      return isTetrad ? tetrads[degIdx % 5] : triads[degIdx % 5];
     } else if (type === 'lydian dominant') {
-      const triads = [cleanRoot, `${cleanRoot}`, `${cleanRoot}dim`, `${cleanRoot}dim`, `${cleanRoot}m`, `${cleanRoot}m`, `${cleanRoot}aug`];
+      const triads = [cleanRoot, cleanRoot, `${cleanRoot}dim`, `${cleanRoot}dim`, `${cleanRoot}m`, `${cleanRoot}m`, `${cleanRoot}aug`];
       const tetrads = [`${cleanRoot}7`, `${cleanRoot}7`, `${cleanRoot}m7b5`, `${cleanRoot}m7b5`, `${cleanRoot}m(maj7)`, `${cleanRoot}m7`, `${cleanRoot}maj7#5`];
       return isTetrad ? tetrads[degIdx % 7] : triads[degIdx % 7];
     } else if (type === 'mixolydian') {
@@ -2766,16 +2770,24 @@
       }
 
     } else if (style === 'rhodes') {
+      const isMinorScale = ['minor', 'harmonic minor', 'dorian', 'phrygian', 'minor pentatonic'].includes(document.getElementById('scaleType').value);
       const chords = [
-        [n(0,-1), n(0,0), n(2,0), n(4,0)],
-        [n(1,-1), n(1,0), n(3,0), n(5,0)],
-        [n(2,-1), n(2,0), n(4,0), n(6,0)],
-        [n(3,-1), n(3,0), n(5,0), n(0,1)],
-        [n(4,-1), n(4,0), n(6,0), n(1,1)],
-        [n(5,-1), n(5,0), n(0,1), n(2,1)],
-        [n(6,-1), n(6,0), n(1,1), n(3,1)],
+        [n(0,-1), n(0,0), n(2,0), n(4,0)], // i ou I
+        [n(1,-1), n(1,0), n(3,0), n(5,0)], // ii ou II
+        [n(2,-1), n(2,0), n(4,0), n(6,0)], // III
+        [n(3,-1), n(3,0), n(5,0), n(0,1)], // iv ou IV
+        [n(4,-1), n(4,0), n(6,0), n(1,1)], // v ou V
+        [n(5,-1), n(5,0), n(0,1), n(2,1)], // VI
+        [n(6,-1), n(6,0), n(1,1), n(3,1)], // VII
         [n(0,-1), n(0,0), n(2,0), n(4,0)]
       ];
+
+      // Mantém a terça diatônica menor nas escalas menores, incluindo a pentatônica.
+      if (isMinorScale) {
+        chords.forEach((chord, index) => {
+          if (index < 7) chord[2] = n(index + 2, 0);
+        });
+      }
 
       if (varType === 'rho_01') {
         const prog = [0, 3, 4, 0, 5, 3, 4, 0];
