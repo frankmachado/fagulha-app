@@ -52,6 +52,15 @@ h1 { max-width: 620px; margin: 0; font-size: clamp(32px, 6vw, 64px); line-height
 .page-placeholder { display: grid; gap: 8px; margin-top: 64px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, .08); color: #80756c; font: 12px Inter, sans-serif; }
 .page-placeholder strong { color: #f5efe6; font-size: 14px; }
 .placeholder-dot { width: 8px; height: 8px; border-radius: 50%; background: #d97736; box-shadow: 0 0 16px #d97736; }
+.support-card { max-width: 760px; }
+.support-form { display: grid; gap: 16px; margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, .08); }
+.support-field { display: grid; gap: 8px; }
+.support-field label { color: #d7cabe; font: 600 12px Inter, sans-serif; }
+.support-field input, .support-field select, .support-field textarea { width: 100%; border: 1px solid rgba(255, 255, 255, .09); border-radius: 8px; padding: 12px 13px; color: #f5efe6; background: rgba(0, 0, 0, .22); font: 13px Inter, sans-serif; outline: none; }
+.support-field textarea { min-height: 128px; resize: vertical; }
+.support-field input:focus, .support-field select:focus, .support-field textarea:focus { border-color: #d97736; box-shadow: 0 0 0 3px rgba(217, 119, 54, .12); }
+.support-submit { justify-self: start; border: 0; border-radius: 7px; padding: 12px 20px; color: #100c09; background: #e5a93c; font: 700 12px Inter, sans-serif; cursor: pointer; transition: background .2s ease, transform .2s ease; }
+.support-submit:hover { background: #f0bc52; transform: translateY(-1px); }
 .route-loader { display: grid; min-height: 60vh; place-items: center; color: rgba(245, 239, 230, .7); }
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { Loader2, Grid2X2, Library, FolderOpen, Music2, CircleHelp, CircleAlert, House, UserRound } from 'lucide-react';
+import Suporte from './pages/Suporte';
 import './styles.css';
 
 type NavItem = { to: string; label: string; icon: typeof Grid2X2 };
@@ -53,6 +54,7 @@ function AnimatedRoutes() {
             className="route-page"
           >
             <Routes location={location}>
+              <Route path="/report" element={<Suporte />} />
               <Route path="*" element={<Page />} />
             </Routes>
           </motion.div>
