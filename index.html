@@ -109,6 +109,12 @@
       padding-left: max(0px, var(--safe-left));
     }
 
+    html,
+    body {
+      min-height: 100dvh;
+      box-sizing: border-box;
+    }
+
     body.is-standalone {
       background: #070504;
     }
@@ -324,6 +330,24 @@
     }
     .language-select { width: auto; min-width: 64px; outline: none; }
     .btn-shortcut-icon { width: 34px; padding: 0 !important; font-family: monospace; font-weight: 700; }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .top-nav-bar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 10px 16px;
+        gap: 10px;
+      }
+
+      .top-nav-group {
+        flex-wrap: wrap;
+      }
+
+      .top-nav-bar .btn-top,
+      .top-nav-bar select {
+        font-size: 0.85rem;
+      }
+    }
 
     @media (max-width: 700px) {
       .sidebar {
@@ -759,6 +783,10 @@
     .faq-item summary { padding: 11px 12px; cursor: pointer; color: var(--text-main); font-size: 12px; font-weight: 700; }
     .faq-item summary::marker { color: var(--accent-ochre); }
     .faq-answer { padding: 0 12px 11px; color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+    .report-intro { color: var(--text-muted); font-size: 13px; line-height: 1.5; margin: 0 0 22px; }
+    .report-form { display: grid; gap: 16px; text-align: left; }
+    .report-form textarea { resize: vertical; min-height: 120px; }
+    .report-status { min-height: 18px; color: var(--accent-ochre); font-size: 11px; }
     .kbd-badge {
       background: var(--input-bg); border: 1px solid var(--input-border); color: var(--accent-sand);
       padding: 3px 6px; border-radius: 4px; font-family: monospace; font-size: 10px; font-weight: 700;
@@ -812,6 +840,10 @@
     <a id="navFaq" class="nav-item" onclick="switchView('faq')">
       <span class="btn-shortcut-icon" style="width: 15px; height: 15px; font-size: 11px;">?</span>
       <span data-i18n="faqTitle">Dúvidas Frequentes</span>
+    </a>
+    <a id="navReport" class="nav-item" onclick="switchView('report')">
+      <span class="btn-shortcut-icon" style="width: 15px; height: 15px; font-size: 11px;">!</span>
+      <span>Reportar Problema</span>
     </a>
   </div>
 
@@ -1246,6 +1278,40 @@
       <details class="faq-item"><summary data-i18n="faqLanguageQuestion">Como mantenho meu idioma?</summary><div class="faq-answer" data-i18n="faqLanguageAnswer">Escolha PT, EN ou ES no menu superior. A preferência fica salva neste navegador.</div></details>
       <details class="faq-item"><summary data-i18n="faqMidiQuestion">Como exporto um arquivo MIDI?</summary><div class="faq-answer" data-i18n="faqMidiAnswer">Faça login, configure seu loop e clique em Exportar MIDI. O arquivo será baixado automaticamente.</div></details>
     </div>
+  </div>
+
+  <div id="viewReport" class="app-card" style="display: none;">
+    <div class="header">
+      <h1 class="brand-title">Reportar <span>Problema</span></h1>
+      <span class="status-badge">SUPORTE DO STUDIO</span>
+    </div>
+    <p class="report-intro">Encontrou um erro ou tem uma sugestão? Descreva o que aconteceu para enviar um chamado ao suporte.</p>
+
+    <form id="bugReportForm" class="report-form">
+      <div class="input-field">
+        <label for="userDevice">Dispositivo e navegador</label>
+        <input type="text" id="userDevice" name="device" placeholder="Ex: iPhone 13 - Safari" required>
+      </div>
+
+      <div class="input-field">
+        <label for="bugCategory">Onde ocorreu o problema?</label>
+        <select id="bugCategory" name="category">
+          <option value="Scale Engine">Scale Engine</option>
+          <option value="Harmonizador">Harmonizador de Campo</option>
+          <option value="Layout/Visual">Layout / Visual</option>
+          <option value="Exportação MIDI">Exportação MIDI</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+
+      <div class="input-field">
+        <label for="bugDescription">Descrição do problema</label>
+        <textarea id="bugDescription" name="description" rows="5" placeholder="Descreva o que aconteceu e como reproduzir o problema..." required></textarea>
+      </div>
+
+      <div class="report-status" id="reportStatus" aria-live="polite"></div>
+      <button class="btn btn-primary" type="submit">⚡ Abrir chamado por e-mail</button>
+    </form>
   </div>
 
 </main>
@@ -2331,14 +2397,16 @@
     const cho = document.getElementById('viewChords');
     const pro = document.getElementById('viewProfile');
     const faq = document.getElementById('viewFaq');
+    const report = document.getElementById('viewReport');
 
     document.getElementById('navGenerator').classList.remove('active');
     document.getElementById('navLibrary').classList.remove('active');
     document.getElementById('navPresets').classList.remove('active');
     document.getElementById('navChords').classList.remove('active');
     document.getElementById('navFaq').classList.remove('active');
+    document.getElementById('navReport').classList.remove('active');
 
-    home.style.display = 'none'; gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none'; faq.style.display = 'none';
+    home.style.display = 'none'; gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none'; faq.style.display = 'none'; report.style.display = 'none';
 
     if (viewName === 'home') {
       home.style.display = 'block';
@@ -2363,6 +2431,9 @@
     } else if (viewName === 'faq') {
       faq.style.display = 'block';
       document.getElementById('navFaq').classList.add('active');
+    } else if (viewName === 'report') {
+      report.style.display = 'block';
+      document.getElementById('navReport').classList.add('active');
     }
   }
 
@@ -2385,6 +2456,33 @@
       }, isStandalone ? 400 : 700);
     }
   });
+
+  const bugReportForm = document.getElementById('bugReportForm');
+  if (bugReportForm) {
+    const deviceField = document.getElementById('userDevice');
+    if (deviceField) {
+      deviceField.value = `${navigator.platform || 'Dispositivo desconhecido'} - ${navigator.userAgent}`;
+    }
+
+    bugReportForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(bugReportForm);
+      const subject = `[Fagulha] Chamado - ${formData.get('category')}`;
+      const body = [
+        `Dispositivo e navegador: ${formData.get('device')}`,
+        `Categoria: ${formData.get('category')}`,
+        '',
+        'Descrição:',
+        formData.get('description'),
+        '',
+        `URL: ${window.location.href}`,
+        `Data: ${new Date().toLocaleString('pt-BR')}`
+      ].join('\n');
+      const reportStatus = document.getElementById('reportStatus');
+      if (reportStatus) reportStatus.textContent = 'Abrindo seu cliente de e-mail...';
+      window.location.href = `mailto:fagulha.app@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  }
 
   function setChordType(type) {
     currentChordType = type;
