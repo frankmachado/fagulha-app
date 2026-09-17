@@ -240,6 +240,25 @@
       animation: pageEnter 0.25s ease-out forwards;
     }
 
+    .view-transition-enter {
+      animation: viewEnter 0.2s ease-out both;
+    }
+
+    .view-transition-exit {
+      animation: viewExit 0.2s ease-out both;
+      pointer-events: none;
+    }
+
+    @keyframes viewEnter {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes viewExit {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-12px); }
+    }
+
     @keyframes pageEnter {
       from {
         opacity: 0;
@@ -2422,6 +2441,8 @@
   });
 
   /* SISTEMA DE NAVEGAÇÃO & ROTAS DINÂMICAS POR HASH */
+  let viewTransitionId = 0;
+
   function switchView(viewName) {
     stopAudio();
     registrarTempoModulo(viewName);
@@ -2439,6 +2460,10 @@
     const faq = document.getElementById('viewFaq');
     const report = document.getElementById('helpCenterTab');
 
+    const nextView = viewName === 'home' ? home : viewName === 'generator' ? gen : viewName === 'library' ? lib : viewName === 'presets' ? pre : viewName === 'chords' ? cho : viewName === 'profile' ? pro : viewName === 'faq' ? faq : report;
+    const visibleView = [home, gen, lib, pre, cho, pro, faq, report].find(view => view.style.display !== 'none');
+    const transitionId = ++viewTransitionId;
+
     document.getElementById('navGenerator').classList.remove('active');
     document.getElementById('navLibrary').classList.remove('active');
     document.getElementById('navPresets').classList.remove('active');
@@ -2446,12 +2471,20 @@
     document.getElementById('navFaq').classList.remove('active');
     document.getElementById('navReport').classList.remove('active');
 
-    home.style.display = 'none'; gen.style.display = 'none'; lib.style.display = 'none'; pre.style.display = 'none'; cho.style.display = 'none'; pro.style.display = 'none'; faq.style.display = 'none'; report.style.display = 'none';
+    const showView = () => {
+      if (transitionId !== viewTransitionId) return;
 
-    if (viewName === 'home') {
-      home.style.display = 'block';
-    } else if (viewName === 'generator') {
-      gen.style.display = 'block';
+      [home, gen, lib, pre, cho, pro, faq, report].forEach(view => {
+        view.style.display = 'none';
+        view.classList.remove('view-transition-exit', 'view-transition-enter');
+      });
+
+      nextView.style.display = 'block';
+      nextView.classList.add('view-transition-enter');
+
+      if (viewName === 'home') {
+        return;
+      } else if (viewName === 'generator') {
       document.getElementById('navGenerator').classList.add('active');
       drawPianoRoll();
     } else if (viewName === 'library') {
@@ -2474,6 +2507,15 @@
     } else if (viewName === 'report') {
       report.style.display = 'block';
       document.getElementById('navReport').classList.add('active');
+    }
+    };
+
+    if (visibleView && visibleView !== nextView) {
+      visibleView.classList.remove('view-transition-enter');
+      visibleView.classList.add('view-transition-exit');
+      window.setTimeout(showView, 200);
+    } else {
+      showView();
     }
   }
 
