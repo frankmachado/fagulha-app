@@ -61,6 +61,15 @@ h1 { max-width: 620px; margin: 0; font-size: clamp(32px, 6vw, 64px); line-height
 .support-field input:focus, .support-field select:focus, .support-field textarea:focus { border-color: #d97736; box-shadow: 0 0 0 3px rgba(217, 119, 54, .12); }
 .support-submit { justify-self: start; border: 0; border-radius: 7px; padding: 12px 20px; color: #100c09; background: #e5a93c; font: 700 12px Inter, sans-serif; cursor: pointer; transition: background .2s ease, transform .2s ease; }
 .support-submit:hover { background: #f0bc52; transform: translateY(-1px); }
+.audio-player { display: grid; gap: 12px; width: min(100%, 420px); padding: 16px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 12px; background: rgba(16, 12, 9, .82); }
+.audio-player-title { color: #f5efe6; font: 600 13px Inter, sans-serif; }
+.audio-player-controls { display: flex; align-items: center; gap: 12px; }
+.audio-player-button, .audio-player-icon-button { display: grid; place-items: center; border: 0; color: #100c09; background: #e5a93c; cursor: pointer; }
+.audio-player-button { width: 38px; height: 38px; border-radius: 50%; }
+.audio-player-icon-button { width: 30px; height: 30px; border-radius: 7px; }
+.audio-player-button:hover, .audio-player-icon-button:hover { background: #f0bc52; }
+.audio-player-track { height: 6px; flex: 1; overflow: hidden; border-radius: 999px; background: rgba(255, 255, 255, .1); }
+.audio-player-progress { height: 100%; border-radius: inherit; background: #d97736; transition: width .1s linear; }
 .route-loader { display: grid; min-height: 60vh; place-items: center; color: rgba(245, 239, 230, .7); }
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
