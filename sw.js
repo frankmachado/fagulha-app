@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fagulha-studio-v3';
+const CACHE_NAME = 'fagulha-studio-v4';
 
 const ASSETS_TO_CACHE = [
   './',

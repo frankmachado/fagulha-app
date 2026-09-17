@@ -1280,37 +1280,46 @@
     </div>
   </div>
 
-  <div id="viewReport" class="app-card" style="display: none;">
+  <div id="helpCenterTab" class="app-card" style="display: none;">
     <div class="header">
       <h1 class="brand-title">Reportar <span>Problema</span></h1>
       <span class="status-badge">SUPORTE DO STUDIO</span>
     </div>
-    <p class="report-intro">Encontrou um erro ou tem uma sugestão? Descreva o que aconteceu para enviar um chamado ao suporte.</p>
+    <p class="report-intro">Como podemos ajudar? Tire suas dúvidas ou envie uma solicitação para a equipe do Fagulha.</p>
 
-    <form id="bugReportForm" class="report-form">
+    <div data-fs-success style="color: #4CAF50; font-weight: bold; margin-bottom: 15px;"></div>
+    <div data-fs-error style="color: #FF5252; font-weight: bold; margin-bottom: 15px;"></div>
+
+    <form id="fagulhaTicketForm" class="report-form">
       <div class="input-field">
-        <label for="userDevice">Dispositivo e navegador</label>
-        <input type="text" id="userDevice" name="device" placeholder="Ex: iPhone 13 - Safari" required>
+        <label for="userEmail">Seu e-mail para retorno</label>
+        <input type="email" id="userEmail" name="email" data-fs-field required placeholder="seuemail@exemplo.com">
+        <span data-fs-error="email" class="error-msg"></span>
       </div>
 
       <div class="input-field">
-        <label for="bugCategory">Onde ocorreu o problema?</label>
-        <select id="bugCategory" name="category">
-          <option value="Scale Engine">Scale Engine</option>
-          <option value="Harmonizador">Harmonizador de Campo</option>
-          <option value="Layout/Visual">Layout / Visual</option>
-          <option value="Exportação MIDI">Exportação MIDI</option>
-          <option value="Outro">Outro</option>
+        <label for="bugCategory">Assunto / Categoria</label>
+        <select id="bugCategory" name="category" data-fs-field>
+          <option value="Dúvida">Dúvida sobre o uso</option>
+          <option value="Reportar Bug">Reportar Erro / Bug no App</option>
+          <option value="Sugestão">Sugestão de funcionalidade</option>
+          <option value="Conta">Problema com Login / Conta</option>
         </select>
       </div>
 
       <div class="input-field">
-        <label for="bugDescription">Descrição do problema</label>
-        <textarea id="bugDescription" name="description" rows="5" placeholder="Descreva o que aconteceu e como reproduzir o problema..." required></textarea>
+        <label for="userDevice">Dispositivo e navegador</label>
+        <input type="text" id="userDevice" name="device" data-fs-field placeholder="Ex: Safari no iPhone 13 / Chrome no Windows" required>
+      </div>
+
+      <div class="input-field">
+        <label for="ticketMessage">Descrição da solicitação</label>
+        <textarea id="ticketMessage" name="message" data-fs-field rows="4" required placeholder="Descreva o que aconteceu ou sua dúvida..."></textarea>
+        <span data-fs-error="message" class="error-msg"></span>
       </div>
 
       <div class="report-status" id="reportStatus" aria-live="polite"></div>
-      <button class="btn btn-primary" type="submit">⚡ Abrir chamado por e-mail</button>
+      <button type="submit" data-fs-submit-btn class="btn btn-primary" style="margin-top: 15px; width: 100%;">⚡ Enviar Solicitação</button>
     </form>
   </div>
 
@@ -2397,7 +2406,7 @@
     const cho = document.getElementById('viewChords');
     const pro = document.getElementById('viewProfile');
     const faq = document.getElementById('viewFaq');
-    const report = document.getElementById('viewReport');
+    const report = document.getElementById('helpCenterTab');
 
     document.getElementById('navGenerator').classList.remove('active');
     document.getElementById('navLibrary').classList.remove('active');
@@ -2457,31 +2466,12 @@
     }
   });
 
-  const bugReportForm = document.getElementById('bugReportForm');
+  const bugReportForm = document.getElementById('fagulhaTicketForm');
   if (bugReportForm) {
     const deviceField = document.getElementById('userDevice');
     if (deviceField) {
       deviceField.value = `${navigator.platform || 'Dispositivo desconhecido'} - ${navigator.userAgent}`;
     }
-
-    bugReportForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const formData = new FormData(bugReportForm);
-      const subject = `[Fagulha] Chamado - ${formData.get('category')}`;
-      const body = [
-        `Dispositivo e navegador: ${formData.get('device')}`,
-        `Categoria: ${formData.get('category')}`,
-        '',
-        'Descrição:',
-        formData.get('description'),
-        '',
-        `URL: ${window.location.href}`,
-        `Data: ${new Date().toLocaleString('pt-BR')}`
-      ].join('\n');
-      const reportStatus = document.getElementById('reportStatus');
-      if (reportStatus) reportStatus.textContent = 'Abrindo seu cliente de e-mail...';
-      window.location.href = `mailto:fagulha.app@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    });
   }
 
   function setChordType(type) {
@@ -3662,6 +3652,15 @@
   updateScaleDisplay();
   updateVariationMenu();
 </script>
+
+<!-- Script do SDK do Formspree para envio Ajax sem sair do Studio -->
+<script>
+  window.formspree = window.formspree || function () {
+    (formspree.q = formspree.q || []).push(arguments);
+  };
+  formspree('initForm', { formElement: '#fagulhaTicketForm', formId: 'xkjgnbly' });
+</script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
 </body>
 </html>
