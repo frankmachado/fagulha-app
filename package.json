@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "dev": "npx --yes serve . --listen 3000"
+  },
   "dependencies": {
     "framer-motion": "^13.4.0",
     "lucide-react": "^1.47.0"
