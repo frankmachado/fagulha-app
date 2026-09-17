@@ -72,7 +72,8 @@ export default function Dashboard() {
         <p className="dashboard-label">Player de teste</p>
         <AudioPlayer
           src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-          title="Demonstração do AudioPlayer"
+          title="Demo Master #1"
+          artist="Fagulha Session"
         />
       </div>
     </section>

@@ -69,14 +69,19 @@ h1 { max-width: 620px; margin: 0; font-size: clamp(32px, 6vw, 64px); line-height
 .dashboard-label { color: #e5a93c; font: 600 10px Inter, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
 .dashboard-section { display: grid; gap: 12px; margin-top: 28px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, .08); }
 .audio-player { display: grid; gap: 12px; width: min(100%, 420px); padding: 16px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 12px; background: rgba(16, 12, 9, .82); }
-.audio-player-title { color: #f5efe6; font: 600 13px Inter, sans-serif; }
+.audio-player-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.audio-player-title { margin: 0; color: #f5efe6; font: 600 15px/1.2 Inter, sans-serif; }
+.audio-player-artist { margin: 4px 0 0; color: #80756c; font: 11px Inter, sans-serif; }
 .audio-player-controls { display: flex; align-items: center; gap: 12px; }
 .audio-player-button, .audio-player-icon-button { display: grid; place-items: center; border: 0; color: #100c09; background: #e5a93c; cursor: pointer; }
 .audio-player-button { width: 38px; height: 38px; border-radius: 50%; }
 .audio-player-icon-button { width: 30px; height: 30px; border-radius: 7px; }
 .audio-player-button:hover, .audio-player-icon-button:hover { background: #f0bc52; }
-.audio-player-track { height: 6px; flex: 1; overflow: hidden; border-radius: 999px; background: rgba(255, 255, 255, .1); }
-.audio-player-progress { height: 100%; border-radius: inherit; background: #d97736; transition: width .1s linear; }
+.audio-player-seek { display: grid; gap: 4px; }
+.audio-player-seek input { width: 100%; height: 6px; margin: 0; accent-color: #e5a93c; cursor: pointer; }
+.audio-player-time { display: flex; justify-content: space-between; color: #80756c; font: 11px/1 monospace; }
+.audio-player-main-controls { justify-content: center; }
+.audio-player-main-controls .audio-player-icon-button { color: #b9aa9b; background: transparent; }
 .route-loader { display: grid; min-height: 60vh; place-items: center; color: rgba(245, 239, 230, .7); }
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

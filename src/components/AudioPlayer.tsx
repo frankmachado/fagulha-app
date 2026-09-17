@@ -1,23 +1,31 @@
-import { useEffect, useRef, useState } from 'react';
-import { Pause, Play, Volume2, VolumeX } from 'lucide-react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { Pause, Play, RotateCcw, Volume2, VolumeX } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface AudioPlayerProps {
   src: string;
   title?: string;
+  artist?: string;
 }
 
-export default function AudioPlayer({ src, title }: AudioPlayerProps) {
+export default function AudioPlayer({ src, title = 'Faixa sem título', artist = 'Fagulha Studio' }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const audio = audioRef.current;
+    setIsPlaying(false);
+    setIsMuted(false);
+    setCurrentTime(0);
+    setDuration(0);
+
     return () => {
       audio?.pause();
     };
-  }, []);
+  }, [src]);
 
   const togglePlay = async () => {
     const audio = audioRef.current;
@@ -26,7 +34,6 @@ export default function AudioPlayer({ src, title }: AudioPlayerProps) {
     if (audio.paused) {
       try {
         await audio.play();
-        setIsPlaying(true);
       } catch {
         setIsPlaying(false);
       }
@@ -34,7 +41,6 @@ export default function AudioPlayer({ src, title }: AudioPlayerProps) {
     }
 
     audio.pause();
-    setIsPlaying(false);
   };
 
   const toggleMute = () => {
@@ -45,43 +51,83 @@ export default function AudioPlayer({ src, title }: AudioPlayerProps) {
     setIsMuted(audio.muted);
   };
 
-  const handleTimeUpdate = () => {
-    const audio = audioRef.current;
-    if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
-    setProgress((audio.currentTime / audio.duration) * 100);
+  const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
+    const time = Number(event.target.value);
+    if (!audioRef.current) return;
+
+    audioRef.current.currentTime = time;
+    setCurrentTime(time);
   };
 
-  const resetProgress = () => {
+  const resetTrack = () => {
     setIsPlaying(false);
-    setProgress(0);
+    setCurrentTime(0);
+  };
+
+  const resetToStart = () => {
+    if (!audioRef.current) return;
+    audioRef.current.currentTime = 0;
+    setCurrentTime(0);
+  };
+
+  const formatTime = (time: number) => {
+    const mins = Math.floor(time / 60);
+    const secs = Math.floor(time % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
   return (
-    <div className="audio-player" aria-label={title || 'Player de áudio'}>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="audio-player"
+      aria-label={`${title} por ${artist}`}
+    >
       <audio
         ref={audioRef}
         src={src}
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={resetProgress}
+        onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+        onEnded={resetTrack}
         onPause={() => setIsPlaying(false)}
         onPlay={() => setIsPlaying(true)}
         preload="metadata"
       />
-      {title && <span className="audio-player-title">{title}</span>}
 
-      <div className="audio-player-controls">
-        <button type="button" className="audio-player-button" onClick={togglePlay} aria-label={isPlaying ? 'Pausar áudio' : 'Reproduzir áudio'}>
-          {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
-        </button>
-
-        <div className="audio-player-track" aria-hidden="true">
-          <div className="audio-player-progress" style={{ width: `${progress}%` }} />
+      <div className="audio-player-heading">
+        <div>
+          <h3 className="audio-player-title">{title}</h3>
+          <p className="audio-player-artist">{artist}</p>
         </div>
-
         <button type="button" className="audio-player-icon-button" onClick={toggleMute} aria-label={isMuted ? 'Ativar som' : 'Silenciar áudio'}>
           {isMuted ? <VolumeX size={17} /> : <Volume2 size={17} />}
         </button>
       </div>
-    </div>
+
+      <div className="audio-player-seek">
+        <input
+          type="range"
+          min={0}
+          max={duration || 100}
+          value={Math.min(currentTime, duration || 100)}
+          onChange={handleSeek}
+          aria-label="Progresso da faixa"
+        />
+        <div className="audio-player-time">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+
+      <div className="audio-player-controls audio-player-main-controls">
+        <button type="button" className="audio-player-icon-button" onClick={resetToStart} aria-label="Recomeçar faixa">
+          <RotateCcw size={16} />
+        </button>
+
+        <button type="button" className="audio-player-button" onClick={togglePlay} aria-label={isPlaying ? 'Pausar áudio' : 'Reproduzir áudio'}>
+          {isPlaying ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" />}
+        </button>
+      </div>
+    </motion.div>
   );
 }
