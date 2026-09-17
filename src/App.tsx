@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Loader2, Grid2X2, Library, FolderOpen, Music2, CircleHelp, CircleAlert, House, UserRound } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import Suporte from './pages/Suporte';
@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
   { to: '/presets', label: 'Presets', icon: FolderOpen },
   { to: '/chords', label: 'Harmonizador', icon: Music2 },
   { to: '/faq', label: 'Dúvidas Frequentes', icon: CircleHelp },
-  { to: '/report', label: 'Reportar Problema', icon: CircleAlert },
+  { to: '/suporte', label: 'Reportar Problema', icon: CircleAlert },
 ];
 
 const pageCopy: Record<string, { eyebrow: string; title: string; description: string }> = {
@@ -27,6 +27,17 @@ const pageCopy: Record<string, { eyebrow: string; title: string; description: st
   '/faq': { eyebrow: 'Quick Guide', title: 'Dúvidas fora do caminho.', description: 'Respostas curtas para manter sua sessão em movimento.' },
   '/report': { eyebrow: 'Studio Support', title: 'Vamos resolver juntos.', description: 'Envie uma solicitação para a equipe do Fagulha.' },
 };
+
+function normalizeLegacyHash() {
+  if (typeof window === 'undefined') return;
+
+  const legacyRoute = window.location.hash.replace(/^#\/?/, '');
+  const knownRoutes = ['home', 'generator', 'library', 'presets', 'chords', 'profile', 'faq', 'report', 'suporte'];
+  if (!legacyRoute || !knownRoutes.includes(legacyRoute) || window.location.hash.startsWith('#/')) return;
+
+  const nextRoute = legacyRoute === 'home' ? '/' : legacyRoute === 'report' ? '/suporte' : `/${legacyRoute}`;
+  window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${nextRoute}`);
+}
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -56,7 +67,9 @@ function AnimatedRoutes() {
           >
             <Routes location={location}>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/report" element={<Suporte />} />
+              <Route path="/generator" element={<Dashboard />} />
+              <Route path="/suporte" element={<Suporte />} />
+              <Route path="/report" element={<Navigate to="/suporte" replace />} />
               <Route path="*" element={<Page />} />
             </Routes>
           </motion.div>
@@ -104,10 +117,14 @@ function Sidebar() {
 }
 
 export default function App() {
+  normalizeLegacyHash();
+
   return (
-    <div className="spa-app">
-      <Sidebar />
-      <AnimatedRoutes />
-    </div>
+    <HashRouter>
+      <div className="spa-app">
+        <Sidebar />
+        <AnimatedRoutes />
+      </div>
+    </HashRouter>
   );
 }
