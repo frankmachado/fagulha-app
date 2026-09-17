@@ -1,4 +1,9 @@
-# Logs
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example# Logs
 logs
 *.log
 npm-debug.log*

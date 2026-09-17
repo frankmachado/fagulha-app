@@ -845,6 +845,10 @@
 </head>
 <body>
 
+<div id="root"></div>
+
+<div id="legacyApp" hidden>
+
 <div id="appSplash" class="app-splash" aria-live="polite">
   <div class="splash-logo" aria-hidden="true">
     <img src="icon-192.png" alt="Fagulha Loading" width="64" height="64">
@@ -1402,6 +1406,8 @@
       <button class="btn btn-primary" onclick="confirmSendSparkToMake()" style="padding: 9px 18px;" data-i18n="saveToCloud">⚡ Salvar na Nuvem</button>
     </div>
   </div>
+</div>
+
 </div>
 
 <script>
@@ -3736,6 +3742,10 @@
   formspree('initForm', { formElement: '#fagulhaTicketForm', formId: 'xkjgnbly' });
 </script>
 <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+
+</div>
+
+<script type="module" src="/src/main.tsx"></script>
 
 </body>
 </html>
