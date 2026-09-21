@@ -1,0 +1,1209 @@
+This file is a merged representation of a subset of the codebase, containing specifically included files, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Only files matching these patterns are included: src/**/*
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+src/
+  components/
+    AudioPlayer.tsx
+    AuthControls.tsx
+    LanguageSwitcher.tsx
+    StudioChrome.tsx
+  i18n/
+    LanguageContext.tsx
+  pages/
+    Dashboard.tsx
+    StudioModules.tsx
+    Suporte.tsx
+  platform/
+    registerServiceWorker.ts
+  services/
+    firebase.ts
+    musicAudio.ts
+    musicMidi.ts
+  App.tsx
+  main.tsx
+  styles.css
+  vite-env.d.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="src/components/AuthControls.tsx">
+import { useEffect, useState } from 'react';
+import { LogIn, LogOut, UserRound } from 'lucide-react';
+import { onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider, type User } from 'firebase/auth';
+import { auth } from '../services/firebase';
+
+export default function AuthControls() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!auth) return;
+    return onAuthStateChanged(auth, setUser);
+  }, []);
+
+  const handleSignIn = async () => {
+    if (!auth) return;
+    setLoading(true);
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    if (!auth) return;
+    setLoading(true);
+    try {
+      await signOut(auth);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!auth) return <span className="auth-status"><UserRound size={14} /> Visitante</span>;
+  if (user) return <button type="button" className="auth-control" onClick={handleSignOut} disabled={loading}><LogOut size={14} /> {loading ? 'Saindo...' : 'Sair da conta'}</button>;
+  return <button type="button" className="auth-control" onClick={handleSignIn} disabled={loading}><LogIn size={14} /> {loading ? 'Entrando...' : 'Entrar com Google'}</button>;
+}
+</file>
+
+<file path="src/components/LanguageSwitcher.tsx">
+import { Languages } from 'lucide-react';
+import { useLanguage, type Locale } from '../i18n/LanguageContext';
+
+const localeOptions: { value: Locale; labelKey: 'language.ptBR' | 'language.en' | 'language.es' }[] = [
+  { value: 'pt-BR', labelKey: 'language.ptBR' },
+  { value: 'en', labelKey: 'language.en' },
+  { value: 'es', labelKey: 'language.es' },
+];
+
+export default function LanguageSwitcher() {
+  const { locale, setLocale, t } = useLanguage();
+
+  return (
+    <label className="language-switcher">
+      <Languages size={15} aria-hidden="true" />
+      <span className="sr-only">{t('language.label')}</span>
+      <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)} aria-label={t('language.label')}>
+        {localeOptions.map(({ value, labelKey }) => <option key={value} value={value}>{t(labelKey)}</option>)}
+      </select>
+    </label>
+  );
+}
+</file>
+
+<file path="src/components/StudioChrome.tsx">
+import { useState } from 'react';
+import { Clock3, HelpCircle, Menu, Save, Square, Volume2, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { setMasterVolume, stopAudio } from '../services/musicAudio';
+import AuthControls from './AuthControls';
+import LanguageSwitcher from './LanguageSwitcher';
+
+export function StudioTopBar({ onMenu }: { onMenu: () => void }) {
+  const [tapTimes, setTapTimes] = useState<number[]>([]);
+  const [bpm, setBpm] = useState(113);
+  const tapTempo = () => {
+    const now = Date.now();
+    const recent = [...tapTimes.filter((time) => now - time < 2200), now];
+    setTapTimes(recent);
+    if (recent.length > 1) setBpm(Math.round(60000 / ((recent[recent.length - 1] - recent[0]) / (recent.length - 1))));
+  };
+
+  return <header className="studio-topbar"><div className="topbar-group"><button className="topbar-button" type="button" onClick={onMenu}><Menu size={15} /> Menu</button><Link className="topbar-button topbar-save" to="/generator"><Save size={14} /> Salvar Fagulha</Link><button className="topbar-button" type="button" onClick={tapTempo}><Clock3 size={14} /> Tap Tempo{tapTimes.length > 1 ? ` · ${bpm}` : ''}</button><button className="topbar-button topbar-stop" type="button" onClick={stopAudio}><Square size={13} /> Stop</button></div><div className="topbar-group topbar-right"><label className="topbar-volume"><Volume2 size={14} /><input type="range" min="0" max="100" defaultValue="80" onChange={(event) => setMasterVolume(Number(event.target.value) / 100)} /><span>80%</span></label><LanguageSwitcher /><Link className="topbar-help" to="/faq" aria-label="Dúvidas Frequentes"><HelpCircle size={15} /></Link><AuthControls /></div></header>;
+}
+
+export function SidebarControls() {
+  const [humanizer, setHumanizer] = useState(15);
+  const [swing, setSwing] = useState(0);
+  const [tuning, setTuning] = useState('440 Hz (Padrão)');
+  return <div className="sidebar-controls"><p className="sidebar-section-title">GROOVE & HUMANIZER</p><label className="slider-control">Humanizer <output>{humanizer}%</output><input type="range" min="0" max="100" value={humanizer} onChange={(event) => setHumanizer(Number(event.target.value))} /></label><label className="slider-control">Swing <output>{swing}%</output><input type="range" min="0" max="100" value={swing} onChange={(event) => setSwing(Number(event.target.value))} /></label><p className="sidebar-section-title">CONFIGURAÇÕES</p><label className="sidebar-select">Afinação Master<select value={tuning} onChange={(event) => setTuning(event.target.value)}><option>440 Hz (Padrão)</option><option>432 Hz (Natural)</option><option>444 Hz (Brilhante)</option></select></label></div>;
+}
+
+export function MobileClose({ onClose }: { onClose: () => void }) { return <button className="mobile-close" type="button" onClick={onClose} aria-label="Fechar menu"><X size={16} /></button>; }
+</file>
+
+<file path="src/platform/registerServiceWorker.ts">
+export function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch((error: unknown) => {
+      console.error('Erro ao registrar Service Worker:', error);
+    });
+  });
+}
+</file>
+
+<file path="src/services/musicAudio.ts">
+let audioContext: AudioContext | null = null;
+let masterGain: GainNode | null = null;
+let activeSources: OscillatorNode[] = [];
+
+function getAudioContext() {
+  audioContext ??= new AudioContext();
+  masterGain ??= audioContext.createGain();
+  masterGain.gain.value = 0.18;
+  masterGain.connect(audioContext.destination);
+  return audioContext;
+}
+
+function frequencyFromMidi(midi: number) {
+  return 440 * 2 ** ((midi - 69) / 12);
+}
+
+function playTone(frequency: number, start: number, duration: number, type: OscillatorType = 'triangle') {
+  const context = getAudioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = type;
+  oscillator.frequency.value = frequency;
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(0.28, start + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  oscillator.connect(gain).connect(masterGain!);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.03);
+  activeSources.push(oscillator);
+  oscillator.addEventListener('ended', () => {
+    activeSources = activeSources.filter((source) => source !== oscillator);
+  });
+}
+
+export async function playNotes(notes: number[], tempo = 113) {
+  const context = getAudioContext();
+  if (context.state === 'suspended') await context.resume();
+  stopAudio();
+  const start = context.currentTime + 0.04;
+  const beat = 60 / tempo;
+  notes.forEach((midi, index) => playTone(frequencyFromMidi(midi), start + index * beat, beat * 0.82));
+}
+
+export async function playChord(notes: number[]) {
+  const context = getAudioContext();
+  if (context.state === 'suspended') await context.resume();
+  stopAudio();
+  const start = context.currentTime + 0.04;
+  notes.forEach((midi) => playTone(frequencyFromMidi(midi), start, 1.3, 'sine'));
+}
+
+export function stopAudio() {
+  activeSources.forEach((source) => {
+    try { source.stop(); } catch { /* already ended */ }
+  });
+  activeSources = [];
+}
+
+export function setMasterVolume(value: number) {
+  if (!masterGain) getAudioContext();
+  masterGain!.gain.value = Math.max(0, Math.min(1, value));
+}
+</file>
+
+<file path="src/services/musicMidi.ts">
+import { Midi } from '@tonejs/midi';
+
+export function downloadMidi(notes: number[], tempo: number, fileName = 'fagulha-loop.mid') {
+  const midi = new Midi();
+  const track = midi.addTrack();
+  midi.header.setTempo(tempo);
+  notes.forEach((midiNote, index) => {
+    track.addNote({
+      midi: midiNote,
+      time: index * (60 / tempo),
+      duration: 60 / tempo,
+      velocity: 0.78,
+    });
+  });
+
+  const bytes = midi.toArray();
+  const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
+  const blob = new Blob([buffer], { type: 'audio/midi' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+</file>
+
+<file path="src/vite-env.d.ts">
+/// <reference types="vite/client" />
+</file>
+
+<file path="src/i18n/LanguageContext.tsx">
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+
+export type Locale = 'pt-BR' | 'en' | 'es';
+
+type TranslationKey =
+  | 'language.label'
+  | 'language.ptBR'
+  | 'language.en'
+  | 'language.es'
+  | 'brand.tagline'
+  | 'navigation.label'
+  | 'navigation.home'
+  | 'navigation.generator'
+  | 'navigation.library'
+  | 'navigation.presets'
+  | 'navigation.chords'
+  | 'navigation.faq'
+  | 'navigation.support'
+  | 'navigation.profile'
+  | 'page.home.eyebrow'
+  | 'page.home.title'
+  | 'page.home.description'
+  | 'page.generator.eyebrow'
+  | 'page.generator.title'
+  | 'page.generator.description'
+  | 'page.library.eyebrow'
+  | 'page.library.title'
+  | 'page.library.description'
+  | 'page.presets.eyebrow'
+  | 'page.presets.title'
+  | 'page.presets.description'
+  | 'page.chords.eyebrow'
+  | 'page.chords.title'
+  | 'page.chords.description'
+  | 'page.profile.eyebrow'
+  | 'page.profile.title'
+  | 'page.profile.description'
+  | 'page.faq.eyebrow'
+  | 'page.faq.title'
+  | 'page.faq.description'
+  | 'page.support.eyebrow'
+  | 'page.support.title'
+  | 'page.support.description'
+  | 'page.placeholder.home'
+  | 'page.placeholder.module'
+  | 'page.placeholder.routes'
+  | 'dashboard.auth'
+  | 'dashboard.greeting'
+  | 'dashboard.visitor'
+  | 'dashboard.authenticated'
+  | 'dashboard.unauthenticated'
+  | 'dashboard.firestore'
+  | 'dashboard.loading'
+  | 'dashboard.records'
+  | 'dashboard.query'
+  | 'dashboard.error'
+  | 'dashboard.unavailable'
+  | 'dashboard.player'
+  | 'support.emailLabel'
+  | 'support.emailPlaceholder'
+  | 'support.messageLabel'
+  | 'support.messagePlaceholder'
+  | 'support.submit'
+  | 'support.successTitle'
+  | 'support.successDescription'
+  | 'support.sendAnother'
+  | 'support.error'
+  | 'audio.mute'
+  | 'audio.unmute'
+  | 'audio.progress'
+  | 'audio.restart'
+  | 'audio.play'
+  | 'audio.pause';
+
+const translations: Record<Locale, Record<TranslationKey, string>> = {
+  'pt-BR': {
+    'language.label': 'Idioma', 'language.ptBR': 'Português', 'language.en': 'English', 'language.es': 'Español',
+    'brand.tagline': 'Pro Studio Hub', 'navigation.label': 'Navegação principal', 'navigation.home': 'Início',
+    'navigation.generator': 'Scale Engine', 'navigation.library': 'Minhas Fagulhas', 'navigation.presets': 'Presets',
+    'navigation.chords': 'Harmonizador', 'navigation.faq': 'Dúvidas Frequentes', 'navigation.support': 'Reportar Problema', 'navigation.profile': 'Perfil',
+    'page.home.eyebrow': 'Studio Hub', 'page.home.title': 'Crie algo que tenha faísca.', 'page.home.description': 'Um espaço para transformar escalas, harmonias e ideias em loops musicais.',
+    'page.generator.eyebrow': 'Fagulha Engine', 'page.generator.title': 'Comece pela tonalidade.', 'page.generator.description': 'Monte a base do seu próximo loop com escolhas rápidas e precisas.',
+    'page.library.eyebrow': 'Biblioteca de Fagulhas', 'page.library.title': 'Suas fagulhas, reunidas.', 'page.library.description': 'Acesse loops salvos e retome uma ideia quando ela pedir passagem.',
+    'page.presets.eyebrow': 'Packs Curados', 'page.presets.title': 'Atalhos com personalidade.', 'page.presets.description': 'Escolha um ponto de partida e leve a ideia para o seu território.',
+    'page.chords.eyebrow': 'Harmonizador de Campo', 'page.chords.title': 'Encontre o acorde certo.', 'page.chords.description': 'Explore o campo harmônico da escala ativa sem sair do fluxo.',
+    'page.profile.eyebrow': 'Perfil do Produtor', 'page.profile.title': 'Seu espaço de produtor.', 'page.profile.description': 'Ajuste sua identidade e preferências do Studio Hub.',
+    'page.faq.eyebrow': 'Guia Rápido', 'page.faq.title': 'Dúvidas fora do caminho.', 'page.faq.description': 'Respostas curtas para manter sua sessão em movimento.',
+    'page.support.eyebrow': 'Suporte do Studio', 'page.support.title': 'Vamos resolver juntos.', 'page.support.description': 'Envie uma solicitação para a equipe do Fagulha.',
+    'page.placeholder.home': 'Seu próximo loop começa aqui.', 'page.placeholder.module': 'Módulo pronto para receber o fluxo do Studio.', 'page.placeholder.routes': 'Rotas sem recarregar a página.',
+    'dashboard.auth': 'Autenticação', 'dashboard.greeting': 'Olá, {name}.', 'dashboard.visitor': 'Sessão visitante', 'dashboard.authenticated': 'Firebase Auth detectou uma sessão ativa.', 'dashboard.unauthenticated': 'Nenhum usuário autenticado no momento.',
+    'dashboard.firestore': 'Firestore / chamados', 'dashboard.loading': 'Carregando...', 'dashboard.records': '{count} registro(s)', 'dashboard.query': 'Consulta concluída na coleção chamados.', 'dashboard.error': 'Não foi possível carregar os chamados agora.', 'dashboard.unavailable': 'Firebase não está configurado neste ambiente.', 'dashboard.player': 'Player de teste',
+    'support.emailLabel': 'Seu e-mail para retorno', 'support.emailPlaceholder': 'nome@fagulha.com', 'support.messageLabel': 'Descrição do problema ou dúvida', 'support.messagePlaceholder': 'Descreva o que está acontecendo...', 'support.submit': 'Enviar chamado', 'support.successTitle': 'Solicitação enviada com sucesso!', 'support.successDescription': 'Nossa equipe retornará o contato em breve.', 'support.sendAnother': 'Enviar outro chamado', 'support.error': 'Ocorreu um erro ao enviar. Tente novamente.',
+    'audio.mute': 'Silenciar áudio', 'audio.unmute': 'Ativar som', 'audio.progress': 'Progresso da faixa', 'audio.restart': 'Recomeçar faixa', 'audio.play': 'Reproduzir áudio', 'audio.pause': 'Pausar áudio',
+  },
+  en: {
+    'language.label': 'Language', 'language.ptBR': 'Português', 'language.en': 'English', 'language.es': 'Español',
+    'brand.tagline': 'Pro Studio Hub', 'navigation.label': 'Main navigation', 'navigation.home': 'Home',
+    'navigation.generator': 'Scale Engine', 'navigation.library': 'My Sparks', 'navigation.presets': 'Presets',
+    'navigation.chords': 'Harmonizer', 'navigation.faq': 'Frequently Asked Questions', 'navigation.support': 'Report a Problem', 'navigation.profile': 'Profile',
+    'page.home.eyebrow': 'Studio Hub', 'page.home.title': 'Create something with a spark.', 'page.home.description': 'A space to turn scales, harmonies and ideas into musical loops.',
+    'page.generator.eyebrow': 'Scale Engine', 'page.generator.title': 'Start with the key.', 'page.generator.description': 'Build the foundation for your next loop with quick, precise choices.',
+    'page.library.eyebrow': 'Cloud Library', 'page.library.title': 'Your sparks, gathered.', 'page.library.description': 'Access saved loops and pick up an idea whenever it calls.',
+    'page.presets.eyebrow': 'Curated Packs', 'page.presets.title': 'Shortcuts with personality.', 'page.presets.description': 'Choose a starting point and make the idea your own.',
+    'page.chords.eyebrow': 'Harmonizer', 'page.chords.title': 'Find the right chord.', 'page.chords.description': 'Explore the active scale harmony without leaving your flow.',
+    'page.profile.eyebrow': 'Producer Profile', 'page.profile.title': 'Your producer space.', 'page.profile.description': 'Adjust your identity and Studio Hub preferences.',
+    'page.faq.eyebrow': 'Quick Guide', 'page.faq.title': 'Questions out of the way.', 'page.faq.description': 'Short answers to keep your session moving.',
+    'page.support.eyebrow': 'Studio Support', 'page.support.title': "Let's solve it together.", 'page.support.description': 'Send a request to the Fagulha team.',
+    'page.placeholder.home': 'Your next loop starts here.', 'page.placeholder.module': 'Module ready for the Studio flow.', 'page.placeholder.routes': 'Routes without reloading the page.',
+    'dashboard.auth': 'Authentication', 'dashboard.greeting': 'Hello, {name}.', 'dashboard.visitor': 'Guest session', 'dashboard.authenticated': 'Firebase Auth detected an active session.', 'dashboard.unauthenticated': 'No authenticated user at the moment.',
+    'dashboard.firestore': 'Firestore / tickets', 'dashboard.loading': 'Loading...', 'dashboard.records': '{count} record(s)', 'dashboard.query': 'Query completed in the tickets collection.', 'dashboard.error': 'Could not load tickets right now.', 'dashboard.unavailable': 'Firebase is not configured in this environment.', 'dashboard.player': 'Test player',
+    'support.emailLabel': 'Your reply email', 'support.emailPlaceholder': 'name@fagulha.com', 'support.messageLabel': 'Problem or question description', 'support.messagePlaceholder': 'Describe what is happening...', 'support.submit': 'Send ticket', 'support.successTitle': 'Request sent successfully!', 'support.successDescription': 'Our team will get back to you soon.', 'support.sendAnother': 'Send another ticket', 'support.error': 'Something went wrong. Please try again.',
+    'audio.mute': 'Mute audio', 'audio.unmute': 'Unmute audio', 'audio.progress': 'Track progress', 'audio.restart': 'Restart track', 'audio.play': 'Play audio', 'audio.pause': 'Pause audio',
+  },
+  es: {
+    'language.label': 'Idioma', 'language.ptBR': 'Português', 'language.en': 'English', 'language.es': 'Español',
+    'brand.tagline': 'Pro Studio Hub', 'navigation.label': 'Navegación principal', 'navigation.home': 'Inicio',
+    'navigation.generator': 'Scale Engine', 'navigation.library': 'Mis Chispas', 'navigation.presets': 'Presets',
+    'navigation.chords': 'Armonizador', 'navigation.faq': 'Preguntas Frecuentes', 'navigation.support': 'Reportar Problema', 'navigation.profile': 'Perfil',
+    'page.home.eyebrow': 'Studio Hub', 'page.home.title': 'Crea algo con chispa.', 'page.home.description': 'Un espacio para transformar escalas, armonías e ideas en loops musicales.',
+    'page.generator.eyebrow': 'Scale Engine', 'page.generator.title': 'Empieza por la tonalidad.', 'page.generator.description': 'Construye la base de tu próximo loop con elecciones rápidas y precisas.',
+    'page.library.eyebrow': 'Cloud Library', 'page.library.title': 'Tus chispas, reunidas.', 'page.library.description': 'Accede a loops guardados y retoma una idea cuando te llame.',
+    'page.presets.eyebrow': 'Curated Packs', 'page.presets.title': 'Atajos con personalidad.', 'page.presets.description': 'Elige un punto de partida y lleva la idea a tu terreno.',
+    'page.chords.eyebrow': 'Harmonizer', 'page.chords.title': 'Encuentra el acorde correcto.', 'page.chords.description': 'Explora la armonía de la escala activa sin salir de tu flujo.',
+    'page.profile.eyebrow': 'Producer Profile', 'page.profile.title': 'Tu espacio de productor.', 'page.profile.description': 'Ajusta tu identidad y preferencias del Studio Hub.',
+    'page.faq.eyebrow': 'Quick Guide', 'page.faq.title': 'Dudas fuera del camino.', 'page.faq.description': 'Respuestas breves para mantener tu sesión en movimiento.',
+    'page.support.eyebrow': 'Studio Support', 'page.support.title': 'Vamos a resolverlo juntos.', 'page.support.description': 'Envía una solicitud al equipo de Fagulha.',
+    'page.placeholder.home': 'Tu próximo loop empieza aquí.', 'page.placeholder.module': 'Módulo listo para recibir el flujo del Studio.', 'page.placeholder.routes': 'Rutas sin recargar la página.',
+    'dashboard.auth': 'Autenticación', 'dashboard.greeting': 'Hola, {name}.', 'dashboard.visitor': 'Sesión de invitado', 'dashboard.authenticated': 'Firebase Auth detectó una sesión activa.', 'dashboard.unauthenticated': 'No hay usuarios autenticados en este momento.',
+    'dashboard.firestore': 'Firestore / tickets', 'dashboard.loading': 'Cargando...', 'dashboard.records': '{count} registro(s)', 'dashboard.query': 'Consulta completada en la colección de tickets.', 'dashboard.error': 'No se pudieron cargar los tickets ahora.', 'dashboard.unavailable': 'Firebase no está configurado en este entorno.', 'dashboard.player': 'Reproductor de prueba',
+    'support.emailLabel': 'Tu correo para respuesta', 'support.emailPlaceholder': 'nombre@fagulha.com', 'support.messageLabel': 'Descripción del problema o duda', 'support.messagePlaceholder': 'Describe lo que está pasando...', 'support.submit': 'Enviar solicitud', 'support.successTitle': 'Solicitud enviada correctamente', 'support.successDescription': 'Nuestro equipo responderá pronto.', 'support.sendAnother': 'Enviar otra solicitud', 'support.error': 'Ocurrió un error. Inténtalo de nuevo.',
+    'audio.mute': 'Silenciar audio', 'audio.unmute': 'Activar sonido', 'audio.progress': 'Progreso de la pista', 'audio.restart': 'Reiniciar pista', 'audio.play': 'Reproducir audio', 'audio.pause': 'Pausar audio',
+  },
+};
+
+interface LanguageContextValue {
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+  t: (key: TranslationKey, variables?: Record<string, string | number>) => string;
+}
+
+const LanguageContext = createContext<LanguageContextValue | null>(null);
+const storageKey = 'fagulha-locale';
+
+function getInitialLocale(): Locale {
+  if (typeof window === 'undefined') return 'pt-BR';
+  const savedLocale = window.localStorage.getItem(storageKey);
+  if (savedLocale === 'pt-BR' || savedLocale === 'en' || savedLocale === 'es') return savedLocale;
+  return window.navigator.language.toLowerCase().startsWith('en') ? 'en' : window.navigator.language.toLowerCase().startsWith('es') ? 'es' : 'pt-BR';
+}
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [locale, setLocale] = useState<Locale>(getInitialLocale);
+
+  useEffect(() => {
+    window.localStorage.setItem(storageKey, locale);
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  const t = (key: TranslationKey, variables?: Record<string, string | number>) => {
+    let value = translations[locale][key];
+    Object.entries(variables ?? {}).forEach(([name, replacement]) => {
+      value = value.replace(`{${name}}`, String(replacement));
+    });
+    return value;
+  };
+
+  return <LanguageContext.Provider value={{ locale, setLocale, t }}>{children}</LanguageContext.Provider>;
+}
+
+export function useLanguage() {
+  const context = useContext(LanguageContext);
+  if (!context) throw new Error('useLanguage deve ser usado dentro de LanguageProvider.');
+  return context;
+}
+
+export type { TranslationKey };
+</file>
+
+<file path="src/services/firebase.ts">
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
+
+export const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
+const app = isFirebaseConfigured ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : null;
+
+export const auth = app ? getAuth(app) : null;
+export const db = app ? getFirestore(app) : null;
+export const storage = app ? getStorage(app) : null;
+export default app;
+</file>
+
+<file path="src/components/AudioPlayer.tsx">
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { Pause, Play, RotateCcw, Volume2, VolumeX } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useLanguage } from '../i18n/LanguageContext';
+
+interface AudioPlayerProps {
+  src: string;
+  title?: string;
+  artist?: string;
+}
+
+export default function AudioPlayer({ src, title = 'Faixa sem título', artist = 'Fagulha Studio' }: AudioPlayerProps) {
+  const { t } = useLanguage();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    setIsPlaying(false);
+    setIsMuted(false);
+    setCurrentTime(0);
+    setDuration(0);
+
+    return () => {
+      audio?.pause();
+    };
+  }, [src]);
+
+  const togglePlay = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      try {
+        await audio.play();
+      } catch {
+        setIsPlaying(false);
+      }
+      return;
+    }
+
+    audio.pause();
+  };
+
+  const toggleMute = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.muted = !audio.muted;
+    setIsMuted(audio.muted);
+  };
+
+  const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
+    const time = Number(event.target.value);
+    if (!audioRef.current) return;
+
+    audioRef.current.currentTime = time;
+    setCurrentTime(time);
+  };
+
+  const resetTrack = () => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+  };
+
+  const resetToStart = () => {
+    if (!audioRef.current) return;
+    audioRef.current.currentTime = 0;
+    setCurrentTime(0);
+  };
+
+  const formatTime = (time: number) => {
+    const mins = Math.floor(time / 60);
+    const secs = Math.floor(time % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="audio-player"
+      aria-label={`${title} por ${artist}`}
+    >
+      <audio
+        ref={audioRef}
+        src={src}
+        onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+        onEnded={resetTrack}
+        onPause={() => setIsPlaying(false)}
+        onPlay={() => setIsPlaying(true)}
+        preload="metadata"
+      />
+
+      <div className="audio-player-heading">
+        <div>
+          <h3 className="audio-player-title">{title}</h3>
+          <p className="audio-player-artist">{artist}</p>
+        </div>
+        <button type="button" className="audio-player-icon-button" onClick={toggleMute} aria-label={isMuted ? t('audio.unmute') : t('audio.mute')}>
+          {isMuted ? <VolumeX size={17} /> : <Volume2 size={17} />}
+        </button>
+      </div>
+
+      <div className="audio-player-seek">
+        <input
+          type="range"
+          min={0}
+          max={duration || 100}
+          value={Math.min(currentTime, duration || 100)}
+          onChange={handleSeek}
+          aria-label={t('audio.progress')}
+        />
+        <div className="audio-player-time">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+
+      <div className="audio-player-controls audio-player-main-controls">
+        <button type="button" className="audio-player-icon-button" onClick={resetToStart} aria-label={t('audio.restart')}>
+          <RotateCcw size={16} />
+        </button>
+
+        <button type="button" className="audio-player-button" onClick={togglePlay} aria-label={isPlaying ? t('audio.pause') : t('audio.play')}>
+          {isPlaying ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" />}
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+</file>
+
+<file path="src/pages/Suporte.tsx">
+import { useState, type FormEvent } from 'react';
+import { AlertCircle, CheckCircle2, Loader2, Send } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useLanguage } from '../i18n/LanguageContext';
+
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+
+export default function Suporte() {
+  const { t } = useLanguage();
+  const [formData, setFormData] = useState({ email: '', message: '' });
+  const [status, setStatus] = useState<FormStatus>('idle');
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatus('loading');
+
+    try {
+      const response = await fetch('https://formspree.io/f/xkjgnbly', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        setStatus('error');
+        return;
+      }
+
+      setFormData({ email: '', message: '' });
+      setStatus('success');
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="page-card support-card"
+    >
+      <p className="eyebrow">{t('page.support.eyebrow')}</p>
+      <h1>{t('page.support.title')}</h1>
+      <p className="page-description">{t('page.support.description')}</p>
+
+      {status === 'success' ? (
+        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="support-success">
+          <CheckCircle2 size={46} />
+          <h2>{t('support.successTitle')}</h2>
+          <p>{t('support.successDescription')}</p>
+          <button type="button" className="support-reset" onClick={() => setStatus('idle')}>{t('support.sendAnother')}</button>
+        </motion.div>
+      ) : (
+        <form id="supportForm" onSubmit={handleSubmit} className="support-form">
+          <div className="support-field">
+            <label htmlFor="supportEmail">{t('support.emailLabel')}</label>
+            <input id="supportEmail" type="email" required value={formData.email} onChange={(event) => setFormData({ ...formData, email: event.target.value })} placeholder={t('support.emailPlaceholder')} />
+          </div>
+
+          <div className="support-field">
+            <label htmlFor="supportMessage">{t('support.messageLabel')}</label>
+            <textarea id="supportMessage" rows={5} required value={formData.message} onChange={(event) => setFormData({ ...formData, message: event.target.value })} placeholder={t('support.messagePlaceholder')} />
+          </div>
+
+          {status === 'error' && <div className="support-error"><AlertCircle size={16} /> <span>{t('support.error')}</span></div>}
+
+          <button type="submit" className="support-submit" disabled={status === 'loading'}>
+            {status === 'loading' ? <Loader2 size={18} className="spin" /> : <><Send size={16} /> <span>{t('support.submit')}</span></>}
+          </button>
+        </form>
+      )}
+    </motion.section>
+  );
+}
+</file>
+
+<file path="src/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import { registerServiceWorker } from './platform/registerServiceWorker';
+
+const root = document.getElementById('root');
+
+if (!root) {
+  throw new Error('O elemento #root não foi encontrado.');
+}
+
+root.classList.add('react-root-mounted');
+
+document.body.classList.add('react-spa');
+registerServiceWorker();
+
+createRoot(root).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
+</file>
+
+<file path="src/pages/StudioModules.tsx">
+import { useEffect, useState } from 'react';
+import { Check, ChevronDown, Download, Play, Save, Square } from 'lucide-react';
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { useLanguage } from '../i18n/LanguageContext';
+import { auth } from '../services/firebase';
+import { downloadMidi } from '../services/musicMidi';
+import { playChord, playNotes, setMasterVolume, stopAudio } from '../services/musicAudio';
+
+const scaleOptions = ['Lídio Dominante (Sertão / Neo-Soul)', 'Mixolídio / Aboia (Reza Psicodélico)', 'Escala Praiana (Afrobeat / Maré)', 'Menor Natural / Eólio (Melancolia / R&B)', 'Menor Harmônica (Dramático / Baião)', 'Dório Mouro (Baião Menor / MPB Jazz)', 'Frígio (Transe / Reza Mística)', 'Pentatônica Gnawa (Transe / Trap)'];
+const scaleNotes: Record<string, number[]> = {
+  'Lídio Dominante (Sertão / Neo-Soul)': [69, 71, 73, 75, 76, 78, 80],
+  'Mixolídio / Aboia (Reza Psicodélico)': [69, 71, 73, 75, 76, 78, 80],
+  'Escala Praiana (Afrobeat / Maré)': [69, 71, 73, 76, 78],
+  'Menor Natural / Eólio (Melancolia / R&B)': [69, 71, 72, 74, 76, 77, 79],
+  'Menor Harmônica (Dramático / Baião)': [69, 71, 72, 74, 76, 77, 80],
+};
+
+const instrumentLoops: Record<string, string[]> = {
+  'Baixo / Logdrum': ['Balanço Sincopado Urbano', 'Pressão Acelerada (Rolls 1/16)', 'Pulso Galopado', 'Saltos Oitavados', 'Ostinato de Transe'],
+  'Rhodes / Teclados': ['Atmosfera Aveludada (Sustentação)', 'Sincopado Cadenciado', 'Bloco Estelar (Acordes Abertos)', 'Staccato Espaçado', 'Modulação Móvel', 'Arpejo Sustentado'],
+  'Viola Caipira / Cordas Aço': ['Dedilhado de Serra', 'Galope Mourisco', 'Melodia Ondulante', 'Fraseado de Solitude', 'Transe de Pífano', 'Cascata de Cordas', 'Pontilhado Seco', 'Balanço de Maré', 'Rezo Mourisco', 'Cortejo Evolutivo'],
+};
+
+const rhythmOptions = ['Balanço Sincopado Urbano', 'Pressão Acelerada (Rolls 1/16)', 'Espaça & Ataca (Staccato)', 'Pulso Galopado', 'Saltos Oitavados', 'Ostinato de Transe', 'Síncopa Quebrada', 'Caminhada Contínua', 'Ataque Duplo (Contratempo)', 'Virada Trípletada'];
+
+function buildPattern(notes: number[], loop: string, rhythm: string) {
+  const direction = loop.includes('Galope') || rhythm.includes('Acelerada') ? [...notes].reverse() : notes;
+  const repeats = loop.includes('Dedilhado') || rhythm.includes('Ostinato') ? 2 : 1;
+  return Array.from({ length: repeats }, () => direction).flat();
+}
+
+function useLiveScaleKeyboard(notes: number[], bpm: number) {
+  useEffect(() => {
+    const keys: Record<string, number> = { a: notes[0], s: notes[1], d: notes[2], f: notes[3], g: notes[4], h: notes[5], j: notes[6] };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement) return;
+      const note = keys[event.key.toLowerCase()];
+      if (note) void playNotes([note], bpm);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [bpm, notes]);
+}
+
+export function GeneratorPage() {
+  const { t } = useLanguage();
+  const [instrument, setInstrument] = useState('Baixo / Logdrum');
+  const [loop, setLoop] = useState(instrumentLoops['Baixo / Logdrum'][0]);
+  const [scale, setScale] = useState(scaleOptions[0]);
+  const [rhythm, setRhythm] = useState(rhythmOptions[0]);
+  const [bpm, setBpm] = useState(113);
+  const notes = scaleNotes[scale] ?? scaleNotes[scaleOptions[0]];
+  const availableLoops = instrumentLoops[instrument];
+  const pattern = buildPattern(notes, loop, rhythm);
+  useLiveScaleKeyboard(notes, bpm);
+
+  const saveSpark = () => {
+    const saved = JSON.parse(window.localStorage.getItem('fagulha-sparks') || '[]') as Array<{ title: string; meta: string }>;
+    saved.unshift({ title: loop, meta: `${instrument} · ${scale} · ${bpm} BPM` });
+    window.localStorage.setItem('fagulha-sparks', JSON.stringify(saved.slice(0, 20)));
+  };
+
+  return <section className="page-card studio-card">
+    <p className="eyebrow">{t('page.generator.eyebrow')}</p>
+    <h1>{t('page.generator.title')}</h1>
+    <p className="page-description">{t('page.generator.description')}</p>
+    <div className="studio-controls studio-controls-wide">
+      <label>Instrumento<select value={instrument} onChange={(event) => { const next = event.target.value; setInstrument(next); setLoop(instrumentLoops[next][0]); }}>{Object.keys(instrumentLoops).map((option) => <option key={option}>{option}</option>)}</select></label>
+      <label>Loop / Groove (8 Compassos)<select value={loop} onChange={(event) => setLoop(event.target.value)}>{availableLoops.map((option) => <option key={option}>{option}</option>)}</select></label>
+      <label>Escala & Vibe Harmônica<select value={scale} onChange={(event) => setScale(event.target.value)}>{scaleOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
+      <label>Groove / Contratempos<select value={rhythm} onChange={(event) => setRhythm(event.target.value)}>{rhythmOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
+      <label>Andamento (BPM)<input type="number" min="60" max="180" value={bpm} onChange={(event) => setBpm(Number(event.target.value))} /></label>
+    </div>
+    <div className="scale-preview"><div><span className="dashboard-label">Escala ativa</span><strong>{scale}</strong></div><div className="note-chips">{notes.map((note) => <span key={note}>{note - 60}</span>)}</div></div>
+    <div className="keyboard-guide"><span className="dashboard-label">Teclado ao vivo</span><span>A · S · D · F · G · H · J</span></div>
+    <div className="piano-preview" aria-label="Grid piano roll da escala"><div className="piano-grid">{Array.from({ length: 32 }, (_, index) => <span key={index} style={{ height: `${32 + (index % 5) * 13}%` }}>{index % 4 === 0 ? '●' : '·'}</span>)}</div></div>
+    <div className="studio-toolbar"><label>Volume <input type="range" min="0" max="100" defaultValue="80" onChange={(event) => setMasterVolume(Number(event.target.value) / 100)} /></label><button className="action-button" type="button" onClick={stopAudio}><Square size={15} /> Stop</button></div>
+    <div className="studio-actions"><button className="action-button primary" type="button" onClick={() => playNotes(pattern, bpm)}><Play size={16} /> Escutar Loop</button><button className="action-button" type="button" onClick={saveSpark}><Save size={16} /> Salvar Fagulha</button><button className="action-button" type="button" onClick={() => downloadMidi(pattern, bpm)}><Download size={16} /> Exportar MIDI (.mid)</button></div>
+  </section>;
+}
+
+export function LibraryPage() {
+  const { t } = useLanguage();
+  const [savedSparks, setSavedSparks] = useState<Array<{ title: string; meta: string }>>([]);
+  const defaults = [{ title: 'Sertão Neo-Soul', meta: 'Lídio Dominante · 113 BPM' }, { title: 'Transe Gnawa 808', meta: 'Pentatônica Gnawa · 140 BPM' }, { title: 'Abóbora Melancólica Menor', meta: 'Menor Natural · 120 BPM' }, { title: 'Maracatu Amarelo', meta: 'Escala Praiana · 112 BPM' }];
+  useEffect(() => { const stored = JSON.parse(window.localStorage.getItem('fagulha-sparks') || '[]') as Array<{ title: string; meta: string }>; setSavedSparks(stored.length ? stored : defaults); }, []);
+  return <section className="page-card"><p className="eyebrow">{t('page.library.eyebrow')}</p><h1>{t('page.library.title')}</h1><p className="page-description">{t('page.library.description')}</p><div className="module-list">{savedSparks.map((spark) => <article className="module-row" key={`${spark.title}-${spark.meta}`}><div><strong>{spark.title}</strong><span>{spark.meta}</span></div><button className="icon-action" type="button" onClick={() => playNotes([69, 73, 76, 80], 110)} aria-label={`Reproduzir ${spark.title}`}><Play size={15} /></button></article>)}</div></section>;
+}
+
+export function PresetsPage() {
+  const { t } = useLanguage();
+  const presets = [{ title: 'Sertão Neo-Soul Pack', description: 'Acordes aveludados em Lá Lídio Dominante com Rhodes expansivo em 113 BPM.', tag: 'Rhodes · 113 BPM' }, { title: 'Transe Gnawa 808', description: 'Viradas aceleradas de Logdrum em Ré Pentatônica Gnawa focado em Trap de 140 BPM.', tag: 'Logdrum · 140 BPM' }, { title: 'Abóbora Melancólica Menor', description: 'Dedilhado rápido de Viola em Mi Menor Natural focado em clima denso em 120 BPM.', tag: 'Viola · 120 BPM' }, { title: 'Maracatu Amarelo', description: 'Sincopado cadenciado com Escala Praiana em 112 BPM.', tag: 'Maracatu · 112 BPM' }];
+  return <section className="page-card"><p className="eyebrow">{t('page.presets.eyebrow')}</p><h1>{t('page.presets.title')}</h1><p className="page-description">{t('page.presets.description')}</p><div className="preset-grid">{presets.map((preset) => <button className="preset-tile" type="button" key={preset.title} onClick={() => playNotes([69, 73, 76, 80], 113)}><span className="preset-tag">{preset.tag}</span><strong>{preset.title}</strong><span>{preset.description}</span></button>)}</div></section>;
+}
+
+export function ChordsPage() {
+  const { t } = useLanguage();
+  const [root, setRoot] = useState('A');
+  const [instrument, setInstrument] = useState('Baixo / Logdrum');
+  const [activeScale, setActiveScale] = useState('Lídio Dominante');
+  const chords = [{ name: 'A', notes: [69, 73, 76] }, { name: 'B', notes: [71, 75, 78] }, { name: 'C#dim', notes: [73, 76, 79] }, { name: 'D#dim', notes: [75, 78, 81] }, { name: 'Em', notes: [76, 79, 83] }, { name: 'F#m', notes: [78, 81, 85] }, { name: 'Gaug', notes: [79, 83, 87] }];
+  useEffect(() => { const keys: Record<string, number> = { '1': 69, '2': 71, '3': 73, '4': 76, c: 69, d: 71, e: 73, f: 76 }; const handleKeyDown = (event: KeyboardEvent) => { if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement) return; const note = keys[event.key.toLowerCase()]; if (note) void playChord([note, note + 4, note + 7]); }; window.addEventListener('keydown', handleKeyDown); return () => window.removeEventListener('keydown', handleKeyDown); }, []);
+  return <section className="page-card"><p className="eyebrow">{t('page.chords.eyebrow')}</p><h1>{t('page.chords.title')}</h1><p className="page-description">{t('page.chords.description')}</p><div className="live-keyboard-panel"><strong>🎹 LIVE KEYBOARD JAM (MAPEADO)</strong><span>Pressione <kbd>1..7</kbd> para tocar os graus da escala ativa ou <kbd>C..B</kbd> para notas fixas.</span><div className="harmonizer-controls"><label>TÔNICA<select value={root} onChange={(event) => setRoot(event.target.value)}>{['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((note) => <option key={note}>{note}</option>)}</select></label><label>INSTRUMENTO<select value={instrument} onChange={(event) => setInstrument(event.target.value)}><option>Baixo / Logdrum</option><option>Rhodes / Teclados</option><option>Viola Caipira / Cordas Aço</option></select></label><label>ESCALA ATIVA<select value={activeScale} onChange={(event) => setActiveScale(event.target.value)}><option>Lídio Dominante</option><option>Menor Natural</option><option>Pentatônica Gnawa</option></select></label></div></div><div className="chord-grid">{chords.map((chord, index) => <button type="button" className="chord-tile" key={chord.name} onClick={() => playChord(chord.notes)}><span>Grau {index + 1}</span><strong>{chord.name}</strong><small>{chord.notes.map((note) => note - 60).join(' · ')}</small><em>▶ Clique para ouvir</em></button>)}</div><div className="progression-card"><span className="dashboard-label">💡 Progressões recomendadas:</span><p>Sertão Neo-Soul: <strong>A → B → A</strong></p><p>Tensão Lídia Ancestral: <strong>A → Gaug → F#m → A</strong></p></div></section>;
+}
+
+export function FaqPage() { const { t } = useLanguage(); const questions = ['Como começo uma nova fagulha?', 'Como salvo uma ideia na biblioteca?', 'Como exporto um arquivo MIDI?', 'Como altero o idioma?']; return <section className="page-card"><p className="eyebrow">{t('page.faq.eyebrow')}</p><h1>{t('page.faq.title')}</h1><p className="page-description">{t('page.faq.description')}</p><div className="faq-list">{questions.map((question) => <details className="faq-item" key={question}><summary>{question}<ChevronDown size={16} /></summary><p>Configure sua escala, instrumento, loop e andamento no Fagulha Engine. Você pode salvar a Fagulha ou exportar o resultado em MIDI.</p></details>)}</div></section>; }
+
+export function ProfilePage() {
+  const { t } = useLanguage();
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => { if (!auth) return; return onAuthStateChanged(auth, setUser); }, []);
+  const isMasterAdmin = user?.email?.toLowerCase() === 'contatofagulha.app@gmail.com';
+  return <section className="page-card profile-card"><p className="eyebrow">{t('page.profile.eyebrow')}</p><h1>{t('page.profile.title')}</h1><p className="page-description">{t('page.profile.description')}</p><div className="profile-panel"><div className="profile-avatar">{user?.photoURL ? <img src={user.photoURL} alt="" /> : 'F'}</div><div><strong>{user?.displayName || 'Produtor Fagulha'}</strong><span>{user?.email || 'Perfil local · sessão visitante'}</span></div><Check size={18} /></div>{isMasterAdmin && <div className="admin-panel"><strong>Painel administrativo do Fagulha Studio Hub</strong><span>Controles de usuários, chamados e configurações disponíveis somente para o administrador mestre.</span></div>}</section>;
+}
+</file>
+
+<file path="src/pages/Dashboard.tsx">
+import { useLanguage } from '../i18n/LanguageContext';
+
+export default function Dashboard() {
+  const { t } = useLanguage();
+
+  return (
+    <section className="page-card dashboard-card">
+      <p className="eyebrow">{t('page.home.eyebrow')}</p>
+      <h1>{t('page.home.title')}</h1>
+      <p className="page-description">{t('page.home.description')}</p>
+
+      <div className="privacy-terms-container">
+        <h2>Termos de Uso e Privacidade</h2>
+        <p><strong>1. Coleta de Dados:</strong> O Fagulha Studio Hub coleta apenas as informações necessárias para autenticação e personalização da sua experiência.</p>
+        <p><strong>2. Armazenamento e Segurança:</strong> Dados de perfil e projetos salvos são armazenados com regras de segurança do Firebase.</p>
+        <p><strong>3. Seus Direitos (LGPD):</strong> Você pode editar suas informações ou solicitar a exclusão dos seus registros.</p>
+        <p><strong>4. Uso da Plataforma:</strong> O Fagulha Studio Hub apoia produtores musicais. Respeite direitos autorais e a comunidade ao compartilhar criações.</p>
+      </div>
+    </section>
+  );
+}
+</file>
+
+<file path="src/App.tsx">
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Loader2, Grid2X2, Library, FolderOpen, Music2, CircleHelp, CircleAlert, UserRound } from 'lucide-react';
+import Dashboard from './pages/Dashboard';
+import Suporte from './pages/Suporte';
+import { ChordsPage, FaqPage, GeneratorPage, LibraryPage, PresetsPage, ProfilePage } from './pages/StudioModules';
+import LanguageSwitcher from './components/LanguageSwitcher';
+import { SidebarControls, StudioTopBar } from './components/StudioChrome';
+import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
+import './styles.css';
+
+type NavItem = { to: string; labelKey: 'navigation.generator' | 'navigation.library' | 'navigation.presets' | 'navigation.chords' | 'navigation.faq' | 'navigation.support'; icon: typeof Grid2X2 };
+
+const navItems: NavItem[] = [
+  { to: '/generator', labelKey: 'navigation.generator', icon: Grid2X2 },
+  { to: '/library', labelKey: 'navigation.library', icon: Library },
+  { to: '/presets', labelKey: 'navigation.presets', icon: FolderOpen },
+  { to: '/chords', labelKey: 'navigation.chords', icon: Music2 },
+  { to: '/faq', labelKey: 'navigation.faq', icon: CircleHelp },
+  { to: '/suporte', labelKey: 'navigation.support', icon: CircleAlert },
+];
+
+function normalizeLegacyHash() {
+  if (typeof window === 'undefined') return;
+
+  const legacyRoute = window.location.hash.replace(/^#\/?/, '');
+  const knownRoutes = ['home', 'generator', 'library', 'presets', 'chords', 'profile', 'faq', 'report', 'suporte'];
+  if (!legacyRoute || !knownRoutes.includes(legacyRoute) || window.location.hash.startsWith('#/')) return;
+
+  const nextRoute = legacyRoute === 'home' ? '/' : legacyRoute === 'report' ? '/suporte' : `/${legacyRoute}`;
+  window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${nextRoute}`);
+}
+
+function AnimatedRoutes() {
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = window.setTimeout(() => setLoading(false), 240);
+    return () => window.clearTimeout(timer);
+  }, [location.pathname]);
+
+  return (
+    <main className="spa-content">
+      {loading ? (
+        <div className="route-loader" aria-label="Carregando tela">
+          <Loader2 size={28} className="spin" />
+        </div>
+      ) : (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="route-page"
+          >
+            <Routes location={location}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/generator" element={<GeneratorPage />} />
+              <Route path="/library" element={<LibraryPage />} />
+              <Route path="/presets" element={<PresetsPage />} />
+              <Route path="/chords" element={<ChordsPage />} />
+              <Route path="/faq" element={<FaqPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/suporte" element={<Suporte />} />
+              <Route path="/report" element={<Navigate to="/suporte" replace />} />
+              <Route path="*" element={<Page />} />
+            </Routes>
+          </motion.div>
+        </AnimatePresence>
+      )}
+    </main>
+  );
+}
+
+function Page() {
+  const location = useLocation();
+  const { t } = useLanguage();
+  const pageKey = location.pathname === '/' ? 'home' : location.pathname.slice(1);
+  const validPageKey = ['home', 'generator', 'library', 'presets', 'chords', 'profile', 'faq', 'support'].includes(pageKey) ? pageKey : 'home';
+  const content = {
+    eyebrow: t(`page.${validPageKey}.eyebrow` as Parameters<typeof t>[0]),
+    title: t(`page.${validPageKey}.title` as Parameters<typeof t>[0]),
+    description: t(`page.${validPageKey}.description` as Parameters<typeof t>[0]),
+  };
+
+  return (
+    <section className="page-card">
+      <p className="eyebrow">{content.eyebrow}</p>
+      <h1>{content.title}</h1>
+      <p className="page-description">{content.description}</p>
+      <div className="page-placeholder">
+        <span className="placeholder-dot" />
+        <strong>{t(location.pathname === '/' ? 'page.placeholder.home' : 'page.placeholder.module')}</strong>
+        <span>{t('page.placeholder.routes')}</span>
+      </div>
+    </section>
+  );
+}
+
+function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const location = useLocation();
+  const { t } = useLanguage();
+  return (
+    <aside className={`spa-sidebar${isOpen ? ' is-open' : ''}`}>
+      <Link to="/" className="spa-brand">
+        <span className="brand-mark">F</span>
+        <span><strong>Fagulha</strong><small>{t('brand.tagline')}</small></span>
+      </Link>
+      <nav aria-label={t('navigation.label')}>
+        {navItems.map(({ to, labelKey, icon: Icon }) => (
+          <Link key={to} to={to} className={location.pathname === to ? 'nav-link active' : 'nav-link'}><Icon size={15} /> {t(labelKey)}</Link>
+        ))}
+      </nav>
+      <Link to="/profile" className={location.pathname === '/profile' ? 'profile-link active' : 'profile-link'}><UserRound size={15} /> {t('navigation.profile')}</Link>
+      <LanguageSwitcher />
+      <SidebarControls />
+    </aside>
+  );
+}
+
+export default function App() {
+  normalizeLegacyHash();
+
+  return (
+    <LanguageProvider>
+      <HashRouter>
+        <StudioShell />
+      </HashRouter>
+    </LanguageProvider>
+  );
+}
+
+function StudioShell() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  return <div className="spa-app"><div className={`sidebar-backdrop${sidebarOpen ? ' visible' : ''}`} onClick={() => setSidebarOpen(false)} /><Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} /><div className="studio-main"><StudioTopBar onMenu={() => setSidebarOpen((open) => !open)} /><AnimatedRoutes /></div></div>;
+}
+</file>
+
+<file path="src/styles.css">
+:root {
+  font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+  color: #f5efe6;
+  background: #090807;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+
+body.react-spa {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(200, 90, 23, 0.15), transparent 30%),
+    #090807;
+}
+
+.spa-app { min-height: 100vh; display: flex; }
+.studio-main { width: calc(100% - 260px); min-width: 0; margin-left: 260px; }
+
+.spa-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 2;
+  display: flex;
+  width: 260px;
+  flex-direction: column;
+  gap: 32px;
+  padding: 28px 18px;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(16, 12, 9, 0.88);
+  backdrop-filter: blur(18px);
+}
+
+.spa-brand { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
+.spa-brand strong, .spa-brand small { display: block; }
+.spa-brand strong { font-size: 15px; }
+.spa-brand small { margin-top: 3px; color: #80756c; font: 10px Inter, sans-serif; }
+.brand-mark { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 11px; background: linear-gradient(135deg, #d97736, #8a3305); font-weight: 800; }
+
+.spa-sidebar nav { display: grid; gap: 5px; }
+.nav-link, .profile-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 7px; color: #a89b8e; font: 12px Inter, sans-serif; text-decoration: none; transition: color .2s ease, background .2s ease; }
+.nav-link:hover, .nav-link.active, .profile-link:hover, .profile-link.active { color: #f5efe6; background: rgba(217, 119, 54, .13); }
+.profile-link { margin-top: auto; }
+.sidebar-section-title { margin: 0 0 10px; color: #80756c; font: 10px Inter, sans-serif; letter-spacing: .14em; }
+.sidebar-controls { display: grid; gap: 16px; margin-top: auto; }
+.slider-control { display: grid; grid-template-columns: 1fr auto; gap: 7px 10px; color: #a89b8e; font: 11px Inter, sans-serif; }
+.slider-control output { color: #e5a93c; }
+.slider-control input { grid-column: 1 / -1; width: 100%; accent-color: #d97736; }
+.sidebar-select { display: grid; gap: 8px; color: #a89b8e; font: 11px Inter, sans-serif; }
+.sidebar-select select { width: 100%; border: 1px solid rgba(255,255,255,.09); border-radius: 8px; padding: 11px 12px; color: #f5efe6; background: rgba(255,255,255,.03); font: 12px Inter, sans-serif; }
+.sidebar-select option { color: #f5efe6; background: #100c09; }
+.studio-topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 18px clamp(18px, 4vw, 40px) 0; padding: 8px 10px; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; background: rgba(16,12,9,.78); backdrop-filter: blur(16px); }
+.topbar-group { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.topbar-right { justify-content: flex-end; }
+.topbar-button, .topbar-help { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 32px; padding: 0 10px; border: 1px solid rgba(255,255,255,.07); border-radius: 7px; color: #b9aa9b; background: transparent; font: 11px Inter, sans-serif; text-decoration: none; cursor: pointer; }
+.topbar-button:hover, .topbar-help:hover { color: #f5efe6; background: rgba(255,255,255,.06); }
+.topbar-save { color: #f5efe6; background: rgba(217,119,54,.14); }
+.topbar-stop { color: #ff9999; }
+.topbar-volume { display: flex; align-items: center; gap: 6px; color: #80756c; font: 10px Inter, sans-serif; }
+.topbar-volume input { width: 58px; accent-color: #d97736; }
+.topbar-help { padding: 0 7px; }
+.studio-topbar .auth-control, .studio-topbar .auth-status { width: auto; min-height: 32px; white-space: nowrap; }
+.language-switcher { display: flex; align-items: center; gap: 8px; color: #a89b8e; font: 12px Inter, sans-serif; }
+.auth-control, .auth-status { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 10px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 7px; color: #d7cabe; background: rgba(255, 255, 255, .03); font: 11px Inter, sans-serif; }
+.auth-control { cursor: pointer; }
+.auth-control:hover { border-color: rgba(217, 119, 54, .45); color: #f5efe6; background: rgba(217, 119, 54, .1); }
+.auth-control:disabled { cursor: wait; opacity: .65; }
+.language-switcher select { min-width: 0; flex: 1; border: 1px solid rgba(255, 255, 255, .09); border-radius: 7px; padding: 8px 9px; color: #f5efe6; background: rgba(0, 0, 0, .22); font: 12px Inter, sans-serif; outline: none; }
+.language-switcher select:focus { border-color: #d97736; box-shadow: 0 0 0 3px rgba(217, 119, 54, .12); }
+.language-switcher option { color: #f5efe6; background: #100c09; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.spa-content { width: 100%; min-height: 100vh; padding: 34px clamp(24px, 7vw, 110px); }
+.route-page { width: min(760px, 100%); margin: 0 auto; }
+.page-card { padding: clamp(28px, 6vw, 72px); border: 1px solid rgba(255, 255, 255, .08); border-radius: 12px; background: linear-gradient(145deg, rgba(37, 24, 16, .8), rgba(16, 12, 9, .7)); box-shadow: 0 28px 80px rgba(0, 0, 0, .28); }
+.eyebrow { margin: 0 0 14px; color: #e5a93c; font: 11px Inter, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+h1 { max-width: 620px; margin: 0; font-size: clamp(32px, 6vw, 64px); line-height: 1.05; letter-spacing: -.04em; }
+.page-description { max-width: 560px; margin: 22px 0 0; color: #b9aa9b; font: 16px/1.65 Inter, sans-serif; }
+.page-placeholder { display: grid; gap: 8px; margin-top: 64px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, .08); color: #80756c; font: 12px Inter, sans-serif; }
+.page-placeholder strong { color: #f5efe6; font-size: 14px; }
+.placeholder-dot { width: 8px; height: 8px; border-radius: 50%; background: #d97736; box-shadow: 0 0 16px #d97736; }
+.support-card { max-width: 760px; }
+.support-form { display: grid; gap: 16px; margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, .08); }
+.support-field { display: grid; gap: 8px; }
+.support-field label { color: #d7cabe; font: 600 12px Inter, sans-serif; }
+.support-field input, .support-field select, .support-field textarea { width: 100%; border: 1px solid rgba(255, 255, 255, .09); border-radius: 8px; padding: 12px 13px; color: #f5efe6; background: rgba(0, 0, 0, .22); font: 13px Inter, sans-serif; outline: none; }
+.support-field textarea { min-height: 128px; resize: vertical; }
+.support-field input:focus, .support-field select:focus, .support-field textarea:focus { border-color: #d97736; box-shadow: 0 0 0 3px rgba(217, 119, 54, .12); }
+.support-submit { justify-self: start; border: 0; border-radius: 7px; padding: 12px 20px; color: #100c09; background: #e5a93c; font: 700 12px Inter, sans-serif; cursor: pointer; transition: background .2s ease, transform .2s ease; }
+.support-submit:hover { background: #f0bc52; transform: translateY(-1px); }
+.support-submit:disabled { cursor: wait; opacity: .55; transform: none; }
+.support-success { display: grid; justify-items: center; gap: 10px; margin-top: 44px; padding: 28px; border: 1px solid rgba(229, 169, 60, .3); border-radius: 16px; background: rgba(0, 0, 0, .2); text-align: center; }
+.support-success svg { color: #e5a93c; }
+.support-success h2 { margin: 0; color: #f5efe6; font: 600 18px Inter, sans-serif; }
+.support-success p { margin: 0; color: #80756c; font: 13px Inter, sans-serif; }
+.support-reset { margin-top: 8px; border: 0; color: #e5a93c; background: transparent; font: 600 12px Inter, sans-serif; cursor: pointer; }
+.support-reset:hover { text-decoration: underline; }
+.support-error { display: flex; align-items: center; gap: 8px; color: #f28b82; font: 12px Inter, sans-serif; }
+.studio-card { max-width: 820px; }
+.studio-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 38px; }
+.studio-controls-wide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.studio-controls label { display: grid; gap: 8px; color: #d7cabe; font: 600 12px Inter, sans-serif; }
+.studio-controls select, .studio-controls input { width: 100%; border: 1px solid rgba(255, 255, 255, .09); border-radius: 8px; padding: 12px 13px; color: #f5efe6; background: rgba(0, 0, 0, .22); font: 13px Inter, sans-serif; outline: none; }
+.studio-controls select:focus, .studio-controls input:focus { border-color: #d97736; box-shadow: 0 0 0 3px rgba(217, 119, 54, .12); }
+.scale-preview { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; padding: 16px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 10px; background: rgba(0, 0, 0, .18); }
+.scale-preview div:first-child { display: grid; gap: 5px; }
+.scale-preview strong { color: #f5efe6; font: 700 15px Inter, sans-serif; }
+.note-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.note-chips span, .preset-tag { padding: 5px 9px; border: 1px solid rgba(229, 169, 60, .24); border-radius: 999px; color: #e5a93c; background: rgba(229, 169, 60, .1); font: 600 11px Inter, sans-serif; }
+.piano-preview { height: 150px; margin-top: 14px; padding: 18px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 10px; background: rgba(0, 0, 0, .24); }
+.piano-grid { display: flex; align-items: end; gap: 8px; height: 100%; border-bottom: 1px solid rgba(255, 255, 255, .12); }
+.piano-grid span { display: grid; flex: 1; align-items: end; justify-items: center; min-height: 38px; padding-bottom: 7px; border-radius: 5px 5px 0 0; color: #100c09; background: linear-gradient(#e5a93c, #d97736); font: 700 10px Inter, sans-serif; }
+.studio-actions { display: flex; gap: 10px; margin-top: 18px; }
+.action-button, .icon-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid rgba(255, 255, 255, .09); border-radius: 7px; padding: 11px 15px; color: #f5efe6; background: rgba(255, 255, 255, .04); font: 600 12px Inter, sans-serif; cursor: pointer; }
+.action-button.primary { border-color: transparent; color: #100c09; background: #e5a93c; }
+.module-list, .faq-list { display: grid; gap: 10px; margin-top: 42px; }
+.module-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 10px; background: rgba(0, 0, 0, .18); }
+.module-row div { display: grid; gap: 5px; }
+.module-row strong, .preset-tile strong { color: #f5efe6; font: 700 14px Inter, sans-serif; }
+.module-row span, .preset-tile > span:last-child { color: #80756c; font: 12px Inter, sans-serif; }
+.icon-action { width: 34px; height: 34px; padding: 0; color: #100c09; background: #e5a93c; }
+.preset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 42px; }
+.preset-tile { display: grid; justify-items: start; gap: 9px; min-height: 150px; padding: 17px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 10px; text-align: left; background: rgba(0, 0, 0, .18); cursor: pointer; }
+.preset-tile:hover, .module-row:hover, .chord-tile:hover { border-color: rgba(229, 169, 60, .48); background: rgba(217, 119, 54, .08); }
+.chord-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 42px; }
+.chord-tile { display: grid; gap: 7px; padding: 15px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 10px; text-align: left; background: rgba(0, 0, 0, .18); cursor: pointer; }
+.chord-tile span, .chord-tile small { color: #80756c; font: 10px Inter, sans-serif; }
+.chord-tile strong { color: #f5efe6; font: 700 20px Inter, sans-serif; }
+.live-keyboard-panel { display: grid; gap: 10px; margin-top: 38px; padding: 16px; border: 1px solid rgba(217,119,54,.18); border-radius: 10px; background: rgba(217,119,54,.05); color: #b9aa9b; font: 11px Inter, sans-serif; }
+.live-keyboard-panel strong { color: #f5efe6; font-size: 11px; }
+.live-keyboard-panel kbd { padding: 3px 6px; border: 1px solid rgba(255,255,255,.12); border-radius: 4px; color: #e5a93c; background: rgba(0,0,0,.25); font: 700 10px monospace; }
+.harmonizer-controls { display: grid; grid-template-columns: 1fr 1.25fr 1.25fr; gap: 12px; margin-top: 5px; }
+.harmonizer-controls label { display: grid; gap: 7px; color: #80756c; font-size: 10px; }
+.harmonizer-controls select { min-width: 0; border: 1px solid rgba(255,255,255,.09); border-radius: 7px; padding: 9px 10px; color: #f5efe6; background: rgba(0,0,0,.2); font: 12px Inter, sans-serif; }
+.chord-modes { display: flex; gap: 8px; margin-top: 14px; }
+.chord-modes button { border: 1px solid rgba(255,255,255,.09); border-radius: 999px; padding: 8px 13px; color: #80756c; background: transparent; font: 11px Inter, sans-serif; cursor: pointer; }
+.chord-modes button.active, .chord-modes button:hover { border-color: rgba(217,119,54,.45); color: #e5a93c; background: rgba(217,119,54,.12); }
+.chord-tile em { color: #80756c; font: 10px Inter, sans-serif; }
+.faq-item { overflow: hidden; }
+.faq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px; color: #f5efe6; font: 600 13px Inter, sans-serif; cursor: pointer; list-style: none; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item p { margin: 0; padding: 0 15px 15px; color: #80756c; font: 12px/1.5 Inter, sans-serif; }
+.profile-panel { display: flex; align-items: center; gap: 13px; margin-top: 42px; padding: 18px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 10px; background: rgba(0, 0, 0, .18); }
+.profile-panel div:not(.profile-avatar) { display: grid; flex: 1; gap: 5px; }
+.profile-panel strong { color: #f5efe6; font: 700 14px Inter, sans-serif; }
+.profile-panel span { color: #80756c; font: 12px Inter, sans-serif; }
+.profile-panel > svg { color: #e5a93c; }
+.admin-panel { display: grid; gap: 8px; margin-top: 18px; padding: 16px; border: 1px solid rgba(255, 69, 0, .45); border-radius: 8px; background: rgba(255, 69, 0, .05); }
+.admin-panel strong { color: #ff9a62; font: 700 13px Inter, sans-serif; }
+.admin-panel span { color: #a89b8e; font: 12px/1.5 Inter, sans-serif; }
+.profile-avatar { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; color: #100c09; background: #e5a93c; font: 800 16px Inter, sans-serif; }
+.profile-avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
+.keyboard-guide, .studio-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 10px 12px; border: 1px solid rgba(217, 119, 54, .16); border-radius: 8px; color: #b9aa9b; background: rgba(217, 119, 54, .04); font: 11px Inter, sans-serif; }
+.studio-toolbar { justify-content: flex-end; }
+.studio-toolbar label { display: flex; align-items: center; gap: 8px; }
+.studio-toolbar input { width: 110px; accent-color: #e5a93c; }
+.dashboard-card { max-width: 820px; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 44px; }
+.dashboard-panel { display: grid; gap: 7px; min-height: 126px; padding: 16px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 10px; background: rgba(0, 0, 0, .18); }
+.dashboard-panel strong { color: #f5efe6; font: 700 14px Inter, sans-serif; }
+.dashboard-panel span:last-child { color: #80756c; font: 12px/1.45 Inter, sans-serif; }
+.dashboard-label { color: #e5a93c; font: 600 10px Inter, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.dashboard-section { display: grid; gap: 12px; margin-top: 28px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, .08); }
+.audio-player { display: grid; gap: 12px; width: min(100%, 420px); padding: 16px; border: 1px solid rgba(255, 255, 255, .08); border-radius: 12px; background: rgba(16, 12, 9, .82); }
+.audio-player-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.audio-player-title { margin: 0; color: #f5efe6; font: 600 15px/1.2 Inter, sans-serif; }
+.audio-player-artist { margin: 4px 0 0; color: #80756c; font: 11px Inter, sans-serif; }
+.audio-player-controls { display: flex; align-items: center; gap: 12px; }
+.audio-player-button, .audio-player-icon-button { display: grid; place-items: center; border: 0; color: #100c09; background: #e5a93c; cursor: pointer; }
+.audio-player-button { width: 38px; height: 38px; border-radius: 50%; }
+.audio-player-icon-button { width: 30px; height: 30px; border-radius: 7px; }
+.audio-player-button:hover, .audio-player-icon-button:hover { background: #f0bc52; }
+.audio-player-seek { display: grid; gap: 4px; }
+.audio-player-seek input { width: 100%; height: 6px; margin: 0; accent-color: #e5a93c; cursor: pointer; }
+.audio-player-time { display: flex; justify-content: space-between; color: #80756c; font: 11px/1 monospace; }
+.audio-player-main-controls { justify-content: center; }
+.audio-player-main-controls .audio-player-icon-button { color: #b9aa9b; background: transparent; }
+.route-loader { display: grid; min-height: 60vh; place-items: center; color: rgba(245, 239, 230, .7); }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 700px) {
+  .spa-app { display: block; }
+  .studio-main { width: 100%; margin-left: 0; }
+  .spa-sidebar { transform: translateX(-105%); position: fixed; width: min(86vw, 280px); min-height: 100vh; padding: 18px; border-right: 1px solid rgba(255, 255, 255, .07); border-bottom: 0; transition: transform .25s ease; }
+  .spa-sidebar.is-open { transform: translateX(0); }
+  .spa-sidebar nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .profile-link { margin-top: 10px; }
+  .spa-content { padding: 24px 18px; }
+  .studio-topbar { margin: 12px; flex-wrap: wrap; }
+  .topbar-group { flex-wrap: wrap; }
+  .topbar-right { width: 100%; justify-content: stretch; }
+  .topbar-right > * { flex: 1; }
+  .page-card { padding: 28px 22px; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .studio-controls, .preset-grid { grid-template-columns: 1fr; }
+  .scale-preview { align-items: flex-start; flex-direction: column; }
+  .note-chips { justify-content: flex-start; }
+  .harmonizer-controls { grid-template-columns: 1fr; }
+}
+</file>
+
+</files>
