@@ -42,6 +42,11 @@ body.react-spa {
 .nav-link, .profile-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 7px; color: #a89b8e; font: 12px Inter, sans-serif; text-decoration: none; transition: color .2s ease, background .2s ease; }
 .nav-link:hover, .nav-link.active, .profile-link:hover, .profile-link.active { color: #f5efe6; background: rgba(217, 119, 54, .13); }
 .profile-link { margin-top: auto; }
+.language-switcher { display: flex; align-items: center; gap: 8px; color: #a89b8e; font: 12px Inter, sans-serif; }
+.language-switcher select { min-width: 0; flex: 1; border: 1px solid rgba(255, 255, 255, .09); border-radius: 7px; padding: 8px 9px; color: #f5efe6; background: rgba(0, 0, 0, .22); font: 12px Inter, sans-serif; outline: none; }
+.language-switcher select:focus { border-color: #d97736; box-shadow: 0 0 0 3px rgba(217, 119, 54, .12); }
+.language-switcher option { color: #f5efe6; background: #100c09; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 .spa-content { width: 100%; min-height: 100vh; margin-left: 260px; padding: 9vh clamp(24px, 7vw, 110px); }
 .route-page { width: min(760px, 100%); margin: 0 auto; }

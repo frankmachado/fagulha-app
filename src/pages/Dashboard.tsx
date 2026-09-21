@@ -3,18 +3,21 @@ import { collection, getDocs, type DocumentData } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { auth, db } from '../services/firebase';
 import AudioPlayer from '../components/AudioPlayer';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface FirestoreItem extends DocumentData {
   id: string;
 }
 
 export default function Dashboard() {
+  const { t } = useLanguage();
   const [data, setData] = useState<FirestoreItem[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, setUser);
     return unsubscribe;
   }, []);
@@ -23,6 +26,12 @@ export default function Dashboard() {
     let isMounted = true;
 
     async function loadData() {
+      if (!db) {
+        setLoading(false);
+        setError(t('dashboard.unavailable'));
+        return;
+      }
+
       setLoading(true);
       setError('');
 
@@ -50,26 +59,26 @@ export default function Dashboard() {
 
   return (
     <section className="page-card dashboard-card">
-      <p className="eyebrow">Studio Hub</p>
-      <h1>Crie algo que tenha faísca.</h1>
-      <p className="page-description">Firebase e o player React estão conectados à primeira tela da aplicação.</p>
+      <p className="eyebrow">{t('page.home.eyebrow')}</p>
+      <h1>{t('page.home.title')}</h1>
+      <p className="page-description">{t('page.home.description')}</p>
 
       <div className="dashboard-grid">
         <div className="dashboard-panel">
-          <span className="dashboard-label">Autenticação</span>
-          <strong>{user ? `Olá, ${user.displayName || user.email || 'produtor'}.` : 'Sessão visitante'}</strong>
-          <span>{user ? 'Firebase Auth detectou uma sessão ativa.' : 'Nenhum usuário autenticado no momento.'}</span>
+          <span className="dashboard-label">{t('dashboard.auth')}</span>
+          <strong>{user ? t('dashboard.greeting', { name: user.displayName || user.email || 'producer' }) : t('dashboard.visitor')}</strong>
+          <span>{user ? t('dashboard.authenticated') : t('dashboard.unauthenticated')}</span>
         </div>
 
         <div className="dashboard-panel">
-          <span className="dashboard-label">Firestore / chamados</span>
-          <strong>{loading ? 'Carregando...' : `${data.length} registro(s)`}</strong>
-          <span>{error || 'Consulta concluída na coleção chamados.'}</span>
+          <span className="dashboard-label">{t('dashboard.firestore')}</span>
+          <strong>{loading ? t('dashboard.loading') : t('dashboard.records', { count: data.length })}</strong>
+          <span>{error ? t('dashboard.error') : t('dashboard.query')}</span>
         </div>
       </div>
 
       <div className="dashboard-section">
-        <p className="dashboard-label">Player de teste</p>
+        <p className="dashboard-label">{t('dashboard.player')}</p>
         <AudioPlayer
           src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
           title="Demo Master #1"

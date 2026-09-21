@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Pause, Play, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface AudioPlayerProps {
   src: string;
@@ -9,6 +10,7 @@ interface AudioPlayerProps {
 }
 
 export default function AudioPlayer({ src, title = 'Faixa sem título', artist = 'Fagulha Studio' }: AudioPlayerProps) {
+  const { t } = useLanguage();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -99,7 +101,7 @@ export default function AudioPlayer({ src, title = 'Faixa sem título', artist =
           <h3 className="audio-player-title">{title}</h3>
           <p className="audio-player-artist">{artist}</p>
         </div>
-        <button type="button" className="audio-player-icon-button" onClick={toggleMute} aria-label={isMuted ? 'Ativar som' : 'Silenciar áudio'}>
+        <button type="button" className="audio-player-icon-button" onClick={toggleMute} aria-label={isMuted ? t('audio.unmute') : t('audio.mute')}>
           {isMuted ? <VolumeX size={17} /> : <Volume2 size={17} />}
         </button>
       </div>
@@ -111,7 +113,7 @@ export default function AudioPlayer({ src, title = 'Faixa sem título', artist =
           max={duration || 100}
           value={Math.min(currentTime, duration || 100)}
           onChange={handleSeek}
-          aria-label="Progresso da faixa"
+          aria-label={t('audio.progress')}
         />
         <div className="audio-player-time">
           <span>{formatTime(currentTime)}</span>
@@ -120,11 +122,11 @@ export default function AudioPlayer({ src, title = 'Faixa sem título', artist =
       </div>
 
       <div className="audio-player-controls audio-player-main-controls">
-        <button type="button" className="audio-player-icon-button" onClick={resetToStart} aria-label="Recomeçar faixa">
+        <button type="button" className="audio-player-icon-button" onClick={resetToStart} aria-label={t('audio.restart')}>
           <RotateCcw size={16} />
         </button>
 
-        <button type="button" className="audio-player-button" onClick={togglePlay} aria-label={isPlaying ? 'Pausar áudio' : 'Reproduzir áudio'}>
+        <button type="button" className="audio-player-button" onClick={togglePlay} aria-label={isPlaying ? t('audio.pause') : t('audio.play')}>
           {isPlaying ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" />}
         </button>
       </div>
