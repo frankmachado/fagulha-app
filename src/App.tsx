@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Suporte from './pages/Suporte';
 import { ChordsPage, FaqPage, GeneratorPage, LibraryPage, PresetsPage, ProfilePage } from './pages/StudioModules';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import AuthControls from './components/AuthControls';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import './styles.css';
 
@@ -117,6 +118,7 @@ function Sidebar() {
         ))}
       </nav>
       <Link to="/profile" className={location.pathname === '/profile' ? 'profile-link active' : 'profile-link'}><UserRound size={15} /> {t('navigation.profile')}</Link>
+      <AuthControls />
       <LanguageSwitcher />
     </aside>
   );
