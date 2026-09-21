@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Suporte from './pages/Suporte';
 import { ChordsPage, FaqPage, GeneratorPage, LibraryPage, PresetsPage, ProfilePage } from './pages/StudioModules';
 import LanguageSwitcher from './components/LanguageSwitcher';
-import AuthControls from './components/AuthControls';
+import { SidebarControls, StudioTopBar } from './components/StudioChrome';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import './styles.css';
 
@@ -102,11 +102,11 @@ function Page() {
   );
 }
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const location = useLocation();
   const { t } = useLanguage();
   return (
-    <aside className="spa-sidebar">
+    <aside className={`spa-sidebar${isOpen ? ' is-open' : ''}`}>
       <Link to="/" className="spa-brand">
         <span className="brand-mark">F</span>
         <span><strong>Fagulha</strong><small>{t('brand.tagline')}</small></span>
@@ -118,8 +118,8 @@ function Sidebar() {
         ))}
       </nav>
       <Link to="/profile" className={location.pathname === '/profile' ? 'profile-link active' : 'profile-link'}><UserRound size={15} /> {t('navigation.profile')}</Link>
-      <AuthControls />
       <LanguageSwitcher />
+      <SidebarControls />
     </aside>
   );
 }
@@ -130,11 +130,13 @@ export default function App() {
   return (
     <LanguageProvider>
       <HashRouter>
-        <div className="spa-app">
-          <Sidebar />
-          <AnimatedRoutes />
-        </div>
+        <StudioShell />
       </HashRouter>
     </LanguageProvider>
   );
+}
+
+function StudioShell() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  return <div className="spa-app"><div className={`sidebar-backdrop${sidebarOpen ? ' visible' : ''}`} onClick={() => setSidebarOpen(false)} /><Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} /><div className="studio-main"><StudioTopBar onMenu={() => setSidebarOpen((open) => !open)} /><AnimatedRoutes /></div></div>;
 }

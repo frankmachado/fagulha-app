@@ -69,8 +69,22 @@ export function PresetsPage() {
 
 export function ChordsPage() {
   const { t } = useLanguage();
+  const [root, setRoot] = useState('A');
+  const [instrument, setInstrument] = useState('Baixo / Logdrum');
+  const [activeScale, setActiveScale] = useState('Lídio Dominante');
   const chords = [{ name: 'A', notes: [69, 73, 76] }, { name: 'B', notes: [71, 75, 78] }, { name: 'C#dim', notes: [73, 76, 79] }, { name: 'D#dim', notes: [75, 78, 81] }, { name: 'Em', notes: [76, 79, 83] }, { name: 'F#m', notes: [78, 81, 85] }, { name: 'Gaug', notes: [79, 83, 87] }];
-  return <section className="page-card"><p className="eyebrow">{t('page.chords.eyebrow')}</p><h1>{t('page.chords.title')}</h1><p className="page-description">{t('page.chords.description')}</p><div className="chord-grid">{chords.map((chord, index) => <button type="button" className="chord-tile" key={chord.name} onClick={() => playChord(chord.notes)}><span>Grau {index + 1}</span><strong>{chord.name}</strong><small>{chord.notes.map((note) => note - 60).join(' · ')}</small><em>▶ Clique para ouvir</em></button>)}</div><div className="progression-card"><span className="dashboard-label">💡 Progressões recomendadas:</span><p>Sertão Neo-Soul: <strong>A → B → A</strong></p><p>Tensão Lídia Ancestral: <strong>A → Gaug → F#m → A</strong></p></div></section>;
+  useEffect(() => {
+    const keyboardNotes: Record<string, number> = { '1': 69, '2': 71, '3': 73, '4': 76, c: 69, d: 71, e: 73, f: 76 };
+    const handleKeyboard = (event: KeyboardEvent) => {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement) return;
+      const note = keyboardNotes[event.key.toLowerCase()];
+      if (note) void playChord([note, note + 4, note + 7]);
+    };
+    window.addEventListener('keydown', handleKeyboard);
+    return () => window.removeEventListener('keydown', handleKeyboard);
+  }, []);
+
+  return <section className="page-card"><p className="eyebrow">{t('page.chords.eyebrow')}</p><h1>{t('page.chords.title')}</h1><p className="page-description">{t('page.chords.description')}</p><div className="live-keyboard-panel"><strong>🎹 LIVE KEYBOARD JAM (MAPEADO)</strong><span>Pressione <kbd>1..7</kbd> para tocar os graus da escala ativa ou <kbd>C..B</kbd> para notas fixas.</span><div className="harmonizer-controls"><label>TÔNICA<select value={root} onChange={(event) => setRoot(event.target.value)}>{['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((note) => <option key={note}>{note}</option>)}</select></label><label>INSTRUMENTO<select value={instrument} onChange={(event) => setInstrument(event.target.value)}><option>Baixo / Logdrum</option><option>Rhodes / Teclados</option><option>Viola Caipira / Cordas Aço</option></select></label><label>ESCALA ATIVA<select value={activeScale} onChange={(event) => setActiveScale(event.target.value)}><option>Lídio Dominante</option><option>Menor Natural</option><option>Pentatônica Gnawa</option></select></label></div></div><div className="chord-modes"><button type="button" className="active">Triades (3 Notas)</button><button type="button">Tétrades / 7ªs (4 Notas)</button></div><div className="chord-grid">{chords.map((chord, index) => <button type="button" className="chord-tile" key={chord.name} onClick={() => playChord(chord.notes)}><span>Grau {index + 1}</span><strong>{chord.name}</strong><small>{chord.notes.map((note) => note - 60).join(' · ')}</small><em>▶ Clique para ouvir</em></button>)}</div><div className="progression-card"><span className="dashboard-label">💡 Progressões recomendadas:</span><p>Sertão Neo-Soul: <strong>A → B → A</strong></p><p>Tensão Lídia Ancestral: <strong>A → Gaug → F#m → A</strong></p></div></section>;
 }
 
 export function FaqPage() { const { t } = useLanguage(); const questions = ['Como começo uma nova fagulha?', 'Como salvo uma ideia na biblioteca?', 'Como exporto um arquivo MIDI?', 'Como altero o idioma?']; return <section className="page-card"><p className="eyebrow">{t('page.faq.eyebrow')}</p><h1>{t('page.faq.title')}</h1><p className="page-description">{t('page.faq.description')}</p><div className="faq-list">{questions.map((question) => <details className="faq-item" key={question}><summary>{question}<ChevronDown size={16} /></summary><p>Configure sua escala, groove e andamento no Scale Engine. Os controles da sessão permanecem disponíveis sem recarregar a página.</p></details>)}</div></section>; }
