@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { registerServiceWorker } from './platform/registerServiceWorker';
 
 const root = document.getElementById('root');
 
@@ -11,6 +12,7 @@ if (!root) {
 root.classList.add('react-root-mounted');
 
 document.body.classList.add('react-spa');
+registerServiceWorker();
 
 createRoot(root).render(
   <StrictMode>
