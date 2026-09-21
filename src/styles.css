@@ -147,6 +147,9 @@ h1 { max-width: 620px; margin: 0; font-size: clamp(32px, 6vw, 64px); line-height
 .profile-panel strong { color: #f5efe6; font: 700 14px Inter, sans-serif; }
 .profile-panel span { color: #80756c; font: 12px Inter, sans-serif; }
 .profile-panel > svg { color: #e5a93c; }
+.admin-panel { display: grid; gap: 8px; margin-top: 18px; padding: 16px; border: 1px solid rgba(255, 69, 0, .45); border-radius: 8px; background: rgba(255, 69, 0, .05); }
+.admin-panel strong { color: #ff9a62; font: 700 13px Inter, sans-serif; }
+.admin-panel span { color: #a89b8e; font: 12px/1.5 Inter, sans-serif; }
 .profile-avatar { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; color: #100c09; background: #e5a93c; font: 800 16px Inter, sans-serif; }
 .profile-avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
 .keyboard-guide, .studio-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 10px 12px; border: 1px solid rgba(217, 119, 54, .16); border-radius: 8px; color: #b9aa9b; background: rgba(217, 119, 54, .04); font: 11px Inter, sans-serif; }

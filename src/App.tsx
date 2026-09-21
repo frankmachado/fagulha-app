@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { Loader2, Grid2X2, Library, FolderOpen, Music2, CircleHelp, CircleAlert, House, UserRound } from 'lucide-react';
+import { Loader2, Grid2X2, Library, FolderOpen, Music2, CircleHelp, CircleAlert, UserRound } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import Suporte from './pages/Suporte';
 import { ChordsPage, FaqPage, GeneratorPage, LibraryPage, PresetsPage, ProfilePage } from './pages/StudioModules';
@@ -112,7 +112,6 @@ function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
         <span><strong>Fagulha</strong><small>{t('brand.tagline')}</small></span>
       </Link>
       <nav aria-label={t('navigation.label')}>
-        <Link to="/" className={location.pathname === '/' ? 'nav-link active' : 'nav-link'}><House size={15} /> {t('navigation.home')}</Link>
         {navItems.map(({ to, labelKey, icon: Icon }) => (
           <Link key={to} to={to} className={location.pathname === to ? 'nav-link active' : 'nav-link'}><Icon size={15} /> {t(labelKey)}</Link>
         ))}
