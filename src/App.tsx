@@ -4,6 +4,7 @@ import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-ro
 import { Loader2, Grid2X2, Library, FolderOpen, Music2, CircleHelp, CircleAlert, House, UserRound } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import Suporte from './pages/Suporte';
+import { ChordsPage, FaqPage, GeneratorPage, LibraryPage, PresetsPage, ProfilePage } from './pages/StudioModules';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import './styles.css';
@@ -58,7 +59,12 @@ function AnimatedRoutes() {
           >
             <Routes location={location}>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/generator" element={<Dashboard />} />
+              <Route path="/generator" element={<GeneratorPage />} />
+              <Route path="/library" element={<LibraryPage />} />
+              <Route path="/presets" element={<PresetsPage />} />
+              <Route path="/chords" element={<ChordsPage />} />
+              <Route path="/faq" element={<FaqPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/suporte" element={<Suporte />} />
               <Route path="/report" element={<Navigate to="/suporte" replace />} />
               <Route path="*" element={<Page />} />
